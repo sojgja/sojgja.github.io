@@ -1,5 +1,9 @@
-# hello from soigia
+---
+template: home.html
+title: Material for MkDocs
+social:
+  cards_layout_options:
+    title: Documentation that simply works
+---
 
-- note to code
-- check me code
-- check me now
+Welcome to Material for MkDocs.
