@@ -1,9 +1,3 @@
----
-template: home.html
-title: Material for MkDocs
-social:
-  cards_layout_options:
-    title: Documentation that simply works
----
+# hello from soigia
 
-Welcome to Material for MkDocs.
+- note to code
