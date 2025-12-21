@@ -92,7 +92,10 @@ theme:
 
 # Plugins
 plugins:
-  - blog
+  - blog:
+      blog_dir: soigia
+      blog_posts_dir: soigia/posts
+      blog_toc: true
   - search:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - minify:
@@ -280,5 +283,7 @@ nav:
       - Creating a reproduction: guides/creating-a-reproduction.md
   - Blog:
     - blog/index.md
-  - SOIGIA:
+  - soigia:
     - soigia/index.md
+  - python:
+      - python/index.md
