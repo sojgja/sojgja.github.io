@@ -1,1 +1,7 @@
-Welcome to Material for MkDocs.
+---
+hide:
+  - toc
+  - navigation
+---
+
+# 
