@@ -33,3 +33,4 @@ paginate>=0.5
 backrefs>=5.7.post1
 requests>=2.30
 mkdocs-minify-plugin
+mkdocs-redirects
