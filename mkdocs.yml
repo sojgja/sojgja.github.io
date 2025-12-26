@@ -94,7 +94,6 @@ theme:
 plugins:
   - blog:
       blog_dir: blog
-      blog_posts_dir: blog/posts
       blog_toc: true
   - search:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
@@ -174,7 +173,7 @@ markdown_extensions:
   - pymdownx.tilde
 
 not_in_nav: |
-  /tutorials/**/*.md
+  /soigia/**/*.md
 
 # Page tree
 # nav:
