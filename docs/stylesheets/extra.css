@@ -33,3 +33,10 @@
 .md-content blockquote {
     text-align: justify;
 }
+
+/* Nếu muốn cả sidebar và header cũng lowercase */
+.md-header, 
+.md-sidebar, 
+.md-footer {
+    text-transform: lowercase;
+}
