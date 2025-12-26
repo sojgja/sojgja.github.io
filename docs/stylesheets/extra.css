@@ -1,0 +1,20 @@
+/* Mở rộng toàn bộ nội dung ra full width */
+.md-container {
+    max-width: 100% !important;
+}
+
+/* Nếu muốn cả sidebar cũng full height */
+.md-sidebar {
+    max-width: 300px;  /* bạn có thể tăng/decrease */
+}
+
+/* Optional: giảm padding giữa các section */
+.md-content {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Maximum space for text block */
+.md-grid {
+  max-width: 100%; /* or 100%, if you want to stretch to full-width */
+}
