@@ -26,12 +26,12 @@
 
 /* Optional: canh đều cả các list item */
 .md-content li {
-    text-align: justify;
+    text-align: left;
 }
 
 /* Optional: canh đều trong các thẻ blockquote */
 .md-content blockquote {
-    text-align: justify;
+    text-align: left;
 }
 
 .md-header {
