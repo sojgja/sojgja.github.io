@@ -6,12 +6,9 @@ description: >
   a blog alongside your documentation or standalone
 categories:
   - Blog
-links:
-  - setup/setting-up-a-blog.md
-  - plugins/blog.md
 ---
 
-# Blog support just landed
+# Blog support just landed Blog support just landed Blog support just landed
 
 __Hey there! You're looking at our new blog, built with the brand new
 [built-in blog plugin]. With this plugin, you can easily build a blog alongside
