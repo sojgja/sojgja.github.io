@@ -34,9 +34,11 @@
     text-align: justify;
 }
 
-/* Nếu muốn cả sidebar và header cũng lowercase */
-.md-header, 
-.md-sidebar, 
+.md-header {
+  display: none;
+}
+
+
 .md-footer {
-    text-transform: lowercase;
+  display: none;
 }
