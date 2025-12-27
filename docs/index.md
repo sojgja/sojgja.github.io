@@ -1,30 +1,10 @@
 ---
+title: Home
 hide:
-  - toc
   - navigation
+  - toc
 ---
 
-# 
+<meta http-equiv="refresh" content="0; url=./blog/" />
 
-``` mermaid
-graph LR
-  A[Start] --> B{Error?};
-  B -->|Yes| C[Hmm...];
-  C --> D[Debug];
-  D --> B;
-  B ---->|No| E[Yay!];
-```
-
-``` mermaid
-stateDiagram-v2
-  state fork_state <<fork>>
-    [*] --> fork_state
-    fork_state --> State2
-    fork_state --> State3
-
-    state join_state <<join>>
-    State2 --> join_state
-    State3 --> join_state
-    join_state --> State4
-    State4 --> [*]
-```
+[Go to the blog](./blog/)
