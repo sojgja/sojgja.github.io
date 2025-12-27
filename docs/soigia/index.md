@@ -1,3 +1,0 @@
-# soigia
-
-rieng tu
