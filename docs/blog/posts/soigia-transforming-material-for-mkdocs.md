@@ -1,14 +1,11 @@
 ---
 date: 2024-08-19
 authors:
-  - squidfunk
-  - alexvoss
-  - katharinalisalin
-categories:
-  - General
+  - soigia
+categories: [General]
+title: How we're transforming Material for MkDocs
 description: >
   We are transforming Material for MkDocs to ensure its community continues to thrive and doubling down on our commitment to Open Source.
-title: How we're transforming Material for MkDocs
 ---
 
 # Transforming Material for MkDocs
