@@ -36,7 +36,7 @@ copyright: Copyright &copy; 2016 - 2025 soigia
 # Configuration
 theme:
   name: material
-  # custom_dir: material/overrides
+  custom_dir: material/overrides
   features:
     - content.action.edit
     - content.action.view
@@ -46,7 +46,7 @@ theme:
     # - content.footnote.tooltips
     # - content.tabs.link
     - content.tooltips
-    # - header.autohide
+    - header.autohide
     # - navigation.expand
     - navigation.footer
     - navigation.indexes
@@ -78,7 +78,7 @@ theme:
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: black
+      primary: indigo
       accent: indigo
       toggle:
         icon: material/toggle-switch-off
@@ -138,9 +138,7 @@ markdown_extensions:
       smart_enable: all
   - pymdownx.caret
   - pymdownx.details
-  - pymdownx.emoji:
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.emoji
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

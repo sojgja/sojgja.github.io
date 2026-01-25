@@ -1,48 +1,520 @@
-/* Mở rộng toàn bộ nội dung ra full width */
+/* ============================================
+   Professional Blog Styling
+   ============================================ */
+
+/* ============================================
+   Typography & Base Styles
+   ============================================ */
+
+/* Improved text rendering */
+.md-content {
+    text-align: justify;
+    line-height: 1.8;
+    font-size: 16px;
+    color: var(--md-default-fg-color);
+}
+
+/* Landing page specific - override constraints */
+.landing-page {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.landing-page .md-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+
+/* Better heading styles */
+.md-content h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    line-height: 1.3;
+    color: var(--md-primary-fg-color);
+    border-bottom: 3px solid var(--md-primary-fg-color);
+    padding-bottom: 0.3em;
+}
+
+.md-content h2 {
+    font-size: 2em;
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    line-height: 1.4;
+    color: var(--md-primary-fg-color);
+    border-bottom: 2px solid var(--md-accent-fg-color);
+    padding-bottom: 0.2em;
+}
+
+.md-content h3 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-top: 1.3em;
+    margin-bottom: 0.6em;
+    line-height: 1.4;
+    color: var(--md-default-fg-color--light);
+}
+
+.md-content h4 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin-top: 1.2em;
+    margin-bottom: 0.5em;
+}
+
+/* ============================================
+   Layout & Container
+   ============================================ */
+
 .md-container {
     max-width: 100% !important;
 }
 
-/* Nếu muốn cả sidebar cũng full height */
-.md-sidebar {
-    max-width: 500px;  /* bạn có thể tăng/decrease */
-}
-
-/* Optional: giảm padding giữa các section */
-.md-content {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-/* Maximum space for text block */
 .md-grid {
-  max-width: 100%; /* or 100%, if you want to stretch to full-width */
+    max-width: 100%;
 }
 
-/* Canh đều tất cả đoạn text trong content */
 .md-content {
-    text-align: justify;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* Optional: canh đều cả các list item */
+.md-sidebar {
+    max-width: 300px;
+}
+
+/* ============================================
+   Images & Media
+   ============================================ */
+
+/* Professional image styling */
+.md-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    margin: 2em auto;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.md-content img:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Image captions */
+.md-content img + em {
+    display: block;
+    text-align: center;
+    font-style: italic;
+    color: var(--md-default-fg-color--light);
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+    font-size: 0.9em;
+}
+
+/* ============================================
+   Code Blocks
+   ============================================ */
+
+/* Enhanced code block styling */
+.md-content pre {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5em;
+    overflow-x: auto;
+    margin: 1.5em 0;
+    background: var(--md-code-bg-color);
+    border-left: 4px solid var(--md-primary-fg-color);
+}
+
+.md-content code {
+    background: var(--md-code-bg-color);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.md-content pre code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* ============================================
+   Lists
+   ============================================ */
+
+.md-content ul,
+.md-content ol {
+    margin: 1em 0;
+    padding-left: 2em;
+    line-height: 1.8;
+}
+
 .md-content li {
     text-align: left;
+    margin: 0.5em 0;
 }
 
-/* Optional: canh đều trong các thẻ blockquote */
+.md-content ul li::marker {
+    color: var(--md-primary-fg-color);
+}
+
+.md-content ol li::marker {
+    color: var(--md-primary-fg-color);
+    font-weight: 600;
+}
+
+/* ============================================
+   Blockquotes
+   ============================================ */
+
 .md-content blockquote {
+    border-left: 4px solid var(--md-primary-fg-color);
+    padding-left: 1.5em;
+    margin: 1.5em 0;
+    font-style: italic;
+    background: var(--md-default-bg-color--dark);
+    padding: 1em 1.5em;
+    border-radius: 4px;
     text-align: left;
 }
 
-.md-header {
-  display: none;
+/* ============================================
+   Links
+   ============================================ */
+
+.md-content a {
+    font-weight: 600;
+    color: var(--md-primary-fg-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
+.md-content a:hover {
+    color: var(--md-accent-fg-color);
+    border-bottom-color: var(--md-accent-fg-color);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
+.md-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2em 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.md-content table th {
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+    padding: 1em;
+    text-align: left;
+    font-weight: 600;
+}
+
+.md-content table td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-content table tr:hover {
+    background: var(--md-default-bg-color--dark);
+}
+
+/* ============================================
+   Blog Specific Styles
+   ============================================ */
+
+/* Blog post metadata */
+.md-content .blog-post-meta {
+    color: var(--md-default-fg-color--light);
+    font-size: 0.9em;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Blog post title */
+.md-content h1:first-child {
+    margin-top: 0;
+}
+
+/* ============================================
+   Admonitions (Info boxes)
+   ============================================ */
+
+.md-content .admonition {
+    border-radius: 8px;
+    margin: 1.5em 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid;
+}
+
+.md-content .admonition-title {
+    font-weight: 600;
+    padding: 0.8em 1em;
+}
+
+.md-content .admonition-content {
+    padding: 1em;
+}
+
+/* ============================================
+   Horizontal Rules
+   ============================================ */
+
+.md-content hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--md-primary-fg-color), transparent);
+    margin: 3em 0;
+}
+
+/* ============================================
+   Header & Footer
+   ============================================ */
+
+/* Đảm bảo Header và Footer luôn hiển thị */
+.md-header {
+    display: flex !important;
+}
 
 .md-footer {
-  display: none;
+    display: block !important;
 }
 
-a{
-  font-weight: bold;
+/* Search button styling - đảm bảo search luôn hiển thị */
+.md-search {
+    display: block !important;
+}
+
+.md-search__input {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Adjust content để không bị che bởi header */
+.md-main__inner {
+    margin-top: 0;
+}
+
+/* Homepage specific styles */
+.homepage .hero {
+    margin-top: 0;
+    padding-top: 8rem;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .md-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 15px;
+    }
+    
+    .md-content h1 {
+        font-size: 2em;
+    }
+    
+    .md-content h2 {
+        font-size: 1.75em;
+    }
+    
+    .md-content h3 {
+        font-size: 1.4em;
+    }
+    
+    .md-content img {
+        margin: 1.5em auto;
+    }
+    
+    .md-sidebar {
+        max-width: 250px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .md-content {
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+        font-size: 14px;
+    }
+    
+    .md-content h1 {
+        font-size: 1.75em;
+    }
+    
+    .md-content h2 {
+        font-size: 1.5em;
+    }
+    
+    .md-content pre {
+        padding: 1em;
+        font-size: 0.85em;
+    }
+}
+
+/* ============================================
+   Animations & Transitions
+   ============================================ */
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Fade in animation for content */
+.md-content {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+    .md-content {
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .md-content img {
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+    
+    .md-content pre {
+        page-break-inside: avoid;
+    }
+    
+    .md-sidebar {
+        display: none;
+    }
+}
+
+/* ============================================
+   Dark Mode Enhancements
+   ============================================ */
+
+[data-md-color-scheme="slate"] .md-content img {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-md-color-scheme="slate"] .md-content pre {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-md-color-scheme="slate"] .md-content table {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Special Elements
+   ============================================ */
+
+/* Emoji styling */
+.md-content .emoji {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+/* Badge/Tag styling */
+.md-content .badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin: 0 0.2em;
+}
+
+/* ============================================
+   Code Syntax Highlighting Enhancements
+   ============================================ */
+
+.md-content .highlight {
+    position: relative;
+}
+
+.md-content .highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--md-primary-fg-color), var(--md-accent-fg-color));
+    border-radius: 8px 8px 0 0;
+}
+
+/* ============================================
+   Improved Spacing
+   ============================================ */
+
+.md-content > *:first-child {
+    margin-top: 0;
+}
+
+.md-content > *:last-child {
+    margin-bottom: 0;
+}
+
+.md-content p {
+    margin: 1em 0;
+}
+
+.md-content p + p {
+    margin-top: 1.5em;
+}
+
+/* ============================================
+   Focus States for Accessibility
+   ============================================ */
+
+.md-content a:focus,
+.md-content button:focus {
+    outline: 2px solid var(--md-primary-fg-color);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   Selection Color
+   ============================================ */
+
+::selection {
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+}
+
+::-moz-selection {
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
 }

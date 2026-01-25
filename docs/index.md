@@ -1,8 +1,4 @@
 ---
-title: 🏠
-hide:
-  - navigation
-  - toc
+title: Home
+template: home.html
 ---
-
-<meta http-equiv="refresh" content="0; url=./blog/" />

@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Developer & Algorithmic Trader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        .gradient-text { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .code-keyword { color: #c792ea; }
+        .code-string { color: #c3e88d; }
+        .code-function { color: #82aaff; }
+        .code-comment { color: #546e7a; }
+        .code-number { color: #b5cea8; }
+        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.6s ease-in; }
+    </style>
+</head>
+<body class="bg-white">
+
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, #6366f1 1px, transparent 0); background-size: 40px 40px;"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center animate-fade-in">
+        <div class="mb-8">
+            <span class="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold mb-6">
+                Backend Developer • Crypto Trader • Forex EA Developer
+            </span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-6 leading-relaxed">
+            <div class="mb-2">Xây dựng hệ thống</div>
+            <div class="mb-2"><span class="gradient-text">Trading tự động</span></div>
+            <div>chuyên nghiệp</div>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto font-medium">
+            Chuyên phát triển trading bots cho Cryptocurrency và Expert Advisors (EA) cho Forex market. 
+            Biến mọi chiến lược trading thành hệ thống tự động hoàn chỉnh với backtesting chuyên nghiệp, 
+            risk management thông minh và backend services hiệu năng cao
+        </p>
+        <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+            Từ Python trading bots cho Binance, Bybit đến MQL4/MQL5 EAs cho MetaTrader 4/5, 
+            tôi chia sẻ kiến thức thực tế từ việc xây dựng và vận hành các trading systems production-ready 
+            trên cả hai thị trường lớn nhất thế giới
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="./blog/" class="group inline-flex items-center justify-center px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl hover-lift">
+                Khám phá Blog
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+            <a href="./python/" class="inline-flex items-center justify-center px-8 py-4 border-2 border-indigo-600 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all hover-lift">
+                Xem Projects
+            </a>
+        </div>
+        
+        <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div>
+                <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">16+</div>
+                <div class="text-gray-600 text-sm md:text-base">Bài viết Blog</div>
+            </div>
+            <div>
+                <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">100%</div>
+                <div class="text-gray-600 text-sm md:text-base">Open Source</div>
+            </div>
+            <div>
+                <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">24/7</div>
+                <div class="text-gray-600 text-sm md:text-base">Luôn sẵn sàng</div>
+            </div>
+            <div>
+                <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">∞</div>
+                <div class="text-gray-600 text-sm md:text-base">Kiến thức chia sẻ</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="space-y-6">
+                <div>
+                    <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Về Tôi</span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-6">
+                        Backend Developer &<br/>
+                        <span class="gradient-text">Algorithmic Trader</span>
+                    </h2>
+                </div>
+                <p class="text-lg text-gray-700 leading-relaxed font-medium">
+                    Chuyên xây dựng trading systems production-ready cho cả Cryptocurrency và Forex markets. 
+                    Từ Python trading bots cho Binance/Bybit xử lý hàng nghìn orders/giây đến Expert Advisors (EA) 
+                    cho MetaTrader 4/5 với MQL4/MQL5, tôi giúp biến mọi chiến lược trading thành hệ thống tự động 
+                    hoàn chỉnh với performance, reliability và scalability cao.
+                </p>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    Trong blog này, bạn sẽ tìm thấy các case studies chi tiết về cả crypto trading bots và Forex EAs, 
+                    code examples thực tế, và best practices từ việc xây dựng trading systems từ đầu đến deployment. 
+                    Mỗi bài viết đều được viết dựa trên kinh nghiệm thực tế, với focus vào những vấn đề thực sự bạn sẽ 
+                    gặp phải khi build production systems cho cả hai thị trường.
+                </p>
+                <div class="flex flex-wrap gap-3 pt-4">
+                    <span class="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium">Python</span>
+                    <span class="px-4 py-2 bg-purple-50 text-purple-700 rounded-lg font-medium">MQL4/MQL5</span>
+                    <span class="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium">Forex EA</span>
+                    <span class="px-4 py-2 bg-green-50 text-green-700 rounded-lg font-medium">Crypto Bots</span>
+                    <span class="px-4 py-2 bg-yellow-50 text-yellow-700 rounded-lg font-medium">MetaTrader</span>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-3xl transform rotate-3"></div>
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop" 
+                     alt="Backend Development" 
+                     class="relative rounded-3xl shadow-2xl hover-lift w-full">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Chuyên Môn</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Kỹ năng & Công nghệ
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Từ low-latency trading infrastructure đến scalable data pipelines, 
+                khám phá các công nghệ và kỹ thuật được sử dụng trong production systems
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">🐍</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Backend Development</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Thiết kế và xây dựng high-performance backend systems với Python & FastAPI, 
+                    xử lý hàng triệu requests với latency thấp. Từ RESTful APIs đến WebSocket 
+                    real-time connections, đảm bảo reliability và scalability cho trading infrastructure.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">Python</span>
+                    <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">FastAPI</span>
+                    <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">RESTful</span>
+                    <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">WebSocket</span>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">📈</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Algorithmic Trading</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Phát triển và optimize các trading strategies với backtesting engines chuyên nghiệp, 
+                    implement risk management systems tự động, và xây dựng real-time data processing 
+                    pipelines cho high-frequency trading trên cryptocurrency markets.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium">Backtesting</span>
+                    <span class="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium">Strategy</span>
+                    <span class="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium">Risk Mgmt</span>
+                    <span class="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium">Real-time</span>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">⚡</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">System Architecture</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Thiết kế enterprise-grade architectures với focus vào low-latency và high-throughput. 
+                    Sử dụng message queues, distributed caching, ETL pipelines, và microservices để 
+                    đảm bảo hệ thống có thể scale từ prototype đến production với hàng triệu transactions.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">Low-latency</span>
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">Scalable</span>
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">ETL</span>
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">Distributed</span>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">🔧</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">API Integration</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Tích hợp sâu với các exchange APIs (Binance, Bybit, OKX) để xây dựng unified 
+                    trading interfaces. Xử lý rate limits, implement retry strategies, và xây dựng 
+                    data aggregation systems để normalize data từ nhiều sources khác nhau.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium">Binance</span>
+                    <span class="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium">Bybit</span>
+                    <span class="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium">OKX</span>
+                    <span class="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium">Unified</span>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">📊</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Data Engineering</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Xây dựng robust ETL pipelines để xử lý hàng GB dữ liệu trading mỗi ngày. 
+                    Optimize time-series databases cho fast queries, implement real-time analytics 
+                    dashboards, và xây dựng data warehouses để support backtesting và strategy research.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg text-sm font-medium">ETL</span>
+                    <span class="px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg text-sm font-medium">Time-Series</span>
+                    <span class="px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg text-sm font-medium">Visualization</span>
+                    <span class="px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg text-sm font-medium">Analytics</span>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">🛡️</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Risk Management</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Xây dựng automated risk management systems với dynamic position sizing, 
+                    intelligent stop-loss/take-profit algorithms, và portfolio-level risk controls. 
+                    Implement real-time monitoring và alerting để đảm bảo trading systems luôn 
+                    hoạt động trong risk parameters đã định.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-sm font-medium">Position Sizing</span>
+                    <span class="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-sm font-medium">Stop Loss</span>
+                    <span class="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-sm font-medium">Take Profit</span>
+                    <span class="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-sm font-medium">Portfolio</span>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="text-5xl mb-6">💱</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Forex EA Development</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Phát triển Expert Advisors (EA) chuyên nghiệp cho MetaTrader 4/5 sử dụng MQL4/MQL5. 
+                    Từ scalping EAs với execution speed tối ưu đến swing trading EAs với multi-timeframe 
+                    analysis, xây dựng EAs production-ready với backtesting và forward testing đầy đủ.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm font-medium">MQL4/MQL5</span>
+                    <span class="px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm font-medium">MetaTrader</span>
+                    <span class="px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm font-medium">EA Development</span>
+                    <span class="px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm font-medium">Forex</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Markets Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Thị Trường</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Trading trên Nhiều Thị Trường
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Chuyên phát triển trading systems cho cả Cryptocurrency và Forex markets
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-10 rounded-3xl border-2 border-indigo-200 hover-lift">
+                <div class="flex items-center mb-6">
+                    <div class="text-5xl mr-4">₿</div>
+                    <div>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-2">Cryptocurrency Trading</h3>
+                        <p class="text-indigo-600 font-semibold">Python Trading Bots</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6 leading-relaxed text-lg">
+                    Phát triển trading bots cho các sàn giao dịch cryptocurrency lớn như Binance, Bybit, OKX. 
+                    Xây dựng systems xử lý spot trading, futures trading, và margin trading với real-time 
+                    data processing và order execution ở mức microsecond.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Spot, Futures & Margin Trading</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">WebSocket Real-time Data</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Multi-exchange Support</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">High-frequency Trading Support</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-10 rounded-3xl border-2 border-blue-200 hover-lift">
+                <div class="flex items-center mb-6">
+                    <div class="text-5xl mr-4">💱</div>
+                    <div>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-2">Forex Trading</h3>
+                        <p class="text-blue-600 font-semibold">Expert Advisors (EA)</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6 leading-relaxed text-lg">
+                    Phát triển Expert Advisors (EA) chuyên nghiệp cho MetaTrader 4/5 sử dụng MQL4/MQL5. 
+                    Xây dựng EAs từ scalping strategies với execution speed tối ưu đến swing trading 
+                    với multi-timeframe analysis và advanced risk management.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">MetaTrader 4 & 5 Support</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">MQL4/MQL5 Development</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Strategy Tester Integration</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Multi-timeframe & Multi-currency</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Tính Năng</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Tại Sao Chọn Trading Systems của Tôi?
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Các tính năng và lợi ích khi sử dụng trading systems được phát triển chuyên nghiệp
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Backtesting Chuyên Nghiệp</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Mọi strategy đều được backtest kỹ lưỡng trên historical data với walk-forward analysis 
+                    và parameter optimization để đảm bảo performance trên unseen data.
+                </p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Risk Management Tự Động</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Intelligent risk management với dynamic position sizing, adaptive stop-loss/take-profit, 
+                    và portfolio-level controls để bảo vệ capital trong mọi market conditions.
+                </p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">High Performance</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Optimized code với low-latency execution, xử lý hàng nghìn orders/giây với 
+                    minimal slippage và maximum fill rate trên cả crypto và forex markets.
+                </p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Real-time Monitoring</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Comprehensive monitoring và alerting systems với real-time dashboards, 
+                    performance metrics tracking, và automated notifications cho mọi events quan trọng.
+                </p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Code Quality & Documentation</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Production-ready code với comprehensive documentation, clean architecture, 
+                    và best practices. Dễ dàng maintain, extend và customize theo nhu cầu.
+                </p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 hover-lift">
+                <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">24/7 Support & Updates</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Continuous support và regular updates để đảm bảo systems luôn tương thích với 
+                    market changes và exchange API updates. Bug fixes và feature enhancements thường xuyên.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Quy Trình</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Từ Ý Tưởng Đến Production
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Quy trình phát triển trading systems chuyên nghiệp và có hệ thống
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-3xl font-bold text-indigo-600">1</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Strategy Design</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Phân tích và thiết kế trading strategy dựa trên market analysis, 
+                    technical indicators, và risk parameters.
+                </p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-3xl font-bold text-purple-600">2</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Backtesting</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Backtest strategy trên historical data với walk-forward analysis 
+                    và parameter optimization để validate performance.
+                </p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-3xl font-bold text-blue-600">3</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Development</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Implement strategy thành trading bot/EA với production-ready code, 
+                    error handling, và comprehensive logging.
+                </p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-3xl font-bold text-green-600">4</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Deployment</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Deploy với paper trading trước, sau đó live trading với monitoring 
+                    và continuous optimization.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Code Example Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Code Examples</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Chia sẻ Code thực tế
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Code examples từ các dự án trading và backend development
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-25"></div>
+                <div class="relative bg-gray-900 rounded-2xl p-8 shadow-2xl">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    </div>
+                    <pre class="text-sm text-gray-100 font-mono overflow-x-auto"><code><span class="code-keyword">from</span> backtrader <span class="code-keyword">import</span> <span class="code-function">bt</span>
+<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+
+<span class="code-keyword">class</span> <span class="code-function">TradingStrategy</span>(<span class="code-function">bt.Strategy</span>):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-keyword">self</span>):
+        <span class="code-keyword">self</span>.sma = <span class="code-function">bt.indicators.SMA</span>(
+            <span class="code-keyword">self</span>.datas[<span class="code-number">0</span>].close,
+            period=<span class="code-number">20</span>
+        )
+    
+    <span class="code-keyword">def</span> <span class="code-function">next</span>(<span class="code-keyword">self</span>):
+        <span class="code-keyword">if</span> <span class="code-keyword">not</span> <span class="code-keyword">self</span>.position:
+            <span class="code-keyword">if</span> <span class="code-keyword">self</span>.data.close[<span class="code-number">0</span>] > <span class="code-keyword">self</span>.sma[<span class="code-number">0</span>]:
+                <span class="code-keyword">self</span>.<span class="code-function">buy</span>()
+        <span class="code-keyword">else</span>:
+            <span class="code-keyword">if</span> <span class="code-keyword">self</span>.data.close[<span class="code-number">0</span>] < <span class="code-keyword">self</span>.sma[<span class="code-number">0</span>]:
+                <span class="code-keyword">self</span>.<span class="code-function">sell</span>()</code></pre>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <h3 class="text-3xl font-bold text-gray-900">Backtesting với Backtrader</h3>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    Sử dụng Backtrader - một trong những framework backtesting mạnh mẽ nhất cho Python - 
+                    để validate trading strategies trên historical data. Framework này cung cấp đầy đủ 
+                    tools để đánh giá performance, risk metrics, và optimize parameters một cách chuyên nghiệp.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700 text-lg">Hỗ trợ nhiều indicators và strategies</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700 text-lg">Tích hợp sẵn các analyzers (Sharpe, Drawdown, etc.)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700 text-lg">Dễ dàng visualize kết quả backtest</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Dự Án</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Case Studies & Projects
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Khám phá các dự án thực tế và case studies chi tiết từ việc xây dựng trading systems 
+                production-ready, từ concept đến deployment
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover-lift group">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=400&fit=crop" 
+                         alt="Backtesting Case Study" 
+                         class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Case Study: Backtesting BTC Futures</h3>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Phân tích toàn diện về việc backtesting một chiến lược futures BTC trên Binance 
+                        từ A-Z: từ data collection, strategy implementation, performance analysis đến 
+                        risk assessment và optimization recommendations dựa trên real metrics.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold">Backtesting</span>
+                        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold">Case Study</span>
+                        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold">Binance</span>
+                    </div>
+                    <a href="./blog/posts/case-study-backtesting-btc-futures-binance/" 
+                       class="text-indigo-600 font-semibold hover:text-indigo-700 inline-flex items-center group/link">
+                        Đọc thêm 
+                        <svg class="w-5 h-5 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover-lift group">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop" 
+                         alt="Trading Bot" 
+                         class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Trading Bot với Binance API</h3>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Step-by-step guide xây dựng một production-ready trading bot từ đầu: API integration, 
+                        order management, error handling, logging, monitoring, và deployment strategies. 
+                        Bao gồm cả best practices và common pitfalls cần tránh.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-purple-50 text-purple-700 rounded-lg text-xs font-semibold">Trading Bot</span>
+                        <span class="px-3 py-1 bg-purple-50 text-purple-700 rounded-lg text-xs font-semibold">Binance API</span>
+                        <span class="px-3 py-1 bg-purple-50 text-purple-700 rounded-lg text-xs font-semibold">Python</span>
+                    </div>
+                    <a href="./blog/posts/building-trading-bot-with-binance-api/" 
+                       class="text-indigo-600 font-semibold hover:text-indigo-700 inline-flex items-center group/link">
+                        Đọc thêm 
+                        <svg class="w-5 h-5 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover-lift group">
+                <div class="relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop" 
+                         alt="Backtesting Strategies" 
+                         class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Backtesting Trading Strategies</h3>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Xây dựng một backtesting framework hoàn chỉnh với walk-forward analysis, 
+                        parameter optimization, và comprehensive performance metrics. Học cách 
+                        tránh overfitting và đảm bảo strategies có thể generalize trên unseen data.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold">Backtesting</span>
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold">Python</span>
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold">Strategy</span>
+                    </div>
+                    <a href="./blog/posts/backtesting-trading-strategies/" 
+                       class="text-indigo-600 font-semibold hover:text-indigo-700 inline-flex items-center group/link">
+                        Đọc thêm 
+                        <svg class="w-5 h-5 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Highlights -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Blog</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Bài Viết Mới Nhất
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Khám phá các bài viết về algorithmic trading, backend development, và system architecture
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 hover:border-indigo-300 transition-all hover-lift">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Risk Management và Automation</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Xây dựng intelligent risk management systems với dynamic position sizing algorithms, 
+                    adaptive stop-loss/take-profit strategies, và portfolio-level risk controls. 
+                    Implement real-time monitoring và automated risk adjustments.
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-3 py-1 bg-red-50 text-red-700 rounded-lg text-xs font-semibold">Risk Management</span>
+                    <span class="px-3 py-1 bg-red-50 text-red-700 rounded-lg text-xs font-semibold">Automation</span>
+                </div>
+                <a href="./blog/posts/risk-management-automation/" 
+                   class="text-indigo-600 font-semibold hover:text-indigo-700 inline-flex items-center group/link">
+                    Đọc bài viết 
+                    <svg class="w-5 h-5 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 hover:border-indigo-300 transition-all hover-lift">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Low-Latency Trading System</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Deep dive vào việc thiết kế ultra-low-latency trading systems: từ network optimization, 
+                    data structure choices, đến CPU cache optimization. Học cách measure và reduce latency 
+                    ở mọi layer của system stack.
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold">Low-Latency</span>
+                    <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold">Architecture</span>
+                </div>
+                <a href="./blog/posts/low-latency-trading-system/" 
+                   class="text-indigo-600 font-semibold hover:text-indigo-700 inline-flex items-center group/link">
+                    Đọc bài viết 
+                    <svg class="w-5 h-5 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 hover:border-indigo-300 transition-all hover-lift">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Technical Indicators với Python</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Implement và optimize các technical indicators từ cơ bản đến nâng cao: RSI, MACD, 
+                    Bollinger Bands, Ichimoku, và custom indicators. Học cách sử dụng chúng effectively 
+                    trong trading strategies và tránh common mistakes.
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-3 py-1 bg-green-50 text-green-700 rounded-lg text-xs font-semibold">Technical Analysis</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-700 rounded-lg text-xs font-semibold">Python</span>
+                </div>
+                <a href="./blog/posts/technical-indicators-python/" 
+                   class="text-indigo-600 font-semibold hover:text-indigo-700 inline-flex items-center group/link">
+                    Đọc bài viết 
+                    <svg class="w-5 h-5 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technologies Stack Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Công Nghệ</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Technology Stack
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Các công nghệ và tools được sử dụng trong phát triển trading systems
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">🐍</div>
+                <h3 class="font-bold text-gray-900 mb-2">Python</h3>
+                <p class="text-sm text-gray-600">Backtrader, Pandas, NumPy, FastAPI</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">💱</div>
+                <h3 class="font-bold text-gray-900 mb-2">MQL4/MQL5</h3>
+                <p class="text-sm text-gray-600">MetaTrader 4/5, Strategy Tester</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">⚡</div>
+                <h3 class="font-bold text-gray-900 mb-2">APIs</h3>
+                <p class="text-sm text-gray-600">Binance, Bybit, OKX, REST & WebSocket</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">📊</div>
+                <h3 class="font-bold text-gray-900 mb-2">Data</h3>
+                <p class="text-sm text-gray-600">PostgreSQL, Redis, Time-series DB</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">🔧</div>
+                <h3 class="font-bold text-gray-900 mb-2">Tools</h3>
+                <p class="text-sm text-gray-600">Docker, Git, CI/CD, Monitoring</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">📈</div>
+                <h3 class="font-bold text-gray-900 mb-2">Backtesting</h3>
+                <p class="text-sm text-gray-600">Backtrader, MT5 Strategy Tester</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">🛡️</div>
+                <h3 class="font-bold text-gray-900 mb-2">Risk</h3>
+                <p class="text-sm text-gray-600">Custom Risk Management Systems</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover-lift">
+                <div class="text-4xl mb-4">📱</div>
+                <h3 class="font-bold text-gray-900 mb-2">Monitoring</h3>
+                <p class="text-sm text-gray-600">Grafana, Prometheus, Custom Dashboards</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Performance Stats Section -->
+<section class="py-24 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-200 font-semibold text-sm uppercase tracking-wide">Performance</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mt-4 mb-4">
+                Số Liệu Ấn Tượng
+            </h2>
+            <p class="text-xl text-indigo-100 max-w-2xl mx-auto">
+                Kết quả thực tế từ các trading systems đã được phát triển và deploy
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 text-center hover-lift">
+                <div class="text-5xl md:text-6xl font-bold mb-3">99.9%</div>
+                <div class="text-xl font-semibold mb-2">Uptime</div>
+                <p class="text-indigo-100 text-sm">System reliability và availability</p>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 text-center hover-lift">
+                <div class="text-5xl md:text-6xl font-bold mb-3">&lt;10ms</div>
+                <div class="text-xl font-semibold mb-2">Latency</div>
+                <p class="text-indigo-100 text-sm">Average order execution time</p>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 text-center hover-lift">
+                <div class="text-5xl md:text-6xl font-bold mb-3">10K+</div>
+                <div class="text-xl font-semibold mb-2">Orders/Day</div>
+                <p class="text-indigo-100 text-sm">Peak processing capacity</p>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 text-center hover-lift">
+                <div class="text-5xl md:text-6xl font-bold mb-3">50+</div>
+                <div class="text-xl font-semibold mb-2">Strategies</div>
+                <p class="text-indigo-100 text-sm">Backtested và deployed</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Đánh Giá</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Những Gì Người Dùng Nói
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Feedback từ những người đã sử dụng trading systems và học từ blog
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 shadow-lg hover-lift">
+                <div class="flex items-center mb-6">
+                    <div class="flex text-yellow-400 mb-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6 leading-relaxed italic">
+                    "Trading bot được phát triển rất chuyên nghiệp, xử lý orders nhanh và ổn định. 
+                    Risk management system hoạt động tuyệt vời, giúp tôi yên tâm khi để bot chạy 24/7."
+                </p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-indigo-600 font-bold text-lg">JD</span>
+                    </div>
+                    <div>
+                        <div class="font-bold text-gray-900">John Doe</div>
+                        <div class="text-sm text-gray-600">Crypto Trader</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 shadow-lg hover-lift">
+                <div class="flex items-center mb-6">
+                    <div class="flex text-yellow-400 mb-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6 leading-relaxed italic">
+                    "EA cho MetaTrader được code rất clean và professional. Backtesting results chính xác, 
+                    và documentation đầy đủ giúp tôi dễ dàng customize theo nhu cầu."
+                </p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-blue-600 font-bold text-lg">SM</span>
+                    </div>
+                    <div>
+                        <div class="font-bold text-gray-900">Sarah Miller</div>
+                        <div class="text-sm text-gray-600">Forex Trader</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 shadow-lg hover-lift">
+                <div class="flex items-center mb-6">
+                    <div class="flex text-yellow-400 mb-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6 leading-relaxed italic">
+                    "Blog rất hữu ích với case studies chi tiết và code examples thực tế. 
+                    Đã học được rất nhiều về backtesting và risk management từ các bài viết."
+                </p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-green-600 font-bold text-lg">MC</span>
+                    </div>
+                    <div>
+                        <div class="font-bold text-gray-900">Mike Chen</div>
+                        <div class="text-sm text-gray-600">Algorithmic Trader</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">So Sánh</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Crypto Bots vs Forex EAs
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                So sánh chi tiết giữa Python trading bots và MetaTrader Expert Advisors
+            </p>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold">Tính Năng</th>
+                            <th class="px-6 py-4 text-center font-semibold">Python Trading Bots</th>
+                            <th class="px-6 py-4 text-center font-semibold">Forex EAs (MQL)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Platform</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Binance, Bybit, OKX</td>
+                            <td class="px-6 py-4 text-center text-gray-600">MetaTrader 4/5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Language</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Python</td>
+                            <td class="px-6 py-4 text-center text-gray-600">MQL4/MQL5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Execution Speed</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Very Fast (&lt;10ms)</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Ultra Fast (&lt;5ms)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Backtesting</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Backtrader, Custom</td>
+                            <td class="px-6 py-4 text-center text-gray-600">MT Strategy Tester</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Flexibility</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Very High</td>
+                            <td class="px-6 py-4 text-center text-gray-600">High</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Market</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Cryptocurrency</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Forex</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">Complexity</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Medium-High</td>
+                            <td class="px-6 py-4 text-center text-gray-600">Medium</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partners/Exchanges Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Đối Tác</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Exchanges & Platforms
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Các exchanges và platforms mà tôi đã tích hợp và phát triển trading systems
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center hover:shadow-lg transition-all hover-lift">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">₿</div>
+                    <div class="font-bold text-gray-900">Binance</div>
+                    <div class="text-sm text-gray-600 mt-1">Spot & Futures</div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center hover:shadow-lg transition-all hover-lift">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">💱</div>
+                    <div class="font-bold text-gray-900">Bybit</div>
+                    <div class="text-sm text-gray-600 mt-1">Derivatives</div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center hover:shadow-lg transition-all hover-lift">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">⚡</div>
+                    <div class="font-bold text-gray-900">OKX</div>
+                    <div class="text-sm text-gray-600 mt-1">Multi-asset</div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center hover:shadow-lg transition-all hover-lift">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📊</div>
+                    <div class="font-bold text-gray-900">MetaTrader 4</div>
+                    <div class="text-sm text-gray-600 mt-1">Forex Platform</div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center hover:shadow-lg transition-all hover-lift">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📈</div>
+                    <div class="font-bold text-gray-900">MetaTrader 5</div>
+                    <div class="text-sm text-gray-600 mt-1">Forex Platform</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-12 text-center">
+            <p class="text-gray-600 mb-6">
+                Và nhiều exchanges và platforms khác...
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium">REST APIs</span>
+                <span class="px-4 py-2 bg-purple-50 text-purple-700 rounded-lg font-medium">WebSocket</span>
+                <span class="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium">FIX Protocol</span>
+                <span class="px-4 py-2 bg-green-50 text-green-700 rounded-lg font-medium">MQL Integration</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">FAQ</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Câu Hỏi Thường Gặp
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Những câu hỏi phổ biến về trading systems và development
+            </p>
+        </div>
+        
+        <div class="space-y-6">
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Tôi có thể sử dụng trading bots cho cả Crypto và Forex không?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Có! Tôi phát triển cả Python trading bots cho cryptocurrency exchanges (Binance, Bybit, OKX) 
+                    và Expert Advisors (EA) cho MetaTrader 4/5 cho Forex market. Mỗi platform có những đặc điểm riêng 
+                    và tôi sẽ giúp bạn chọn giải pháp phù hợp nhất.
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Làm thế nào để đảm bảo trading strategy hoạt động tốt?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Mọi strategy đều được backtest kỹ lưỡng trên historical data với walk-forward analysis để tránh overfitting. 
+                    Sau đó, chúng ta sẽ paper trade trước khi deploy live. Tôi cũng implement comprehensive risk management 
+                    và monitoring để đảm bảo systems hoạt động trong mọi market conditions.
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Tôi có cần kiến thức lập trình để sử dụng trading systems không?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Không bắt buộc, nhưng có kiến thức cơ bản về Python hoặc MQL sẽ giúp bạn customize và maintain systems tốt hơn. 
+                    Tuy nhiên, tất cả code đều được document đầy đủ và tôi cung cấp hướng dẫn chi tiết để bạn có thể sử dụng 
+                    ngay cả khi chưa có nhiều kinh nghiệm lập trình.
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Trading systems có thể xử lý được bao nhiêu orders/giây?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Tùy thuộc vào platform và infrastructure. Python bots có thể xử lý hàng nghìn orders/giây với proper optimization. 
+                    Forex EAs trên MetaTrader có thể execute orders trong vài milliseconds. Tôi sẽ optimize systems dựa trên 
+                    requirements cụ thể của bạn và market conditions.
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Làm thế nào để monitor và maintain trading systems?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Tôi implement comprehensive monitoring systems với real-time dashboards, performance metrics tracking, 
+                    và automated alerts. Bạn sẽ nhận được notifications cho mọi events quan trọng. Tôi cũng cung cấp 
+                    documentation đầy đủ và support để giúp bạn maintain systems một cách hiệu quả.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Dịch Vụ</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Những Gì Tôi Cung Cấp
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Các dịch vụ phát triển trading systems chuyên nghiệp và toàn diện
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-gradient-to-br from-indigo-50 to-white p-8 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition-all hover-lift">
+                <div class="w-16 h-16 bg-indigo-600 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Custom Trading Bot Development</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Phát triển trading bots tùy chỉnh cho cryptocurrency exchanges với Python. 
+                    Từ strategy implementation đến deployment và monitoring.
+                </p>
+                <ul class="space-y-2 text-gray-600">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-indigo-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Strategy design & implementation</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-indigo-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Backtesting & optimization</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-indigo-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Risk management integration</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-indigo-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Deployment & monitoring setup</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border-2 border-blue-200 hover:border-blue-400 transition-all hover-lift">
+                <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Forex EA Development</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Phát triển Expert Advisors cho MetaTrader 4/5 với MQL4/MQL5. 
+                    Từ scalping EAs đến swing trading systems.
+                </p>
+                <ul class="space-y-2 text-gray-600">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>MQL4/MQL5 programming</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Strategy tester optimization</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Multi-timeframe analysis</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Forward testing & validation</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl border-2 border-purple-200 hover:border-purple-400 transition-all hover-lift">
+                <div class="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Consulting & Training</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Tư vấn về trading systems architecture, code review, và training 
+                    để bạn có thể tự phát triển trading systems.
+                </p>
+                <ul class="space-y-2 text-gray-600">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Architecture consulting</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Code review & optimization</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Best practices training</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Ongoing support & maintenance</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline Section -->
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Hành Trình</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-4">
+                Quy Trình Làm Việc
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Từ concept đến production deployment - quy trình phát triển trading systems
+            </p>
+        </div>
+        
+        <div class="relative">
+            <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-indigo-200 via-purple-200 to-pink-200 hidden md:block"></div>
+            
+            <div class="space-y-12">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-6 md:mb-0">
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">1</div>
+                                <h3 class="text-2xl font-bold text-gray-900">Discovery & Planning</h3>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Phân tích requirements, market research, và strategy design. 
+                                Xác định risk parameters, performance goals, và technical constraints.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12"></div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-6 md:mb-0 order-2 md:order-1"></div>
+                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">2</div>
+                                <h3 class="text-2xl font-bold text-gray-900">Backtesting & Validation</h3>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Backtest strategy trên historical data với walk-forward analysis. 
+                                Optimize parameters và validate performance trên unseen data.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-6 md:mb-0">
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">3</div>
+                                <h3 class="text-2xl font-bold text-gray-900">Development & Testing</h3>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Implement strategy thành production-ready code với comprehensive 
+                                error handling, logging, và unit tests. Paper trading để validate.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12"></div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-6 md:mb-0 order-2 md:order-1"></div>
+                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">4</div>
+                                <h3 class="text-2xl font-bold text-gray-900">Deployment & Monitoring</h3>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Deploy với monitoring systems, alerts, và dashboards. 
+                                Continuous optimization và performance tracking.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">Liên Hệ</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-6">
+                    Hãy Bắt Đầu<br/>
+                    <span class="gradient-text">Dự Án Của Bạn</span>
+                </h2>
+                <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                    Bạn có một trading strategy muốn automate? Cần tư vấn về trading systems architecture? 
+                    Hoặc muốn hợp tác phát triển? Hãy liên hệ với tôi!
+                </p>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 mb-1">Email</h3>
+                            <a href="mailto:contact@example.com" class="text-indigo-600 hover:text-indigo-700">
+                                contact@example.com
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 mb-1">Social Media</h3>
+                            <div class="flex gap-4 mt-2">
+                                <a href="https://github.com/sojgja" target="_blank" class="text-gray-600 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://x.com/sojgja" target="_blank" class="text-gray-600 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://bsky.app/profile/sojgja" target="_blank" class="text-gray-600 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 mb-1">Response Time</h3>
+                            <p class="text-gray-600">Thường phản hồi trong vòng 24 giờ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl border-2 border-indigo-200">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Gửi Tin Nhắn</h3>
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tên của bạn</label>
+                        <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Nhập tên của bạn">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="your.email@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Loại dự án</label>
+                        <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option>Trading Bot Development</option>
+                            <option>Forex EA Development</option>
+                            <option>Consulting</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tin nhắn</label>
+                        <textarea rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Mô tả dự án của bạn..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl hover-lift">
+                        Gửi Tin Nhắn
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-24 gradient-bg">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Bắt đầu hành trình của bạn</h2>
+        <p class="text-xl text-indigo-100 mb-10 leading-relaxed">
+            Khám phá các bài viết chi tiết về algorithmic trading, backend architecture, và case studies 
+            thực tế từ production systems. Mỗi bài viết đều có code examples đầy đủ, best practices, 
+            và lessons learned từ việc xây dựng trading systems thực tế.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="./blog/" 
+               class="group inline-flex items-center justify-center px-10 py-5 bg-white text-indigo-600 font-bold rounded-xl hover:bg-gray-50 transition-all shadow-2xl hover:shadow-3xl hover-lift text-lg">
+                Xem Tất Cả Bài Viết
+                <svg class="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+            <a href="./python/" 
+               class="group inline-flex items-center justify-center px-10 py-5 border-2 border-white text-white font-bold rounded-xl hover:bg-white/10 transition-all hover-lift text-lg">
+                Xem Projects
+                <svg class="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
