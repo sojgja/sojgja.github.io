@@ -10,7 +10,13 @@ description: >
 
 # Xây dựng RESTful API cho Trading
 
-RESTful APIs là cách standard để expose trading functionality. Trong bài viết này, chúng ta sẽ xây dựng trading API với FastAPI.
+![RESTful API Development](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop)
+
+Trong kiến trúc của modern trading systems, RESTful APIs đóng vai trò như những giao diện chuẩn mực để expose trading functionality cho các clients khác nhau, từ web applications, mobile apps, đến các trading bots và third-party integrations. Không giống như WebSocket APIs được thiết kế cho real-time data streaming, RESTful APIs cung cấp một mô hình request-response đơn giản, stateless, và dễ sử dụng, phù hợp cho các operations như query historical data, place orders, check account balance, và retrieve portfolio information. Với sự phổ biến của REST architecture và sự hỗ trợ rộng rãi từ các frameworks và tools, việc xây dựng một RESTful API tốt không chỉ giúp bạn expose functionality một cách dễ dàng, mà còn đảm bảo API của bạn có thể được sử dụng bởi bất kỳ client nào, bất kể platform hay programming language.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau xây dựng một RESTful API hoàn chỉnh cho trading systems sử dụng FastAPI - một framework Python hiện đại, nhanh chóng, và được thiết kế đặc biệt cho việc xây dựng APIs với automatic OpenAPI documentation, type validation, và async support. Chúng ta sẽ học cách thiết kế API endpoints theo RESTful principles, implement authentication và authorization (JWT tokens, API keys), rate limiting để bảo vệ API khỏi abuse, error handling và validation, logging và monitoring, và quan trọng nhất là đảm bảo API có performance tốt và có thể scale. Chúng ta cũng sẽ thảo luận về các best practices như versioning APIs, pagination cho large datasets, filtering và sorting, và cách document APIs một cách tốt nhất.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc setup FastAPI project, thiết kế API endpoints và data models, implement authentication và authorization, đến việc integrate với trading logic, add rate limiting và caching, và deploy API lên production. Chúng ta cũng sẽ học cách test APIs, monitor performance, và implement security best practices. Cuối cùng, bạn sẽ có trong tay một RESTful API mạnh mẽ, well-documented, và production-ready cho trading systems.
 
 <!-- more -->
 

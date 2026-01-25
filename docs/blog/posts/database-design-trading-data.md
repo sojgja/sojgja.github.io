@@ -10,9 +10,17 @@ description: >
 
 # Database Design cho Trading Data
 
-Trading data có đặc thù riêng: high volume, time-series nature, và cần query nhanh. Trong bài viết này, chúng ta sẽ thiết kế database system tối ưu cho trading data.
+![Database Design for Trading](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop)
+
+Trong thế giới của algorithmic trading và quantitative finance, dữ liệu là tài sản quý giá nhất, và việc lưu trữ, quản lý, và truy xuất dữ liệu một cách hiệu quả có thể quyết định thành bại của toàn bộ hệ thống trading. Trading data có những đặc thù riêng biệt mà không phải database nào cũng có thể xử lý tốt: khối lượng dữ liệu cực lớn (hàng triệu records mỗi ngày cho một trading pair), tính chất time-series với các query patterns đặc biệt, yêu cầu về tốc độ truy xuất real-time, và nhu cầu về khả năng scale horizontal. Một database được thiết kế tốt không chỉ giúp bạn lưu trữ dữ liệu một cách hiệu quả, mà còn cho phép bạn query và phân tích dữ liệu với tốc độ cao, hỗ trợ các operations phức tạp như aggregations, window functions, và time-based joins.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau thiết kế một database system tối ưu cho trading data, từ việc lựa chọn loại database phù hợp (time-series databases như InfluxDB, TimescaleDB, hay traditional relational databases như PostgreSQL với optimizations), thiết kế schema để tối ưu hóa storage và query performance, implement indexing strategies cho time-series data, đến việc xây dựng data partitioning và archiving strategies. Chúng ta sẽ học cách xử lý các challenges đặc thù như compression cho historical data, partitioning theo thời gian để tăng tốc độ query, và implement caching layers để giảm latency cho real-time queries. Chúng ta cũng sẽ thảo luận về các trade-offs giữa different database technologies và khi nào nên sử dụng cái nào.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc phân tích requirements và query patterns, thiết kế schema với các best practices cho time-series data, implement indexing và partitioning strategies, đến việc optimize queries và monitor performance. Chúng ta cũng sẽ học cách implement data retention policies, backup và recovery strategies, và scaling strategies cho khi dữ liệu tăng trưởng. Cuối cùng, bạn sẽ có trong tay một database system mạnh mẽ, có thể xử lý hàng triệu records mỗi ngày và query chúng với tốc độ cực nhanh.
 
 <!-- more -->
+
+![Trading Data Characteristics](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=400&fit=crop)
 
 ## Đặc điểm Trading Data
 

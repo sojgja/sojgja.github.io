@@ -10,7 +10,13 @@ description: >
 
 # Pattern Recognition trong Trading
 
-Chart patterns là công cụ mạnh mẽ trong technical analysis. Trong bài viết này, chúng ta sẽ implement pattern recognition với Python.
+![Chart Pattern Recognition](https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&h=600&fit=crop)
+
+Trong thế giới của technical analysis, chart patterns là những công cụ mạnh mẽ giúp các nhà giao dịch dự đoán các biến động giá trong tương lai dựa trên các mẫu hình được hình thành bởi hành động giá trong quá khứ. Từ những patterns cổ điển như Head and Shoulders, Double Top/Bottom, Triangles, đến những patterns phức tạp hơn như Cup and Handle, Flags và Pennants, mỗi pattern đều mang trong mình một câu chuyện về tâm lý thị trường và sự cân bằng giữa lực mua và lực bán. Việc nhận diện chính xác các patterns này không chỉ giúp các nhà giao dịch xác định các điểm vào lệnh và thoát lệnh tối ưu, mà còn cung cấp insights về khả năng đảo chiều hoặc tiếp tục xu hướng của thị trường.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau implement một hệ thống pattern recognition hoàn chỉnh sử dụng Python, từ việc phát hiện các chart patterns phổ biến nhất trong trading, đến việc validate và filter các patterns để tránh false signals. Chúng ta sẽ sử dụng các kỹ thuật từ computer vision và signal processing để nhận diện patterns một cách tự động, kết hợp với các chỉ báo kỹ thuật để tăng độ chính xác, và quan trọng nhất là backtest các patterns để đánh giá hiệu quả thực tế của chúng. Chúng ta sẽ học cách implement các algorithms để detect Head and Shoulders, Triangles, Flags, và nhiều patterns khác, cùng với việc tính toán các metrics như pattern completion probability, target price levels, và stop loss levels.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc xử lý và chuẩn bị dữ liệu giá, implement các algorithms để detect patterns, validate patterns với các điều kiện kỹ thuật, đến việc tích hợp pattern recognition vào trading strategies. Chúng ta cũng sẽ học cách sử dụng machine learning để improve pattern detection accuracy, backtest patterns trên historical data, và optimize parameters. Cuối cùng, bạn sẽ có trong tay một hệ thống pattern recognition mạnh mẽ, có thể tự động phát hiện và trade các chart patterns một cách chính xác.
 
 <!-- more -->
 

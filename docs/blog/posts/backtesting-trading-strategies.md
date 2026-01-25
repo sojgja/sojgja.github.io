@@ -10,9 +10,17 @@ description: >
 
 # Backtesting Trading Strategies với Python
 
-Backtesting là quá trình test một trading strategy trên dữ liệu lịch sử để đánh giá hiệu quả trước khi trade thật. Trong bài viết này, chúng ta sẽ xây dựng một backtesting engine hoàn chỉnh từ đầu.
+![Backtesting Engine](https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=600&fit=crop)
+
+Trong thế giới của algorithmic trading và quantitative finance, backtesting đóng vai trò như một cánh cửa quan trọng giúp các nhà giao dịch và quỹ đầu tư đánh giá tính khả thi của một chiến lược trading trước khi đối mặt với rủi ro thực tế của thị trường. Backtesting không chỉ đơn giản là việc chạy một chiến lược trên dữ liệu lịch sử để xem nó có lãi hay không, mà là một quy trình khoa học và toàn diện để validate, optimize, và đánh giá rủi ro của một trading strategy. Qua việc mô phỏng các điều kiện thị trường trong quá khứ, chúng ta có thể hiểu được cách chiến lược của mình sẽ phản ứng với các biến động giá khác nhau, từ những xu hướng mạnh mẽ đến những giai đoạn sideways market đầy thách thức.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau xây dựng một backtesting engine hoàn chỉnh từ đầu, sử dụng Python - ngôn ngữ được ưa chuộng nhất trong lĩnh vực quantitative trading nhờ vào sự linh hoạt, hiệu năng cao, và hệ sinh thái thư viện phong phú. Engine mà chúng ta sẽ xây dựng sẽ không chỉ có khả năng mô phỏng các giao dịch một cách chính xác, mà còn tích hợp các công cụ phân tích hiệu suất như Sharpe Ratio, Maximum Drawdown, Win Rate, Profit Factor, và nhiều metrics quan trọng khác. Chúng ta sẽ học cách xử lý dữ liệu lịch sử từ nhiều nguồn khác nhau, implement các chỉ báo kỹ thuật phổ biến, quản lý portfolio và risk management, và quan trọng nhất là tránh các lỗi phổ biến trong backtesting như look-ahead bias, survivorship bias, và overfitting.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc thiết kế kiến trúc của backtesting engine, xây dựng data loader để import dữ liệu từ các nguồn khác nhau, implement các strategy base class và concrete strategies, đến việc tính toán các metrics hiệu suất và visualize kết quả. Chúng ta cũng sẽ thảo luận về các best practices trong backtesting, cách xử lý transaction costs và slippage, và các phương pháp để đảm bảo kết quả backtest gần với thực tế nhất có thể. Cuối cùng, bạn sẽ có trong tay một công cụ mạnh mẽ để đánh giá và cải thiện các trading strategies của mình một cách khoa học và có hệ thống.
 
 <!-- more -->
+
+![Why Backtesting Matters](https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=400&fit=crop)
 
 ## Tại sao cần Backtesting?
 

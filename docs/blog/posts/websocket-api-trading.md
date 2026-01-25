@@ -10,7 +10,13 @@ description: >
 
 # WebSocket API cho Trading
 
-WebSocket APIs cung cấp real-time, bidirectional communication cho trading systems. Trong bài viết này, chúng ta sẽ xây dựng WebSocket API với FastAPI và WebSockets.
+![WebSocket Real-time Communication](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop)
+
+Trong thế giới của algorithmic trading và real-time market data processing, tốc độ và độ trễ (latency) là những yếu tố quyết định thành công. Trong khi REST API truyền thống hoạt động theo mô hình request-response với overhead lớn và độ trễ cao, WebSocket API cung cấp một kênh giao tiếp real-time, bidirectional, và hiệu quả hơn rất nhiều. Với WebSocket, chúng ta có thể thiết lập một kết nối persistent giữa client và server, cho phép server push dữ liệu đến client ngay lập tức khi có thay đổi, mà không cần client phải liên tục polling. Điều này đặc biệt quan trọng trong trading, nơi mà mỗi mili giây đều có giá trị và việc nhận được thông tin giá mới nhất có thể quyết định thành bại của một giao dịch.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau xây dựng một WebSocket API hoàn chỉnh cho trading systems, sử dụng FastAPI - một framework Python hiện đại, nhanh chóng, và được thiết kế đặc biệt cho việc xây dựng APIs. Chúng ta sẽ học cách thiết lập WebSocket connections, quản lý nhiều clients đồng thời, xử lý các message types khác nhau, implement authentication và authorization, và quan trọng nhất là xây dựng một hệ thống có khả năng scale để xử lý hàng nghìn connections cùng lúc. Chúng ta cũng sẽ thảo luận về các patterns như pub/sub để broadcast market data đến nhiều clients, connection pooling, heartbeat mechanisms để detect và xử lý dead connections, và error handling robust.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc setup FastAPI với WebSocket support, implement connection manager để track và quản lý các active connections, xây dựng message handlers cho các loại message khác nhau (subscribe, unsubscribe, trade execution, etc.), đến việc tích hợp với trading bot và market data providers. Chúng ta cũng sẽ học cách test WebSocket APIs, monitor performance, và implement các security best practices. Cuối cùng, bạn sẽ có trong tay một WebSocket API mạnh mẽ, có thể stream real-time trading data và execute trades với độ trễ cực thấp.
 
 <!-- more -->
 

@@ -10,9 +10,17 @@ description: >
 
 # Case Study: Backtesting Chiến Lược Futures BTC trên Binance
 
-Trong case study này, chúng ta sẽ thực hiện một phân tích backtesting toàn diện cho chiến lược giao dịch futures BTC trên sàn Binance. Chúng ta sẽ sử dụng thư viện **Backtrader** - một trong những framework backtesting mạnh mẽ nhất cho Python, để đánh giá hiệu quả của chiến lược trước khi triển khai thực tế.
+![Backtesting Trading Strategy](https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=600&fit=crop)
+
+Trong thế giới giao dịch cryptocurrency, việc kiểm thử một chiến lược trading trước khi triển khai với tiền thật là điều vô cùng quan trọng. Backtesting không chỉ giúp chúng ta đánh giá hiệu quả của chiến lược trên dữ liệu lịch sử, mà còn cho phép chúng ta hiểu rõ về rủi ro, drawdown, và các điểm yếu tiềm ẩn trước khi đối mặt với thị trường thực tế. Trong case study chi tiết này, chúng ta sẽ cùng nhau thực hiện một phân tích backtesting toàn diện cho chiến lược giao dịch futures BTC trên sàn Binance - một trong những sàn giao dịch cryptocurrency lớn nhất thế giới với thanh khoản khổng lồ và phí giao dịch cạnh tranh.
+
+Chúng ta sẽ sử dụng thư viện **Backtrader** - một trong những framework backtesting mạnh mẽ và linh hoạt nhất cho Python, được sử dụng rộng rãi bởi các nhà giao dịch chuyên nghiệp và quỹ đầu tư. Backtrader không chỉ cung cấp các công cụ để mô phỏng giao dịch một cách chính xác, mà còn tích hợp sẵn hàng trăm chỉ báo kỹ thuật, các analyzer để đánh giá hiệu suất, và khả năng visualize kết quả một cách trực quan. Case study này sẽ đi sâu vào từng bước: từ việc lấy dữ liệu lịch sử từ Binance Futures API, xây dựng chiến lược kết hợp Moving Average Crossover với RSI và Volume Confirmation, đến việc phân tích kết quả chi tiết và đưa ra các khuyến nghị thực tế cho việc triển khai.
+
+Điều đặc biệt của case study này là chúng ta sẽ không chỉ dừng lại ở việc chạy backtest và xem kết quả. Chúng ta sẽ phân tích sâu các metrics như Sharpe Ratio, Maximum Drawdown, Win Rate, Profit Factor, và quan trọng nhất là đánh giá xem chiến lược này có thực sự robust và có thể triển khai trong thực tế hay không. Chúng ta cũng sẽ thảo luận về các điểm yếu tiềm ẩn, cách tối ưu hóa parameters, và roadmap để cải thiện chiến lược trong tương lai. Hãy cùng bắt đầu hành trình khám phá này!
 
 <!-- more -->
+
+![Binance Futures Trading](https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=400&fit=crop)
 
 ## Tổng quan Case Study
 
@@ -38,9 +46,11 @@ Trong case study này, chúng ta sẽ thực hiện một phân tích backtestin
 
 ## Chiến lược Trading
 
+![Technical Analysis Chart](https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&h=600&fit=crop)
+
 ### Mô tả chiến lược
 
-Chiến lược của chúng ta kết hợp 3 chỉ báo kỹ thuật:
+Chiến lược của chúng ta kết hợp 3 chỉ báo kỹ thuật phổ biến và hiệu quả trong trading:
 
 1. **Moving Average Crossover**
    - SMA 20 (ngắn hạn)
@@ -80,6 +90,8 @@ Chiến lược của chúng ta kết hợp 3 chỉ báo kỹ thuật:
 - **Commission**: 0.04% mỗi lệnh (Binance futures fee)
 
 ## Implementation với Backtrader
+
+![Python Code Development](https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=500&fit=crop)
 
 ### Bước 1: Setup môi trường
 
@@ -576,6 +588,8 @@ if __name__ == '__main__':
 
 ## Kết quả Backtest
 
+![Backtest Results Dashboard](https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=600&fit=crop)
+
 ### Kết quả tổng quan (Giả định)
 
 Dựa trên backtest chạy trên dữ liệu 2 năm (2023-2024), đây là kết quả mẫu:
@@ -643,6 +657,8 @@ Dựa trên backtest chạy trên dữ liệu 2 năm (2023-2024), đây là kế
 
 #### 4. Equity Curve Analysis
 
+![Equity Curve Visualization](https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=400&fit=crop)
+
 ```
 Equity Curve Characteristics:
 - Steady upward trend với một số pullbacks
@@ -652,6 +668,8 @@ Equity Curve Characteristics:
 ```
 
 ## Đánh giá và Phân tích
+
+![Data Analysis](https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=500&fit=crop)
 
 ### Điểm mạnh của Strategy
 
@@ -689,6 +707,8 @@ Equity Curve Characteristics:
    - Thực tế có thể có slippage, đặc biệt trong volatile periods
 
 ## Tối ưu hóa Strategy
+
+![Strategy Optimization](https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=500&fit=crop)
 
 ### 1. Parameter Optimization
 
@@ -822,6 +842,8 @@ self.adx = bt.indicators.ADX(self.datas[0])
 
 ## Báo cáo và Khuyến nghị
 
+![Report and Recommendations](https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=500&fit=crop)
+
 ### Báo cáo Tổng kết
 
 #### ✅ Điểm Đạt được
@@ -918,6 +940,8 @@ self.adx = bt.indicators.ADX(self.datas[0])
 - 🔄 Portfolio approach
 
 ## Kết luận
+
+![Conclusion and Takeaways](https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=500&fit=crop)
 
 Case study này đã trình bày một quy trình backtesting hoàn chỉnh cho chiến lược futures BTC trên Binance. Kết quả cho thấy:
 

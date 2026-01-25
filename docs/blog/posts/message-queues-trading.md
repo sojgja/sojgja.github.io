@@ -10,7 +10,13 @@ description: >
 
 # Message Queues cho Trading Systems
 
-Message queues là backbone của modern trading systems. Chúng cho phép decoupling, scalability và reliability. Trong bài viết này, chúng ta sẽ explore cách sử dụng message queues trong trading systems.
+![Message Queue Architecture](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop)
+
+Trong kiến trúc của modern trading systems, message queues đóng vai trò như những đường ống dẫn quan trọng, kết nối các components khác nhau và đảm bảo dữ liệu được truyền tải một cách reliable, scalable, và efficient. Không giống như synchronous request-response patterns, message queues cho phép các services giao tiếp với nhau một cách asynchronous, decoupling producers và consumers, cho phép hệ thống scale từng component độc lập, và quan trọng nhất là đảm bảo không mất dữ liệu ngay cả khi một component tạm thời không available. Trong trading systems, nơi mà market data có thể đến với tốc độ hàng nghìn messages mỗi giây, và việc mất một message có thể dẫn đến quyết định trading sai lầm, message queues không chỉ là một nice-to-have mà là một requirement thiết yếu.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau khám phá cách sử dụng message queues trong trading systems, từ việc lựa chọn message queue phù hợp (RabbitMQ cho simple use cases, Apache Kafka cho high-throughput scenarios, Redis Streams cho low-latency requirements), thiết kế message schemas và routing strategies, implement producers và consumers, đến việc xử lý các edge cases như message ordering, duplicate detection, và dead letter queues. Chúng ta sẽ học cách implement các patterns phổ biến như pub/sub để broadcast market data đến nhiều consumers, request-reply patterns cho synchronous operations, và event sourcing để maintain state. Chúng ta cũng sẽ thảo luận về các trade-offs giữa different message queue technologies và khi nào nên sử dụng cái nào.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc setup message queue infrastructure, thiết kế message schemas và topics, implement producers và consumers với error handling và retry logic, đến việc monitor và optimize performance. Chúng ta cũng sẽ học cách handle backpressure khi consumers không thể keep up với producers, implement message prioritization, và scale systems horizontally. Cuối cùng, bạn sẽ có trong tay kiến thức và tools cần thiết để xây dựng trading systems có khả năng scale và reliable cao.
 
 <!-- more -->
 

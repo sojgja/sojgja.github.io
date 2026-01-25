@@ -10,9 +10,17 @@ description: >
 
 # ETL Pipelines cho Trading Data
 
-ETL (Extract, Transform, Load) pipelines là critical cho việc xử lý và lưu trữ trading data. Trong bài viết này, chúng ta sẽ xây dựng ETL pipelines với Apache Airflow.
+![ETL Pipeline Architecture](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop)
+
+Trong hệ sinh thái của trading systems và data engineering, ETL (Extract, Transform, Load) pipelines đóng vai trò như những mạch máu, vận chuyển dữ liệu từ các nguồn khác nhau (exchange APIs, market data providers, internal systems) qua các bước xử lý và biến đổi, cuối cùng đưa vào các data stores để phục vụ cho trading strategies, analytics, và reporting. Một ETL pipeline được thiết kế tốt không chỉ đảm bảo dữ liệu được xử lý đúng và kịp thời, mà còn phải có khả năng xử lý lỗi gracefully, scale để xử lý khối lượng dữ liệu lớn, và có khả năng recover từ failures mà không mất dữ liệu. Trong thế giới của trading, nơi mà mỗi mili giây đều có giá trị và dữ liệu không đầy đủ có thể dẫn đến quyết định trading sai lầm, việc có một ETL pipeline robust và reliable là vô cùng quan trọng.
+
+Trong bài viết chi tiết này, chúng ta sẽ cùng nhau xây dựng ETL pipelines hoàn chỉnh cho trading data, sử dụng Apache Airflow - một platform mã nguồn mở mạnh mẽ được thiết kế đặc biệt cho việc quản lý và orchestrate các data pipelines phức tạp. Chúng ta sẽ học cách extract dữ liệu từ các exchange APIs (Binance, Bybit, OKX), transform dữ liệu để làm sạch, validate, và enrich với các thông tin bổ sung, và load vào các databases và data warehouses. Chúng ta cũng sẽ implement các tính năng nâng cao như data quality checks, error handling và retry mechanisms, monitoring và alerting, và scheduling strategies để đảm bảo dữ liệu luôn được cập nhật đúng thời gian.
+
+Bài viết này sẽ hướng dẫn bạn từng bước một, từ việc setup Apache Airflow, thiết kế DAGs (Directed Acyclic Graphs) để định nghĩa workflows, implement các operators cho extract, transform, và load operations, đến việc monitor và troubleshoot pipelines. Chúng ta cũng sẽ học cách implement data validation, handle failures và retries, optimize performance, và scale pipelines để xử lý large datasets. Cuối cùng, bạn sẽ có trong tay một ETL pipeline system mạnh mẽ, có thể xử lý trading data một cách reliable và efficient.
 
 <!-- more -->
+
+![ETL Pipeline Flow](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=400&fit=crop)
 
 ## ETL Pipeline Architecture
 
