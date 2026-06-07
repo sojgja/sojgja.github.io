@@ -1,0 +1,259 @@
+.page {
+  color: var(--ifm-font-color-base);
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  padding: 5rem 0 4rem;
+  text-align: center;
+}
+.name {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
+}
+.tagline {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+.contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.contactLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contactLink:hover {
+  color: #66b0ff;
+  text-decoration: none;
+}
+
+/* Sections */
+.section {
+  padding: 3.5rem 0;
+}
+.sectionAlt {
+  padding: 3.5rem 0;
+  background: var(--ifm-color-emphasis-100);
+}
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--ifm-color-primary);
+  display: inline-block;
+}
+.introText {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* Role Grid */
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+.roleCard {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.roleCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.roleCard h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.roleSub {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+.roleCard p {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Skills */
+.skillTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.skillTag {
+  background: var(--ifm-color-primary);
+  color: #fff;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--ifm-color-emphasis-300);
+}
+.timelineItem {
+  position: relative;
+  margin-bottom: 2rem;
+}
+.timelineItem:last-child {
+  margin-bottom: 0;
+}
+.timelineDot {
+  position: absolute;
+  left: -2.2rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  border: 3px solid var(--ifm-background-color);
+  z-index: 1;
+}
+.timelineContent {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+}
+.timelinePeriod {
+  font-size: 0.8rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.timelineRole {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0.3rem 0 0.5rem;
+}
+.timelineRole span {
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-600);
+}
+.timelineTasks {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+}
+.timelineTasks li {
+  margin-bottom: 0.25rem;
+}
+
+/* Education */
+.eduGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.eduCard {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.eduYear {
+  font-size: 0.8rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.eduCard h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0.4rem 0 0.2rem;
+}
+.eduCard p {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+  margin: 0;
+}
+
+/* Projects */
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.projectCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+}
+.projectNum {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+  opacity: 0.4;
+  line-height: 1;
+  min-width: 2.2rem;
+}
+.projectCard p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Interests */
+.interestRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.interestTag {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+@media (max-width: 768px) {
+  .name { font-size: 2rem; }
+  .hero { padding: 3rem 0 2.5rem; }
+  .contact { gap: 1rem; }
+}
