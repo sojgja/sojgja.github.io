@@ -1,21 +1,41 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
-  tutorialSidebar: [
+  docsSidebar: [
     'intro',
     {
       type: 'category',
-      label: 'Trading System',
-      items: ['trading-system'],
+      label: 'Backend',
+      collapsible: true,
+      collapsed: false,
+      items: ['backend/django', 'backend/api-design'],
     },
     {
       type: 'category',
-      label: 'Backend',
-      items: ['django-backend'],
+      label: 'SQL',
+      collapsible: true,
+      collapsed: false,
+      items: ['sql/oracle-minus', 'sql/join-patterns'],
+    },
+    {
+      type: 'category',
+      label: 'Trading',
+      collapsible: true,
+      collapsed: false,
+      items: ['trading/orderbook', 'trading/strategy'],
+    },
+    {
+      type: 'category',
+      label: 'System Design',
+      collapsible: true,
+      collapsed: false,
+      items: ['system-design/architecture'],
     },
     {
       type: 'category',
       label: 'SDK & Patterns',
-      items: ['sdk-design-pattern'],
+      collapsible: true,
+      collapsed: false,
+      items: ['sdk/design-patterns'],
     },
   ],
 };

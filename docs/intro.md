@@ -1,26 +1,33 @@
 ---
+id: intro
+title: Documentation Home
+sidebar_label: Introduction
 sidebar_position: 1
+description: Central knowledge base for Python backend, Django, SQL, Trading systems, Design patterns, and System architecture.
+keywords: [python, django, sql, trading, backend, design-pattern, system-design]
 ---
 
-# Welcome
+# Welcome to soi gia Knowledge Base
 
-**soi gia** is a trading system documentation hub. Explore the architecture, design patterns, and implementation details of our multi-module trading platform.
+Your internal-grade knowledge base for **backend development**, **algorithmic trading**, **SQL patterns**, and **system design** — built for fast lookup.
 
-## Quick Links
+## What You'll Find
 
-- [Trading System](/docs/trading-system) - Core trading engine architecture
-- [Django Backend](/docs/django-backend) - Backend API and data layer
-- [SDK Design Patterns](/docs/sdk-design-pattern) - SDK and integration patterns
+| Category | Topics |
+|----------|--------|
+| **Backend** | Django patterns, REST API design, middleware |
+| **SQL** | Oracle patterns, JOIN optimization, window functions |
+| **Trading** | Order book, strategy engine, risk management |
+| **System Design** | Architecture patterns, scalability |
+| **SDK** | Design patterns, adapter, strategy, observer |
 
-## Getting Started
+## Quick Start
 
 ```bash
-# Local development with Docker
+# Local development
 docker compose up
+# → http://localhost:3000 with hot reload
 
-# Or run natively
-npm install
-npm start
+# Build production
+npm run build
 ```
-
-Visit `http://localhost:3000` to see the docs with hot reload.
