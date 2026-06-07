@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  docusaurus:
+    image: node:20-alpine
+    container_name: sojgja-docs
+    working_dir: /app
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm start"
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped

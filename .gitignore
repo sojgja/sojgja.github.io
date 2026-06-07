@@ -30,6 +30,7 @@ venv
 
 # Build files
 build
+.docusaurus
 site
 
 # Distribution files
