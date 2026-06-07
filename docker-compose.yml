@@ -1,16 +1,28 @@
 version: '3.8'
 
 services:
-  docusaurus:
+  # Development mode with hot reload
+  dev:
     image: node:20-alpine
-    container_name: sojgja-docs
+    container_name: sojgja-dev
     working_dir: /app
     ports:
       - '3000:3000'
     volumes:
       - .:/app
       - /app/node_modules
-    command: sh -c "npm install && npm start"
     environment:
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    command: sh -c "npm install && npm start"
+    restart: unless-stopped
+
+  # Production mode with Nginx
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sojgja-prod
+    ports:
+      - '80:80'
     restart: unless-stopped

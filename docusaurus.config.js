@@ -7,7 +7,7 @@ const config = {
   tagline: 'Trading system documentation',
   favicon: 'img/favicon.ico',
 
-  url: 'https://sojgja.github.io',
+  url: process.env.SITE_URL || 'https://sojgja.github.io',
   baseUrl: '/',
   organizationName: 'sojgja',
   projectName: 'sojgja.github.io',
