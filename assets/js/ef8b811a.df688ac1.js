@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunksojgja_github_io=globalThis.webpackChunksojgja_github_io||[]).push([[947],{6600(g){g.exports=JSON.parse('{"authors":[{"name":"soigia","title":"Trading System Engineer","url":"https://github.com/sojgja","imageURL":"https://github.com/sojgja.png","key":"soigia","page":null,"count":1}]}')}}]);

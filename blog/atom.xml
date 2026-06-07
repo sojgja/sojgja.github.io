@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://sojgja.github.io/blog</id>
+    <title>soi gia Blog</title>
+    <updated>2025-06-07T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://sojgja.github.io/blog"/>
+    <subtitle>soi gia Blog</subtitle>
+    <icon>https://sojgja.github.io/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>https://sojgja.github.io/blog/welcome</id>
+        <link href="https://sojgja.github.io/blog/welcome"/>
+        <updated>2025-06-07T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[This is the first post of the soi gia documentation blog.]]></summary>
+        <content type="html"><![CDATA[<p>This is the first post of the soi gia documentation blog.</p>
+<p>Stay tuned for updates on trading system development, Django backend architecture, and SDK design patterns.</p>]]></content>
+        <author>
+            <name>soigia</name>
+            <uri>https://github.com/sojgja</uri>
+        </author>
+        <category label="hello" term="hello"/>
+    </entry>
+</feed>
