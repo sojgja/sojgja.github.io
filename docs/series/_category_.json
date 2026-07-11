@@ -2,10 +2,10 @@
   "label": "📰 Series",
   "position": 15,
   "collapsible": true,
-  "collapsed": true,
+  "collapsed": false,
   "link": {
     "type": "generated-index",
     "title": "Series",
-    "description": "Các chùm bài viết theo chủ đề"
+    "description": "Các chùm bài viết theo chủ đề: Design Patterns, SOLID, DI"
   }
 }
