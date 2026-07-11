@@ -344,7 +344,7 @@ print(f"Kết quả phân tích: {result}")
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│                    <<class>> AppLogger                 │
+│                    «class» AppLogger                   │
 ├────────────────────────────────────────────────────────┤
 │ - _instance: Optional[AppLogger]                      │
 │ - _lock: Lock                                         │
