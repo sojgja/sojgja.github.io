@@ -367,7 +367,7 @@ print(f"Kết quả phân tích: {result}")
             │
             ▼
 ┌──────────────────────────────┐
-│     <<interface>> LogSink    │
+│     «interface» LogSink    │
 ├──────────────────────────────┤
 │ + write(record: LogRecord)   │
 └──────────────────────────────┘

@@ -693,7 +693,7 @@ if __name__ == "__main__":
            │ strategy ────────┐
            ▼                  ▼
 ┌───────────────────────────────────────────┐
-│  <<interface>>                             │
+│  «interface»                             │
 │  PaymentStrategy                           │
 ├───────────────────────────────────────────┤
 │ + validate(request): Optional[str]        │

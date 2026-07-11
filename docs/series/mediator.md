@@ -499,7 +499,7 @@ if __name__ == "__main__":
 
 ```
 ┌─────────────────────┐         ┌──────────────────────┐
-│    Mediator (ABC)   │<<uses>>│     Colleague (ABC)   │
+│    Mediator (ABC)   │«uses»  │     Colleague (ABC)   │
 │─────────────────────│         │──────────────────────│
 │ + register(c)       │         │ - name: str          │
 │ + notify(s, e)      │         │ - mediator: Mediator │

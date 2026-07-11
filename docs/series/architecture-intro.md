@@ -47,6 +47,95 @@ Kiến trúc phần mềm bao gồm nhiều khía cạnh, mỗi khía cạnh gi�
 5. **Data**: Lưu trữ, truy xuất, consistency, replication
 6. **Business**: Alignment với mục tiêu kinh doanh, domain modeling
 
+### Các thuật ngữ quan trọng
+
+Trước khi đi sâu vào các kiến trúc cụ thể, hãy làm quen với một số thuật ngữ nền tảng:
+
+| Thuật ngữ | Định nghĩa | Ví dụ |
+|-----------|-----------|-------|
+| **Component** | Đơn vị cấu trúc phần mềm có thể thay thế được | Module, class, service |
+| **Module** | Tập hợp code có liên quan, đóng gói và có interface rõ ràng | `src/payment/`, `src/order/` |
+| **Service** | Đơn vị triển khai độc lập, chạy trong process riêng | Product Service, Order Service |
+| **Interface** | Hợp đồng giữa các component — định nghĩa "cái gì" không phải "như thế nào" | Python ABC, Protocol |
+| **Coupling** | Mức độ phụ thuộc giữa các component | Tight (xấu) vs Loose (tốt) |
+| **Cohesion** | Mức độ liên quan nội tại trong một component | High (tốt) vs Low (xấu) |
+| **Abstraction** | Ẩn chi tiết implementation, chỉ expose interface | `OrderRepository(ABC)` |
+| **Separation of Concerns** | Mỗi component chỉ lo một việc | SRP ở mức kiến trúc |
+
+### Mối quan hệ giữa kiến trúc và design patterns
+
+Kiến trúc và design patterns có mối quan hệ mật thiết nhưng khác biệt:
+
+- **Kiến trúc** là "bức tranh lớn" — cách tổ chức toàn bộ hệ thống
+- **Design patterns** là "mẫu thiết kế nhỏ" — giải pháp cho vấn đề lặp lại trong một ngữ cảnh cụ thể
+
+Mỗi kiến trúc thường sử dụng một số design patterns nhất định:
+
+| Kiến trúc | Design patterns liên quan |
+|-----------|-------------------------|
+| Layered | Facade (giữa các layers), Adapter (DB connection) |
+| Microservices | API Gateway, Circuit Breaker, Saga, Event Sourcing |
+| Event-Driven | Observer, Pub/Sub, Message Broker, CQRS |
+| Hexagonal | Ports & Adapters, Dependency Injection, Factory |
+| Clean | Dependency Rule, Interface Segregation, Factory |
+| MVC | Observer (Model→View), Strategy (Controller) |
+
+Hiểu rõ design patterns là tiền đề quan trọng để nắm vững kiến trúc — đó là lý do series Design Patterns (30 bài) và SOLID (5 bài) được đặt trước series này.
+
+### Architectural Drivers (Yếu tố quyết định kiến trúc)
+
+Có 4 yếu tố chính quyết định kiến trúc của một hệ thống, được gọi là **Architectural Drivers**:
+
+#### 1. Business Drivers
+- **Business goals**: Mục tiêu kinh doanh ngắn hạn và dài hạn
+- **Business constraints**: Ngân sách, thời gian, nguồn lực
+- **Business model**: SaaS? Marketplace? Enterprise license?
+- **Domain complexity**: Domain đơn giản (CRUD) hay phức tạp (trading, healthcare)?
+
+#### 2. Technical Drivers
+- **Technology stack**: Java ecosystem? Python? .NET? Polyglot?
+- **Infrastructure**: On-premise? Cloud? Hybrid?
+- **Integration**: Hệ thống legacy? Third-party APIs? Message queues?
+- **Data requirements**: Volume, velocity, variety, veracity (4Vs of Big Data)
+
+#### 3. Organizational Drivers
+- **Team structure**: Conway's Law — tổ chức team quyết định kiến trúc
+- **Team size and location**: Co-located? Distributed? Offshore?
+- **Skill set**: Backend expertise? DevOps maturity? Frontend specialization?
+- **Development methodology**: Agile? Waterfall? DevOps culture?
+
+#### 4. Operational Drivers
+- **Scalability requirements**: Vertical vs Horizontal
+- **Availability requirements**: 99.9% vs 99.999%
+- **Security requirements**: Compliance (PCI DSS, HIPAA, GDPR)
+- **Performance requirements**: Latency P99, throughput, concurrent users
+
+### Ví dụ: Phân tích Architectural Drivers cho một hệ thống thực tế
+
+Hãy xem xét một hệ thống **ngân hàng số (Digital Banking Platform)**:
+
+| Driver | Yêu cầu | Tác động đến kiến trúc |
+|--------|---------|----------------------|
+| Business | Launch trong 6 tháng, 1M users năm đầu | Cần monolith ban đầu, modular để split sau |
+| Technical | Tích hợp core banking (legacy), cần audit trail | Event Sourcing + CQRS |
+| Organizational | 4 teams: Core, Payment, Customer, Analytics | Microservices phù hợp |
+| Operational | 99.99% availability, PCI DSS, real-time transaction | EDA + Circuit Breaker + Distributed tracing |
+
+Kết luận: **Microservices + Event-Driven + CQRS/Event Sourcing** là lựa chọn phù hợp, nhưng nên bắt đầu với **Modular Monolith** và split dần.
+
+### Quality Attributes và cách đo lường
+
+| Attribute | Định nghĩa | Metric | Công cụ đo |
+|-----------|-----------|--------|-----------|
+| **Performance** | Tốc độ xử lý request | Latency (ms), Throughput (req/s) | k6, Locust, JMeter |
+| **Scalability** | Khả năng xử lý tải tăng | Horizontal scaling efficiency | Load test, Auto-scaling metrics |
+| **Availability** | Thời gian hệ thống hoạt động | Uptime %, MTBF, MTTR | Prometheus, Grafana |
+| **Reliability** | Khả năng xử lý chính xác | Error rate %, P50/P99 latency | Datadog, New Relic |
+| **Security** | Bảo vệ dữ liệu và truy cập | Vulnerability count, CVSS scores | OWASP ZAP, SonarQube |
+| **Maintainability** | Dễ dàng thay đổi và mở rộng | Cyclomatic complexity, Tech debt ratio | SonarQube, CodeClimate |
+| **Testability** | Dễ dàng kiểm thử | Code coverage %, Test execution time | pytest, Coverage.py |
+| **Deployability** | Dễ dàng triển khai | Deployment frequency, Lead time | DORA metrics, CI/CD pipeline |
+
 ---
 
 ## 20 Kiến trúc trong Series
@@ -186,6 +275,181 @@ Không có kiến trúc nào là "tốt nhất" — chỉ có kiến trúc phù 
 
 Kiến trúc không phải là quyết định một lần. Hãy áp dụng **Evolutionary Architecture** — bắt đầu đơn giản, đo lường, và tiến hóa. Như Martin Fowler đã nói: *"If you can't decide between two architectures, choose the simpler one and refactor when you learn more."*
 
+### Architectural Decision Records (ADR)
+
+ADR là một công cụ quan trọng để ghi lại các quyết định kiến trúc. Mỗi ADR bao gồm:
+
+```
+# ADR-001: Chọn Event-Driven cho Notification System
+
+## Context
+Hệ thống cần gửi email, SMS, push notification cho user.
+Có thể có nhiều loại notification mới trong tương lai.
+
+## Decision
+Sử dụng Event-Driven Architecture với Kafka message broker.
+Order Service phát event `order.placed`, Notification Service consume.
+
+## Status
+Accepted
+
+## Consequences
+Positive: Decoupling, dễ thêm notification type mới, async processing
+Negative: Eventually consistency, cần idempotent consumer
+
+## Alternatives Considered
+1. Sync REST calls: Tight coupling, cascade failure
+2. Celery task queue: Good but không có event replay
+```
+
+Lợi ích của ADR:
+- **Traceability**: Biết tại sao quyết định được đưa ra
+- **Onboarding**: New member hiểu lịch sử kiến trúc
+- **Avoid revisiting**: Không lặp lại các cuộc thảo luận cũ
+- **Context preservation**: Ghi lại context tại thời điểm quyết định
+
+### Ví dụ: Áp dụng quy trình 7 bước cho một hệ thống thực tế
+
+**Bối cảnh**: Một startup về **giao đồ ăn** (giống GrabFood/Now) muốn xây dựng hệ thống mới. Team có 8 developers, deadline 4 tháng cho MVP, target 100k orders/ngày.
+
+#### Bước 1: NFRs
+- Scalability: 100k → 1M orders trong 2 năm
+- Availability: 99.9% (downtime ~8h/năm OK)
+- Performance: API response < 500ms P95
+- Time-to-market: MVP trong 4 tháng
+- Budget: Hạn chế (startup), dùng cloud (AWS/GCP)
+
+#### Bước 2: Domain Complexity
+- Domain tương đối phức tạp: Order, Payment, Restaurant, Rider, Notification
+- Nhiều business rule thay đổi (khuyến mãi, phí giao hàng)
+- Cần real-time tracking (rider location, order status)
+
+#### Bước 3: Team Size
+- 8 developers, 2 teams: Team Platform (order, payment), Team Experience (restaurant, rider, notification)
+- Fit Conway's Law: 2 services tương ứng 2 teams
+
+#### Bước 4: Data Characteristics
+- Orders: Write-heavy, cần strong consistency (không thể double charge)
+- Tracking: Write-heavy, không cần strong consistency
+- Restaurants/Menus: Read-heavy
+- Notifications: Event-driven, async
+
+#### Bước 5: Infrastructure
+- Cloud-native (AWS/GCP), Docker, Kubernetes
+- DevOps: 1 DevOps engineer, CI/CD với GitHub Actions
+- Database: PostgreSQL (relational), Redis (cache), Elasticsearch (search)
+
+#### Bước 6: Risk Analysis
+| Decision | Risk | Mitigation |
+|----------|------|------------|
+| Monolith ban đầu | Khó scale khi tăng trưởng | Modular design, split khi cần |
+| Event-Driven (notification) | Eventually consistency | Saga pattern cho payment |
+| Microservices sau này | Distributed complexity | Start với API Gateway pattern |
+
+#### Bước 7: Decision
+- **Giai đoạn 1 (MVP, tháng 1-4)**: Modular Monolith + Event-Driven (in-process event bus)
+- **Giai đoạn 2 (Scale, tháng 5-12)**: Split thành 2 services (Order + Notification)
+- **Giai đoạn 3 (Growth, năm 2+)**: Microservices với Kafka + Kubernetes
+
+### Common Anti-Patterns (Các sai lầm thường gặp)
+
+| Anti-Pattern | Mô tả | Hậu quả | Giải pháp |
+|-------------|-------|---------|-----------|
+| **Big Ball of Mud** | Không có kiến trúc rõ ràng, code lộn xộn | Không maintain được, bug triền miên | Áp dụng Layered hoặc Modular |
+| **Golden Hammer** | Dùng một kiến trúc cho mọi bài toán | Over-engineering hoặc under-engineering | Hiểu trade-off của từng kiến trúc |
+| **Architecture by Buzzword** | Chọn kiến trúc vì "hot" (microservices) | Distributed complexity không cần thiết | Start đơn giản, evolve khi cần |
+| **Distributed Monolith** | Nhiều service nhưng deploy cùng nhau | Mất hết lợi ích của microservices | Independent deployability |
+| **Database as Integration Point** | Share database giữa các service | Tight coupling, không scale được | Database-per-service |
+| **God Service** | Một service làm quá nhiều việc | Single point of failure, khó maintain | Split theo bounded context |
+| **No Monitoring** | Không có observability | Mù về hệ thống, debug rất khó | Distributed tracing, metrics, logging |
+| **Premature Optimization** | Tối ưu quá sớm cho scale | Waste effort, code phức tạp | Measure first, optimize later |
+
+### Mô hình kiến trúc lai (Hybrid Architecture)
+
+Trong thực tế, hầu hết các hệ thống lớn đều sử dụng **kiến trúc lai** — kết hợp nhiều kiến trúc khác nhau cho các phần khác nhau của hệ thống:
+
+```
+HỆ THỐNG THƯƠNG MẠI ĐIỆN TỬ (Ví dụ kiến trúc lai)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ Web Frontend (MVC — React + Redux)                                   │
+│ Mobile App (MVP — Flutter)                                           │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────────┐
+│ API Gateway (BFF — Backend-for-Frontend)                            │
+│ - Web BFF: REST API                                                 │
+│ - Mobile BFF: GraphQL API                                           │
+└──────┬──────────────┬──────────────┬──────────────┬─────────────────┘
+       │              │              │              │
+       ▼              ▼              ▼              ▼
+┌──────────┐  ┌──────────────┐  ┌──────────┐  ┌──────────┐
+│ Order    │  │ Payment      │  │ Product  │  │ User     │
+│ Service  │  │ Service      │  │ Service  │  │ Service  │
+│ (Hexag.) │  │ (Hexagonal)  │  │ (Layered)│  │ (Layered)│
+├──────────┤  ├──────────────┤  ├──────────┤  ├──────────┤
+│ Event    │  │  CQRS +      │  │ CRUD     │  │ CRUD     │
+│ Sourcing │  │  Event Store  │  │ REST API │  │ REST API │
+└────┬─────┘  └──────┬───────┘  └──────────┘  └──────────┘
+     │               │
+     └───────────────┼────────────────────────────────────────┐
+                     │                                         │
+              ┌──────▼──────┐                          ┌──────▼──────┐
+              │  Kafka      │                          │  PostgreSQL │
+              │  (Event Bus)│                          │  (Data)     │
+              └─────────────┘                          └─────────────┘
+```
+
+Các kiến trúc được kết hợp:
+- **Order Service**: Hexagonal Architecture (domain phức tạp, nhiều business rule)
+- **Payment Service**: Hexagonal + CQRS + Event Sourcing (audit trail, consistency)
+- **Product Service**: Layered Architecture (CRUD đơn giản)
+- **User Service**: Layered Architecture (CRUD + authentication)
+- **API Gateway**: BFF Pattern (tách web/mobile backend)
+- **Inter-service communication**: Event-Driven (Kafka)
+
+### Mối quan hệ giữa kiến trúc và DevOps
+
+DevOps và kiến trúc có mối quan hệ hai chiều:
+
+| DevOps Maturity | Kiến trúc phù hợp | Lý do |
+|-----------------|-------------------|-------|
+| Level 1: Manual | Layered, Monolith | Deployment đơn giản, ít moving parts |
+| Level 2: Basic CI/CD | Modular Monolith | Có thể test và deploy tự động |
+| Level 3: Automated CD | Microservices | Deploy độc lập từng service |
+| Level 4: GitOps | Service Mesh, Serverless | Infrastructure as Code |
+| Level 5: Chaos Engineering | EDA, Resilient patterns | Thử nghiệm fault tolerance |
+
+Ngược lại, kiến trúc cũng ảnh hưởng đến DevOps:
+- Microservices → Cần CI/CD mạnh, container orchestration, monitoring phức tạp
+- Serverless → DevOps tự động hóa cao, pay-per-use
+- Monolith → DevOps đơn giản hơn, nhưng deployment risk cao hơn
+
+### CAP Theorem và ảnh hưởng đến kiến trúc
+
+**CAP Theorem** (Brewer's Theorem) phát biểu rằng trong một distributed system, bạn chỉ có thể có tối đa 2 trong 3 đặc tính:
+
+```
+         Consistency (C)
+              │
+              │
+              ├────── Availability (A)
+              │
+         Partition Tolerance (P)
+```
+
+Ảnh hưởng đến kiến trúc:
+
+| Kiến trúc | CAP Priority | Lý do |
+|-----------|-------------|-------|
+| Layered (monolith) | CA (Hy vọng không có partition) | Single database, ACID |
+| Microservices | AP (Availability + Partition Tolerance) | Eventually consistency, saga |
+| Event-Driven | AP | Async, eventual consistency |
+| CQRS | CP (trên write), AP (trên read) | Write: strong consistency, Read: eventual |
+| Event Sourcing | AP | State rebuild từ event stream |
+
+**Ví dụ thực tế**: Hệ thống ngân hàng cần **CP** trên tài khoản (không thể mất tiền) nhưng có thể **AP** trên lịch sử giao dịch (có thể chậm vài giây). Đây là lý do nhiều ngân hàng dùng CQRS — tách write (CP) và read (AP).
+
 ---
 
 ## Lộ trình học
@@ -204,6 +468,8 @@ Bắt đầu với những kiến trúc nền tảng mà hầu hết developer �
 39. Hexagonal Architecture ← DDD, testability
 ```
 
+**Mục tiêu**: Sau giai đoạn này, bạn có thể phân biệt và áp dụng 5 kiến trúc nền tảng. Bạn sẽ hiểu rõ trade-off giữa monolithic và distributed, synchronous và asynchronous, domain-centric và data-centric.
+
 ### Giai đoạn 2: Service & Message (Bài 40-44)
 
 Sau khi nắm vững các kiến trúc nền tảng, chuyển sang các mô hình service và message:
@@ -215,6 +481,8 @@ Sau khi nắm vững các kiến trúc nền tảng, chuyển sang các mô hìn
 43. Service-Oriented Architecture (SOA)
 44. Pub/Sub Architecture
 ```
+
+**Mục tiêu**: Hiểu cách tổ chức giao tiếp giữa client-server, cách tách UI khỏi logic, và các mô hình message cơ bản. SOA và Pub/Sub là nền tảng cho Microservices và EDA.
 
 ### Giai đoạn 3: Advanced Patterns (Bài 45-49)
 
@@ -228,6 +496,8 @@ Các kiến trúc nâng cao đòi hỏi hiểu biết sâu về distributed syst
 49. Pipe-and-Filter Architecture
 ```
 
+**Mục tiêu**: Nắm vững các pattern nâng cao cho distributed systems. CQRS + Event Sourcing là bộ đôi mạnh mẽ cho hệ thống cần audit trail và scalability. Clean/Onion Architecture mở rộng Hexagonal với nhiều layer hơn.
+
 ### Giai đoạn 4: Modern & Scalable (Bài 50-54)
 
 Các kiến trúc hiện đại cho hệ thống lớn:
@@ -239,6 +509,89 @@ Các kiến trúc hiện đại cho hệ thống lớn:
 53. Service Mesh
 54. Space-Based Architecture & Data Mesh
 ```
+
+**Mục tiêu**: Hiểu các xu hướng kiến trúc mới nhất. DDD là phương pháp luận thiết kế, Service Mesh giải quyết vấn đề giao tiếp microservices ở scale lớn, Data Mesh là tương lai của data platform.
+
+### Lộ trình thay thế: Theo vai trò
+
+#### For Backend Developers
+
+```
+Bắt đầu: Layered → Microservices → Hexagonal → Clean
+Kết hợp: Event-Driven → CQRS → Event Sourcing
+Mở rộng: SOA → Service Mesh → Serverless
+```
+
+#### For Frontend/Mobile Developers
+
+```
+Bắt đầu: MVC/MVP/MVVM → Client-Server → BFF
+Kết hợp: Layered → Repository → Pub/Sub
+Mở rộng: Microservices → EDA → Serverless
+```
+
+#### For Data Engineers
+
+```
+Bắt đầu: Pipe-and-Filter → Layered → Repository
+Kết hợp: Event-Driven → CQRS → Event Sourcing
+Mở rộng: Data Mesh → Space-Based → DDD
+```
+
+#### For Architects/Tech Leads
+
+```
+Toàn bộ 20 kiến trúc, ưu tiên:
+1. Layered + Microservices (cốt lõi)
+2. Hexagonal + Clean + DDD (domain)
+3. EDA + Event Sourcing + CQRS (data/async)
+4. Service Mesh + Data Mesh + Space-Based (scale)
+5. Serverless + BFF (modern/cloud)
+```
+
+### Học qua dự án thực tế
+
+Cách tốt nhất để học kiến trúc là áp dụng vào dự án thực tế. Dưới đây là các dự án gợi ý cho từng nhóm kiến trúc:
+
+| Kiến trúc | Dự án thực hành | Technology Stack |
+|-----------|----------------|-----------------|
+| **Layered** | Hệ thống quản lý thư viện | FastAPI + PostgreSQL + SQLAlchemy |
+| **Microservices** | Nền tảng thương mại điện tử | FastAPI + Kafka + Docker + Kubernetes |
+| **Event-Driven** | Hệ thống giao dịch chứng khoán | Kafka + FastAPI + WebSocket + Redis |
+| **Hexagonal** | Hệ thống đặt vé máy bay | FastAPI + PostgreSQL + Stripe + SendGrid |
+| **Clean** | Hệ thống quản lý bệnh viện | FastAPI + MongoDB + RabbitMQ |
+| **CQRS + ES** | Hệ thống ngân hàng | PostgreSQL (write) + Elasticsearch (read) + Kafka |
+| **Serverless** | URL shortener | AWS Lambda + DynamoDB + S3 |
+| **BFF** | Multi-platform social app | React (web) + Flutter (mobile) + BFF services |
+
+Mỗi dự án trong series này đều đi kèm mã nguồn Python hoàn chỉnh, chạy được, có test — bạn có thể fork và sử dụng làm template cho dự án thực tế của mình.
+
+### Cách đọc hiệu quả
+
+Để tận dụng tối đa series này, tôi khuyên bạn:
+
+1. **Đọc theo thứ tự**: Giai đoạn 1 → 2 → 3 → 4 (kiến thức xây dựng dần)
+2. **Code cùng lúc**: Mỗi bài đều có code Python — hãy chạy thử, sửa đổi, break và fix
+3. **So sánh**: Đọc 2 bài cùng lúc và so sánh (ví dụ: Layered vs Hexagonal, Microservices vs Monolith)
+4. **Áp dụng vào dự án hiện tại**: Sau mỗi bài, hãy tự hỏi "Dự án của mình có vấn đề này không? Áp dụng thế nào?"
+5. **Làm bài tập**: Mỗi bài đều có use case mở rộng — hãy tự implement thêm tính năng
+
+### Tài liệu tham khảo theo từng bài
+
+Mỗi bài viết trong series đều có danh sách tài liệu tham khảo riêng. Dưới đây là tổng quan:
+
+| Kiến trúc | Nguồn tham khảo chính |
+|-----------|----------------------|
+| Layered | Fowler: *PEAA*, Richards: *Software Architecture Patterns* |
+| Microservices | Newman: *Building Microservices*, Richardson: *Microservices Patterns* |
+| Event-Driven | Hohpe: *EIP*, Kleppmann: *Designing Data-Intensive Applications* |
+| Hexagonal | Cockburn: *Hexagonal Architecture*, Vernon: *Implementing DDD* |
+| Clean | Martin: *Clean Architecture* |
+| CQRS/ES | Fowler (blog), Vernon: *Implementing DDD* |
+| DDD | Evans: *Domain-Driven Design* |
+| Serverless | AWS Well-Architected Framework, Sbarski: *Serverless Architectures* |
+| Service Mesh | Istio/Linkerd documentation |
+| Data Mesh | Dehghani: *Data Mesh* (O'Reilly) |
 
 ---
 
@@ -278,6 +631,39 @@ Nếu bạn muốn đọc thêm từ các nguồn uy tín:
 | Len Bass | *Software Architecture in Practice* (4th ed.) | 2021 |
 
 ---
+
+## Các bài tập thực hành xuyên suốt
+
+Để giúp bạn áp dụng kiến thức, mỗi bài viết trong series sẽ có các bài tập kèm theo lời giải mẫu. Dưới đây là một số bài tập tiêu biểu:
+
+| Bài tập | Kiến trúc liên quan | Mô tả |
+|---------|-------------------|-------|
+| Xây dựng REST API cho hệ thống quản lý sinh viên | Layered | CRUD với FastAPI + SQLAlchemy |
+| Migrate monolith lên microservices | Microservices | Split student management thành 3 services |
+| Real-time notification system | Event-Driven | Kafka consumer cho email/SMS/push |
+| Refactor code sang Hexagonal | Hexagonal | Tách domain khỏi FastAPI/SQLAlchemy |
+| Implement CQRS cho báo cáo | CQRS + Event Sourcing | Tách read/write database |
+
+Bạn có thể tìm thấy đáp án mẫu và repo GitHub đầy đủ ở cuối mỗi bài viết.
+
+## Coding Challenge: Kiến trúc đầu tiên của bạn
+
+Trước khi bắt đầu bài học đầu tiên, hãy thử thách bản thân với bài tập sau:
+
+**Yêu cầu**: Thiết kế kiến trúc cho một hệ thống **đặt vé xem phim trực tuyến** (giống Galaxy Cinema, CGV). Hệ thống phải:
+1. Cho phép user xem lịch chiếu, chọn ghế, đặt vé
+2. Xử lý thanh toán online (Momo, VNPay, thẻ tín dụng)
+3. Gửi email/SMS xác nhận
+4. Cho phép hủy vé và hoàn tiền
+5. Admin dashboard quản lý phim, suất chiếu, doanh thu
+
+**Câu hỏi**:
+- Bạn sẽ chọn kiến trúc nào? Tại sao?
+- Vẽ sơ đồ kiến trúc tổng quan
+- Liệt kê các components chính
+- Xác định các trade-offs
+
+Sau khi đọc xong series này, hãy quay lại bài tập này và xem bạn có thay đổi quyết định không!
 
 ## Cấu trúc chung của mỗi bài viết
 

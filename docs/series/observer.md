@@ -372,7 +372,7 @@ if __name__ == "__main__":
 
 ```
 ┌─────────────────────┐        ┌──────────────────────────────┐
-│   <<interface>>      │        │        TradePublisher        │
+│   «interface»      │        │        TradePublisher        │
 │   TradingObserver    │        ├──────────────────────────────┤
 ├─────────────────────┤        │ - observers: Dict[EventType, │
 │ + on_event(event)   │◄───────│     List[WeakRef[Observer]]] │
