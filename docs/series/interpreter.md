@@ -7,77 +7,658 @@ sidebar_position: 16
 
 # Interpreter
 
-**Interpreter** định nghĩa ngữ pháp (grammar) cho một ngôn ngữ đơn giản và cung cấp interpreter để diễn giải các câu trong ngôn ngữ đó.
+> **Interpreter** — *"Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language."* — GoF, 1994
 
-## Bài toán
+## Bài toán chi tiết
 
-Ứng dụng cần hỗ trợ **tìm kiếm nâng cao** với các biểu thức: `"Java AND Python"`, `"Design OR Pattern"`, `"NOT JavaScript"`, `"(Java AND Spring) OR Node"`. Viết parser cho các expression phức tạp rất khó nếu dùng if-else.
+Xây dựng hệ thống lọc dữ liệu thời gian thực (real-time data filtering) cho một nền tảng IoT công nghiệp. Hàng ngàn cảm biến gửi dữ liệu về trung tâm: nhiệt độ, độ ẩm, áp suất, rung động. Kỹ sư vận hành cần tạo các bộ lọc phức tạp như: `(temperature > 85 AND pressure > 100) OR (vibration > 5.0 AND NOT zone == "safe")`. Việc hard-code các rule này vào nguồn là không khả thi vì rule thay đổi hàng ngày, cần được nhập từ UI và lưu trong database.
 
-## Giải pháp
+Challenge đầu tiên là parsing. Chuỗi query `"temperature > 85 AND (pressure > 100 OR vibration > 5.0)"` cần được phân tích cú pháp thành cấu trúc dữ liệu có thể thực thi. Dùng regex và `eval()` là cực kỳ nguy hiểm (security vulnerability) và không thể mở rộng khi ngữ pháp thay đổi. Cần một parser có thể chuyển chuỗi thành Abstract Syntax Tree (AST) một cách an toàn.
 
-Interpreter biểu diễn mỗi rule ngữ pháp thành một class, xây cây cú pháp (AST) và diễn giải.
+Challenge thứ hai là mở rộng ngữ pháp. Hệ thống cần hỗ trợ thêm operator mới: `contains` (cho string), `between` (cho range), `regex_match` (cho pattern matching). Với parser thủ công, thêm operator mới yêu cầu sửa parsing logic ở nhiều chỗ. Cần kiến trúc cho phép thêm rule ngữ pháp mà không đụng đến code parser cốt lõi.
+
+Challenge thứ ba là hiệu năng. Hàng triệu data point mỗi giây, mỗi data point cần được kiểm tra với hàng trăm rule. AST interpreter phải đủ nhanh để xử lý real-time. Đồng thời, cần cơ chế cache kết quả (Hazelcast, Redis) cho sub-expression không thay đổi.
+
+Cuối cùng, validation. Người dùng nhập rule qua UI, cần kiểm tra ngay tại client xem rule có hợp lệ không (syntax check, type check). Interpreter pattern hỗ trợ điều này bằng cách cung cấp `validate()` riêng biệt với `interpret()`.
+
+## Giải pháp với Pattern
+
+Interpreter pattern định nghĩa ngữ pháp (grammar) bằng cách biểu diễn mỗi production rule thành một class. Có hai loại expression: **TerminalExpression** (lá — không chứa expression con) và **NonterminalExpression** (nút — chứa expression con). Client xây dựng AST từ chuỗi đầu vào bằng parser (thường là recursive descent parser), sau đó gọi `interpret(context)` trên root node, kết quả được tính toán đệ quy từ lá lên gốc.
+
+Cấu trúc pattern:
+- **AbstractExpression** (Expression): interface với `interpret(context)`.
+- **TerminalExpression**: implement interpret dựa trên dữ liệu context (ví dụ: kiểm tra sensor value).
+- **NonterminalExpression**: `AndExpression`, `OrExpression`, `NotExpression`, `ComparisonExpression` — chứa 1+ expression con.
+- **Context**: chứa dữ liệu đầu vào (sensor reading, environment variables) được truyền vào interpret.
+- **Parser**: xây AST từ chuỗi đầu vào (không bắt buộc trong pattern, nhưng thiết yếu).
+
+Pattern này giải quyết các pain point:
+- **Safety**: Không dùng eval. Mỗi node trong AST là object an toàn, không thể inject code.
+- **Extensibility**: Thêm operator mới bằng class mới, không sửa parser logic.
+- **Composability**: Expression lồng nhau vô hạn.
+- **Validation**: Dễ dàng thêm `validate()` kiểm tra type, range, operator.
+
+## Phân tích thiết kế
+
+**OOP Principles:**
+- **Composite pattern con**: Interpreter về cấu trúc giống Composite — cây với leaf (TerminalExpression) và non-leaf (NonterminalExpression). Mỗi node có cùng interface.
+- **Single Responsibility (SRP)**: Mỗi class chỉ implement đúng một production rule.
+- **Open/Closed (OCP)**: Thêm operator mới = thêm class mới, không sửa class cũ.
+- **Recursive Composition**: Dùng đệ quy để giải quyết vấn đề phức tạp — elegance của pattern.
+
+**Trade-offs:**
+- **Class explosion**: Ngữ pháp phức tạp (10+ production rules) dẫn đến quá nhiều class. Có thể giảm bằng cách dùng hàm (functional approach) cho rule đơn giản.
+- **Performance**: AST interpreter chậm hơn code compiled. Với ngữ pháp lớn, cần JIT compile (dùng `code` module hoặc số hóa rule).
+- **Maintenance**: Khi grammar thay đổi thường xuyên, chi phí bảo trì cao. Cân nhắc dùng DSL engine chuyên dụng (ANTLR, Lark) thay vì tự viết.
+
+**Khi không nên dùng:**
+- Ngữ pháp quá phức tạp (hàng trăm rule) — dùng parser generator (ANTLR, Lark).
+- Cần hiệu năng cực cao — compile rule thành Python function bằng `eval` (có sandbox) hoặc dùng `ast` module.
+- Ngữ pháp đơn giản (1–2 operator) — `if-else` đủ dùng.
+
+## Ví dụ code hoàn chỉnh
+
+### Cách làm sai: Dùng eval
 
 ```python
-from abc import ABC, abstractmethod
+from __future__ import annotations
+from typing import Any
+import operator
 
-class Expression(ABC):
-    @abstractmethod
-    def interpret(self, context: str) -> bool:
-        pass
 
-class TerminalExpression(Expression):
-    def __init__(self, word: str):
-        self.word = word
+class UnsafeRuleEngine:
+    """Dùng eval — cực kỳ nguy hiểm, không kiểm soát được."""
 
-    def interpret(self, context: str) -> bool:
-        return self.word.lower() in context.lower()
+    def evaluate(self, rule: str, data: dict[str, Any]) -> bool:
+        # Ví dụ rule: "(data['temperature'] > 85 and data['pressure'] > 100)"
+        # Nguy cơ: eval("__import__('os').system('rm -rf /')") — RCE!
+        return bool(eval(rule, {"data": data, "__builtins__": {}}))
 
-class OrExpression(Expression):
-    def __init__(self, expr1: Expression, expr2: Expression):
-        self.expr1 = expr1
-        self.expr2 = expr2
-
-    def interpret(self, context: str) -> bool:
-        return self.expr1.interpret(context) or self.expr2.interpret(context)
-
-class AndExpression(Expression):
-    def __init__(self, expr1: Expression, expr2: Expression):
-        self.expr1 = expr1
-        self.expr2 = expr2
-
-    def interpret(self, context: str) -> bool:
-        return self.expr1.interpret(context) and self.expr2.interpret(context)
-
-class NotExpression(Expression):
-    def __init__(self, expr: Expression):
-        self.expr = expr
-
-    def interpret(self, context: str) -> bool:
-        return not self.expr.interpret(context)
-
-# Sử dụng
-java = TerminalExpression('Java')
-spring = TerminalExpression('Spring')
-js = TerminalExpression('JavaScript')
-
-query = AndExpression(
-    OrExpression(java, spring),
-    NotExpression(js)
-)
-
-text = 'Tôi học Java và Spring Boot'
-print(query.interpret(text))  # True
+    # Không thể extend operator, không thể debug, không thể validate
 ```
 
-## Khi nào dùng
+### Cách làm đúng: Interpreter Pattern
 
-- Cần diễn giải một ngôn ngữ đơn giản
-- Grammar ổn định và không quá phức tạp
-- Cần xây dựng cây cú pháp
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from typing import Any, Callable, Optional
+import re
+import logging
+from enum import Enum, auto
 
-## Thực tế
+logger = logging.getLogger(__name__)
 
-- Django ORM filter: `User.objects.filter(name__contains='John')`
-- SQL parser
-- Template engine (Jinja2, Django template)
-- Regular expression engine
+
+# --- Context ---
+
+@dataclass
+class SensorData:
+    """Dữ liệu từ cảm biến — context cho interpret."""
+    temperature: float = 25.0
+    pressure: float = 100.0
+    vibration: float = 0.5
+    humidity: float = 50.0
+    zone: str = "safe"
+    status: str = "normal"
+    timestamp: int = 0
+
+    def get(self, field: str) -> Any:
+        return getattr(self, field, None)
+
+
+# --- Abstract Expression ---
+
+class Expression(ABC):
+    """Interface cho mọi node trong AST."""
+
+    @abstractmethod
+    def interpret(self, context: SensorData) -> bool:
+        ...
+
+    def validate(self) -> list[str]:
+        """Kiểm tra tính hợp lệ của expression tree."""
+        return []
+
+
+# --- Terminal Expressions ---
+
+class FieldExpression(Expression):
+    """Lấy giá trị của một field từ context."""
+    def __init__(self, field_name: str) -> None:
+        self.field_name = field_name
+
+    def interpret(self, context: SensorData) -> bool:
+        raise TypeError("FieldExpression không thể interpret trực tiếp — dùng trong comparison")
+
+    def __repr__(self) -> str:
+        return f"Field({self.field_name})"
+
+
+class LiteralExpression(Expression):
+    """Giá trị hằng số."""
+    def __init__(self, value: Any) -> None:
+        self.value = value
+
+    def interpret(self, context: SensorData) -> Any:
+        return self.value
+
+    def __repr__(self) -> str:
+        return f"Literal({self.value})"
+
+
+# --- Comparison Operators ---
+
+class ComparisonOp(Enum):
+    GT = ">"
+    GE = ">="
+    LT = "<"
+    LE = "<="
+    EQ = "=="
+    NE = "!="
+    CONTAINS = "contains"
+    MATCHES = "matches"
+    BETWEEN = "between"
+
+
+class ComparisonExpression(Expression):
+    """So sánh field với literal hoặc field khác."""
+    def __init__(
+        self,
+        field: str,
+        op: ComparisonOp,
+        value: Any,
+    ) -> None:
+        self.field = field
+        self.op = op
+        self.value = value
+
+    def interpret(self, context: SensorData) -> bool:
+        field_val = context.get(self.field)
+        if field_val is None:
+            logger.warning(f"Field '{self.field}' not found in context")
+            return False
+
+        try:
+            match self.op:
+                case ComparisonOp.GT:
+                    return field_val > self.value
+                case ComparisonOp.GE:
+                    return field_val >= self.value
+                case ComparisonOp.LT:
+                    return field_val < self.value
+                case ComparisonOp.LE:
+                    return field_val <= self.value
+                case ComparisonOp.EQ:
+                    return field_val == self.value
+                case ComparisonOp.NE:
+                    return field_val != self.value
+                case ComparisonOp.CONTAINS:
+                    return str(self.value) in str(field_val)
+                case ComparisonOp.MATCHES:
+                    return bool(re.search(str(self.value), str(field_val)))
+                case ComparisonOp.BETWEEN:
+                    if not isinstance(self.value, (list, tuple)) or len(self.value) != 2:
+                        raise ValueError("BETWEEN requires [min, max]")
+                    return self.value[0] <= field_val <= self.value[1]
+                case _:
+                    raise ValueError(f"Unknown operator: {self.op}")
+        except TypeError as e:
+            logger.error(f"Type error comparing {field_val} {self.op.value} {self.value}: {e}")
+            return False
+
+    def validate(self) -> list[str]:
+        errors = []
+        op_name = self.op.value if isinstance(self.op, ComparisonOp) else str(self.op)
+        if self.op == ComparisonOp.BETWEEN:
+            if not isinstance(self.value, (list, tuple)) or len(self.value) != 2:
+                errors.append(f"BETWEEN requires [min, max], got {self.value}")
+        return errors
+
+    def __repr__(self) -> str:
+        return f"{self.field} {self.op.value} {self.value}"
+
+
+# --- Logical Operators (Nonterminal Expressions) ---
+
+class AndExpression(Expression):
+    """Logical AND."""
+    def __init__(self, left: Expression, right: Expression) -> None:
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: SensorData) -> bool:
+        return self.left.interpret(context) and self.right.interpret(context)
+
+    def validate(self) -> list[str]:
+        return self.left.validate() + self.right.validate()
+
+    def __repr__(self) -> str:
+        return f"({self.left} AND {self.right})"
+
+
+class OrExpression(Expression):
+    """Logical OR."""
+    def __init__(self, left: Expression, right: Expression) -> None:
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: SensorData) -> bool:
+        return self.left.interpret(context) or self.right.interpret(context)
+
+    def validate(self) -> list[str]:
+        return self.left.validate() + self.right.validate()
+
+    def __repr__(self) -> str:
+        return f"({self.left} OR {self.right})"
+
+
+class NotExpression(Expression):
+    """Logical NOT."""
+    def __init__(self, expr: Expression) -> None:
+        self.expr = expr
+
+    def interpret(self, context: SensorData) -> bool:
+        return not self.expr.interpret(context)
+
+    def validate(self) -> list[str]:
+        return self.expr.validate()
+
+    def __repr__(self) -> str:
+        return f"NOT ({self.expr})"
+
+
+# --- XorExpression (mở rộng) ---
+
+class XorExpression(Expression):
+    """Logical XOR — ví dụ mở rộng ngữ pháp."""
+    def __init__(self, left: Expression, right: Expression) -> None:
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: SensorData) -> bool:
+        return self.left.interpret(context) != self.right.interpret(context)
+
+    def __repr__(self) -> str:
+        return f"({self.left} XOR {self.right})"
+
+
+# --- Parser (Recursive Descent) ---
+
+class RuleParser:
+    """Parser chuyển chuỗi rule thành AST."""
+
+    def __init__(self) -> None:
+        self._tokens: list[str] = []
+        self._pos: int = 0
+
+    def parse(self, rule_string: str) -> Expression:
+        """Public API: parse rule string → Expression tree."""
+        self._tokenize(rule_string)
+        self._pos = 0
+        ast = self._parse_or()
+        if self._pos < len(self._tokens):
+            raise SyntaxError(f"Unexpected token: {self._tokens[self._pos:]}")
+        return ast
+
+    def _tokenize(self, s: str) -> None:
+        """Tách chuỗi thành token list."""
+        s = s.replace("(", " ( ").replace(")", " ) ")
+        tokens = []
+        for t in s.split():
+            t = t.strip()
+            if t:
+                tokens.append(t)
+        self._tokens = tokens
+
+    def _peek(self) -> Optional[str]:
+        return self._tokens[self._pos] if self._pos < len(self._tokens) else None
+
+    def _consume(self, expected: str | None = None) -> str:
+        token = self._tokens[self._pos]
+        if expected and token != expected:
+            raise SyntaxError(f"Expected '{expected}', got '{token}'")
+        self._pos += 1
+        return token
+
+    def _parse_or(self) -> Expression:
+        left = self._parse_and()
+        while self._peek() == "OR":
+            self._consume("OR")
+            right = self._parse_and()
+            left = OrExpression(left, right)
+        return left
+
+    def _parse_and(self) -> Expression:
+        left = self._parse_not()
+        while self._peek() == "AND":
+            self._consume("AND")
+            right = self._parse_not()
+            left = AndExpression(left, right)
+        return left
+
+    def _parse_not(self) -> Expression:
+        if self._peek() == "NOT":
+            self._consume("NOT")
+            return NotExpression(self._parse_atom())
+        # XOR: a XOR b
+        left = self._parse_atom()
+        if self._peek() == "XOR":
+            self._consume("XOR")
+            right = self._parse_atom()
+            return XorExpression(left, right)
+        return left
+
+    def _parse_atom(self) -> Expression:
+        token = self._peek()
+        if token is None:
+            raise SyntaxError("Unexpected end of expression")
+
+        if token == "(":
+            self._consume("(")
+            expr = self._parse_or()
+            self._consume(")")
+            return expr
+
+        # So sánh: field op value
+        return self._parse_comparison()
+
+    def _parse_comparison(self) -> Expression:
+        field = self._consume()
+        op_token = self._peek()
+
+        op_map = {
+            ">": ComparisonOp.GT,
+            ">=": ComparisonOp.GE,
+            "<": ComparisonOp.LT,
+            "<=": ComparisonOp.LE,
+            "==": ComparisonOp.EQ,
+            "!=": ComparisonOp.NE,
+            "contains": ComparisonOp.CONTAINS,
+            "matches": ComparisonOp.MATCHES,
+            "between": ComparisonOp.BETWEEN,
+        }
+
+        if op_token not in op_map:
+            raise SyntaxError(f"Expected operator, got '{op_token}'")
+
+        op = op_map[op_token]
+        self._consume(op_token)
+
+        if op == ComparisonOp.BETWEEN:
+            self._consume("[")
+            low = float(self._consume())
+            self._consume(",")
+            high = float(self._consume())
+            self._consume("]")
+            return ComparisonExpression(field, op, [low, high])
+
+        value_token = self._consume()
+        try:
+            value = int(value_token)
+        except ValueError:
+            try:
+                value = float(value_token)
+            except ValueError:
+                value = value_token.strip('"').strip("'")
+
+        return ComparisonExpression(field, op, value)
+
+
+# --- Usage ---
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
+    parser = RuleParser()
+
+    rules = [
+        "temperature > 85 AND pressure > 100",
+        "vibration > 5.0 OR zone == unsafe",
+        "NOT (status == error) AND temperature between [20, 80]",
+        "(temperature > 100 AND pressure > 200) OR zone == critical",
+        "zone contains safe AND humidity > 30",
+        "status matches err.*",
+    ]
+
+    data = SensorData(
+        temperature=90.0,
+        pressure=150.0,
+        vibration=2.0,
+        humidity=45.0,
+        zone="safe-zone",
+        status="error_404",
+    )
+
+    for rule_str in rules:
+        try:
+            ast = parser.parse(rule_str)
+            result = ast.interpret(data)
+            errors = ast.validate()
+            print(f"  Rule: {rule_str}")
+            print(f"  AST:  {ast}")
+            print(f"  Valid: {errors if errors else 'OK'}")
+            print(f"  Result: {'✅ PASS' if result else '❌ FAIL'}")
+            print()
+        except (SyntaxError, ValueError) as e:
+            print(f"  ⚠️ Error parsing '{rule_str}': {e}\n")
+```
+
+## Sơ đồ UML
+
+```
+┌──────────────────────────┐
+│      Expression (ABC)    │
+│──────────────────────────│
+│ + interpret(ctx): bool   │
+│ + validate(): list[str]  │
+└────────────┬─────────────┘
+             │
+    ┌────────┼───────────┬──────────────┐
+    │        │           │              │
+    │  ┌─────┴─────┐  ┌──┴──────┐  ┌───┴────────┐
+    │  │ Terminal  │  │ Nonterm │  │Comparison  │
+    │  │ Expression│  │Expression│  │Expression  │
+    │  └─────┬─────┘  └──┬──────┘  └────────────┘
+    │        │           │
+ ┌──┴────┐ ┌─┴───┐  ┌───┴────┐  ┌────┴───┐  ┌───────┐
+ │Field  │ │Lit  │  │AndExpr │  │OrExpr  │  │NotExpr│
+ │Expr   │ │Expr │  │        │  │        │  │       │
+ └───────┘ └─────┘  └────────┘  └────────┘  └───────┘
+
+┌────────────────────────┐
+│    RuleParser          │
+│────────────────────────│
+│ - tokens: list[str]    │
+│ - pos: int             │
+│────────────────────────│
+│ + parse(s): Expression │
+│ - _parse_or(): Expr    │
+│ - _parse_and(): Expr   │
+│ - _parse_not(): Expr   │
+│ - _parse_atom(): Expr  │
+└────────────────────────┘
+
+┌────────────────┐
+│  SensorData    │
+│  (Context)     │
+│────────────────│
+│ temperature    │
+│ pressure       │
+│ vibration      │
+│ zone           │
+│ ...            │
+└────────────────┘
+```
+
+## So sánh với Pattern liên quan
+
+**1. Composite Pattern:**
+Interpreter và Composite có cấu trúc giống nhau (cây với leaf và composite node). Khác biệt: Composite dùng để xử lý collection đồng nhất (gọi operation trên tất cả child), Interpreter dùng để tính toán kết quả boolean từ AST. Interpreter thêm `interpret(context)` nhận context parameter; Composite thường không có context.
+
+**2. Strategy Pattern:**
+Strategy thay đổi thuật toán trong runtime. Interpreter có thể dùng Strategy bên trong: mỗi operator (GT, LT, CONTAINS) có thể là một Strategy object thay vì enum với switch. Điều này giúp thêm operator mà không cần sửa class ComparisonExpression.
+
+**3. Visitor Pattern:**
+Visitor thường kết hợp với Interpreter để tách operations khỏi AST. Thay vì mỗi Expression có `interpret()`, bạn có thể dùng Visitor để implement interpret, validate, optimize, print riêng biệt. Interpreter pattern nguyên bản gộp logic vào mỗi node; với grammar phức tạp, nên tách bằng Visitor.
+
+## Ứng dụng thực tế
+
+**1. Django ORM Query (filter):**
+Django ORM dùng interpreter để biến đổi `Q` objects thành SQL WHERE clause. Mỗi `Q` object là expression node, `Q.AND` và `Q.OR` là nonterminal.
+
+```python
+from django.db.models import Q
+
+# Django Q object = Interpreter pattern
+query = Q(price__gt=100) & (Q(category="electronics") | Q(category="books"))
+# Biểu diễn AST: And(price_gt(100), Or(category_eq("electronics"), category_eq("books")))
+```
+
+**2. SQLAlchemy Core Expression Language:**
+SQLAlchemy xây dựng SQL query bằng Python expression — mỗi column, operator, function là expression node.
+
+```python
+from sqlalchemy import select, and_, or_, text
+
+# SQLAlchemy expression = Interpreter pattern
+stmt = select(users).where(
+    and_(
+        users.c.age > 18,
+        or_(
+            users.c.country == "VN",
+            users.c.country == "US"
+        )
+    )
+)
+```
+
+**3. ANTLR / Lark Parser Generators:**
+Các parser generator implement Interpreter pattern ở mức cao hơn: grammar file định nghĩa production rules, tool sinh ra parser và listener/visitor classes.
+
+```python
+# Lark: Python parser generator
+from lark import Lark, Transformer
+
+grammar = """
+    rule: comparison ("AND" comparison)*
+    comparison: FIELD OP VALUE
+    FIELD: /[a-zA-Z_]+/
+    OP: ">" | "<" | "==" | ">=" | "<=" | "contains"
+    VALUE: NUMBER | ESCAPED_STRING
+    %import common.NUMBER
+    %import common.ESCAPED_STRING
+"""
+
+parser = Lark(grammar, start="rule")
+tree = parser.parse('temperature > 85 AND pressure > 100')
+```
+
+**4. Regular Expression Engine:**
+Mọi regex engine về bản chất là Interpreter pattern: pattern `[a-z]+@[a-z]+\.com` được parse thành AST gồm các node: `Group`, `Range`, `Quantifier`, `Concat`. Engine interpret AST trên input string.
+
+## Kiểm thử
+
+```python
+import pytest
+
+
+class TestInterpreterPattern:
+    def setup_method(self):
+        self.parser = RuleParser()
+        self.data = SensorData(
+            temperature=90.0,
+            pressure=150.0,
+            vibration=2.0,
+            humidity=45.0,
+            zone="safe-zone",
+            status="error_404",
+        )
+
+    def test_comparison_gt(self):
+        ast = self.parser.parse("temperature > 85")
+        assert ast.interpret(self.data) is True
+
+    def test_comparison_gt_false(self):
+        ast = self.parser.parse("temperature > 95")
+        assert ast.interpret(self.data) is False
+
+    def test_and_expression(self):
+        ast = self.parser.parse("temperature > 85 AND pressure > 100")
+        assert ast.interpret(self.data) is True
+
+    def test_and_expression_false(self):
+        ast = self.parser.parse("temperature > 85 AND vibration > 10")
+        assert ast.interpret(self.data) is False
+
+    def test_or_expression(self):
+        ast = self.parser.parse("vibration > 5.0 OR zone == safe-zone")
+        assert ast.interpret(self.data) is True
+
+    def test_not_expression(self):
+        ast = self.parser.parse("NOT (status == error)")
+        assert ast.interpret(self.data) is False
+
+    def test_nested_parentheses(self):
+        ast = self.parser.parse("(temperature > 80 AND pressure > 100) OR zone == critical")
+        assert ast.interpret(self.data) is True
+
+    def test_contains_operator(self):
+        ast = self.parser.parse('zone contains safe')
+        assert ast.interpret(self.data) is True
+
+    def test_matches_operator(self):
+        ast = self.parser.parse('status matches err.*')
+        assert ast.interpret(self.data) is True
+
+    def test_between_operator(self):
+        ast = self.parser.parse("temperature between [20, 80]")
+        assert ast.interpret(self.data) is False  # 90 > 80
+
+        ast2 = self.parser.parse("humidity between [30, 60]")
+        assert ast2.interpret(self.data) is True  # 45 ∈ [30, 60]
+
+    def test_xor_expression(self):
+        ast = self.parser.parse("temperature > 80 XOR vibration > 3.0")
+        assert ast.interpret(self.data) is True  # True XOR False = True
+
+    def test_validate_between_invalid(self):
+        """Validation phát hiện BETWEEN thiếu range."""
+        expr = ComparisonExpression("temp", ComparisonOp.BETWEEN, 100)
+        errors = expr.validate()
+        assert len(errors) > 0
+
+    def test_parse_syntax_error(self):
+        with pytest.raises(SyntaxError):
+            self.parser.parse("temperature >> 85")
+
+    def test_invalid_field(self):
+        ast = self.parser.parse("nonexistent > 10")
+        assert ast.interpret(self.data) is False
+
+    def test_empty_rule_raises_error(self):
+        with pytest.raises(SyntaxError):
+            self.parser.parse("")
+```
+
+## Ưu và nhược điểm
+
+| Ưu điểm | Nhược điểm |
+|---------|-----------|
+| An toàn: không dùng eval — không RCE | Class explosion khi ngữ pháp phức tạp |
+| Dễ mở rộng ngữ pháp (thêm class) | Hiệu năng kém hơn code compiled |
+| Cấu trúc cây rõ ràng, dễ debug | Khó bảo trì khi grammar thay đổi thường xuyên |
+| Hỗ trợ validation riêng biệt | Parser phức tạp nếu có operator precedence |
+| Tách biệt grammar khỏi interpreter logic | Với grammar lớn, nên dùng ANTLR/Lark |
+| Type safety hơn eval | Recursion depth có thể gây stack overflow |
+
+## Kết luận
+
+Interpreter pattern là giải pháp tuyệt vời cho các ngôn ngữ **đơn giản, ổn định, có cấu trúc đệ quy**. Áp dụng khi bạn cần parsing và thực thi user-defined expressions một cách an toàn, có thể mở rộng operator, và muốn kiểm soát chặt chẽ AST. Pattern này thường xuất hiện trong business rule engine, DSL cho IoT, filter/sort query, và template engine.
+
+**Golden rules:**
+1. Chỉ dùng khi grammar **nhỏ và ổn định** (< 20 production rules). Lớn hơn thì dùng parser generator (ANTLR, Lark).
+2. Tách **Parser** khỏi **Interpreter** — parser build AST, interpreter walk AST.
+3. Luôn implement `validate()` để kiểm tra AST trước khi interpret.
+4. Cân nhắc **Visitor pattern** nếu bạn cần nhiều thao tác trên AST (interpret, optimize, print, export).
+5. Với hiệu năng cao, **compile** AST thành function: dùng `code` module hoặc transpile sang SQL/Python.
