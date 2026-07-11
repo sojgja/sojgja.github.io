@@ -1,7 +1,7 @@
 ---
 id: builder
 title: Builder
-sidebar_label: \U0001f528 Builder
+sidebar_label: 🔨 Builder
 sidebar_position: 5
 ---
 

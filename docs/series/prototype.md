@@ -1,7 +1,7 @@
 ---
 id: prototype
 title: Prototype
-sidebar_label: \U0001f9ec Prototype
+sidebar_label: 🧬 Prototype
 sidebar_position: 6
 ---
 
