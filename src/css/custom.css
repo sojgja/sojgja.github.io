@@ -1,0 +1,112 @@
+:root {
+  --ifm-color-primary: #3578e5;
+  --ifm-color-primary-dark: #2d6ad0;
+  --ifm-color-primary-darker: #2a64c5;
+  --ifm-color-primary-darkest: #2353a2;
+  --ifm-color-primary-light: #4d89e8;
+  --ifm-color-primary-lighter: #5991ea;
+  --ifm-color-primary-lightest: #80aaef;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --doc-sidebar-width: 300px;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #66b0ff;
+  --ifm-color-primary-dark: #4da3ff;
+  --ifm-color-primary-darker: #3396ff;
+  --ifm-color-primary-darkest: #1a89ff;
+  --ifm-color-primary-light: #80bdff;
+  --ifm-color-primary-lighter: #99caff;
+  --ifm-color-primary-lightest: #b3d7ff;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar trái và phải tối đa 300px, content chiếm phần còn lại */
+.docs-wrapper,
+.blog-wrapper {
+  --ifm-container-width: 100%;
+  --ifm-container-width-xl: 100%;
+}
+
+.docs-wrapper .container,
+.blog-wrapper .container {
+  max-width: 100% !important;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.theme-doc-toc {
+  max-width: 300px;
+  min-width: 200px;
+}
+
+.blog-wrapper .theme-back-to-top-button {
+  bottom: 2rem;
+  right: 2rem;
+}
+
+/* Nút ẩn/hiện sidebar */
+.theme-doc-sidebar-container .collapseSidebarButton {
+  opacity: 1 !important;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 6px;
+  min-width: 30px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.theme-doc-sidebar-container .collapseSidebarButton:hover {
+  background: var(--ifm-color-primary-dark);
+}
+.theme-doc-sidebar-container .expandSidebarButton {
+  opacity: 1 !important;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 6px;
+  min-width: 30px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.theme-doc-sidebar-container .expandSidebarButton:hover {
+  background: var(--ifm-color-primary-dark);
+}
+
+/* Footer */
+.footer {
+  padding: 1.5rem 0 1rem;
+  margin-top: 2rem;
+}
+.footer .footer__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 0.5rem;
+}
+.footer .footer__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.footer .footer__link-item {
+  font-size: 0.85rem;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.footer .footer__link-item:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+.footer .footer__copyright {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}

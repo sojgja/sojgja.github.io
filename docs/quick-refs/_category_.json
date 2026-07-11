@@ -1,0 +1,11 @@
+{
+  "label": "⚡ Quick Refs",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Quick Refs",
+    "description": "Tra cứu nhanh — template, cheatsheet, command"
+  }
+}

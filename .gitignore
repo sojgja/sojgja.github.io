@@ -1,0 +1,34 @@
+# Dependencies
+node_modules
+__pycache__
+venv
+.venv
+
+# Build files
+build
+.docusaurus
+site
+
+# Distribution files
+dist
+
+# Caches and logs
+*.cpuprofile
+*.log
+*.tsbuildinfo
+.cache
+.eslintcache
+
+# macOS internals
+.DS_Store
+
+# Temporary files
+tmp
+
+# IDEs & Editors
+.idea
+*~
+
+# uv Python package manager
+uv.lock
+www/

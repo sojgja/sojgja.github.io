@@ -1,0 +1,11 @@
+{
+  "label": "🛠️ Guides",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Guides",
+    "description": "Practical guides and tutorials"
+  }
+}

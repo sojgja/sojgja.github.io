@@ -1,0 +1,11 @@
+{
+  "label": "📑 References",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "References",
+    "description": "Reference materials and documentation"
+  }
+}

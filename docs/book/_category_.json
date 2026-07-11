@@ -1,0 +1,11 @@
+{
+  "label": "📚 Book",
+  "position": 10,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Book",
+    "description": "Book chapters and content"
+  }
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#1b1b2d"/>
+  <rect x="60" y="60" width="1080" height="510" rx="30" fill="#3578e5" opacity="0.15"/>
+  <text x="600" y="280" text-anchor="middle" fill="white" font-size="80" font-family="Arial" font-weight="bold">sojgja</text>
+  <text x="600" y="370" text-anchor="middle" fill="#a0a0b0" font-size="32" font-family="Arial">Software Engineer &amp; Algo Trading</text>
+  <rect x="460" y="420" width="280" height="4" rx="2" fill="#3578e5"/>
+</svg>
