@@ -75,6 +75,7 @@ const config = {
         items: [
           { to: '/docs/2026/hello-2026', label: 'Help', position: 'left' },
           { to: '/docs/book/book-intro', label: 'Book', position: 'left' },
+          { to: '/docs/category/series', label: 'Series', position: 'left' },
           { to: '/about', label: 'About', position: 'left' },
         ],
       },
