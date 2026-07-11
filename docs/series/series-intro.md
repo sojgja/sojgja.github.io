@@ -1,5 +1,5 @@
 ---
-id: series-index
+id: series-intro
 title: Design Patterns — 23 mẫu thiết kế
 sidebar_label: 📖 Giới thiệu
 sidebar_position: 1
