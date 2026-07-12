@@ -565,55 +565,52 @@ if __name__ == "__main__":
     print(f"Prototypes preserved: {id(goblin_proto)} vs spawned: {id(spawner.spawn_goblin())}")
 ```
 
-## So do UML
+## Sơ đồ UML
 
+```mermaid
+classDiagram
+    class Prototype {
+        <<interface>>
+        +clone(**kwargs) Self
+        +reset() void
+    }
+    class Enemy {
+        -entity_id: str
+        -name: str
+        -enemy_type: str
+        -hp, max_hp: int
+        -mp, max_mp: int
+        -attack, defense: int
+        -speed: int
+        -skills: list~Skill~
+        -weapon, armor: str
+        -texture_path: str
+        -animation: AnimationData
+        -behavior_tree: str
+        -buffs, debuffs: list
+        +clone(**kwargs) Enemy
+        +reset() void
+        +take_damage(amount) int
+        +is_alive() bool
+        +scale_to_level(lvl) Enemy
+        +to_elite() Enemy
+    }
+    class Goblin {
+    }
+    class Orc {
+    }
+    class Dragon {
+    }
+    class PrototypeRegistry {
+        -_prototypes: dict~str, Prototype~
+        +register(key, prototype) void
+    }
+    Prototype <|-- Enemy
+    Enemy <|-- Goblin
+    Enemy <|-- Orc
+    Enemy <|-- Dragon
+    PrototypeRegistry --> Prototype
 ```
-+-----------------------------------------------+
-|              «interface»                       |
-|               Prototype                        |
-+-----------------------------------------------+
-| + clone(**kwargs) -> Self                     |
-| + reset()                                      |
-+-----------------------------------------------+
-          ^
-          |
-+---------+--------------------+
-|           Enemy              |
-+-------------------------------+
-| - entity_id: str             |
-| - name: str                  |
-| - enemy_type: str            |
-| - hp, max_hp: int            |
-| - mp, max_mp: int            |
-| - attack, defense: int       |
-| - speed: int                 |
-| - skills: list[Skill]        |
-| - weapon, armor: str         |
-| - texture_path: str          |
-| - animation: AnimationData   |
-| - behavior_tree: str         |
-| - buffs, debuffs: list       |
-+-------------------------------+
-| + clone(**kwargs) -> Enemy   |
-| + reset()                    |
-| + take_damage(amount) -> int |
-| + is_alive() -> bool         |
-| + scale_to_level(lvl) -> En |
-| + to_elite() -> Enemy        |
-+-------------------------------+
-          ^
-          |  co the co nhieu ConcretePrototype
-          |
-+---------+---------+---------+
-|  Goblin  |   Orc   |  Dragon |  ...
-+---------+---------+---------+
-
-+-----------------------------------------------+
-|            PrototypeRegistry                   |
-+-----------------------------------------------+
-| - _prototypes: dict[str, Prototype]           |
-+-----------------------------------------------+
-| + register(key, prototype)                    |
 | + unregister(key)                             |
 | + spawn(key, **kwargs) -> Prototype           |
 | + spawn_batch(key, count) -> list[Prototype]  |
