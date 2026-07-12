@@ -1,3 +1,8 @@
+---
+sidebar_label: 🛡️ Quản lý vốn & rủi ro
+sidebar_position: 2
+---
+
 # QUẢN LÝ VỐN VÀ RỦI RO — BẢO VỆ TÀI KHOẢN LÀ TRÊN HẾT
 
 

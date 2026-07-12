@@ -1,3 +1,8 @@
+---
+sidebar_label: 📐 Phương pháp giao dịch
+sidebar_position: 3
+---
+
 # PHƯƠNG PHÁP GIAO DỊCH — ĐƠN GIẢN HÓA ĐỂ THÀNH CÔNG
 
 

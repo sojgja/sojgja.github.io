@@ -571,7 +571,7 @@ if __name__ == "__main__":
 classDiagram
     class Prototype {
         <<interface>>
-        +clone(**kwargs) Self
+        +clone(params) Self
         +reset() void
     }
     class Enemy {
@@ -588,7 +588,7 @@ classDiagram
         -animation: AnimationData
         -behavior_tree: str
         -buffs, debuffs: list
-        +clone(**kwargs) Enemy
+        +clone(params) Enemy
         +reset() void
         +take_damage(amount) int
         +is_alive() bool
@@ -604,30 +604,25 @@ classDiagram
     class PrototypeRegistry {
         -_prototypes: dict~str, Prototype~
         +register(key, prototype) void
+        +unregister(key) void
+        +spawn(key, params) Prototype
+        +spawn_batch(key, count) list~Prototype~
+        +list_prototypes() list~str~
+    }
+    class EnemySpawner {
+        -registry: PrototypeRegistry
+        -_spawn_count: int
+        +spawn_goblin(level) Enemy
+        +spawn_orc(level, elite) Enemy
+        +spawn_dragon(level) Enemy
+        +spawn_wave(enemies) list~Enemy~
     }
     Prototype <|-- Enemy
     Enemy <|-- Goblin
     Enemy <|-- Orc
     Enemy <|-- Dragon
     PrototypeRegistry --> Prototype
-```
-| + unregister(key)                             |
-| + spawn(key, **kwargs) -> Prototype           |
-| + spawn_batch(key, count) -> list[Prototype]  |
-| + list_prototypes() -> list[str]              |
-+-----------------------------------------------+
-
-+-----------------------------------------------+
-|              EnemySpawner (Client)             |
-+-----------------------------------------------+
-| - registry: PrototypeRegistry                 |
-| - _spawn_count: int                           |
-+-----------------------------------------------+
-| + spawn_goblin(level) -> Enemy                |
-| + spawn_orc(level, elite) -> Enemy            |
-| + spawn_dragon(level) -> Enemy                |
-| + spawn_wave(list) -> list[Enemy]             |
-+-----------------------------------------------+
+    EnemySpawner --> PrototypeRegistry
 ```
 
 ## So sanh voi Pattern lien quan
@@ -695,35 +690,61 @@ for i in range(10):
 
 Unity dung ScriptableObject nhu Prototype:
 
-```csharp
-// C# — Unity ScriptableObject lam Prototype
-[CreateAssetMenu(fileName = "EnemyData", menuName = "Enemy/Prototype")]
-public class EnemyPrototype : ScriptableObject
-{
-    public string enemyName;
-    public int hp;
-    public int attack;
-    public int defense;
-    public GameObject prefab;
-    public RuntimeAnimatorController animator;
-    public List<SkillData> skills;
-}
+```python
+# Python — ScriptableObject concept lam Prototype
+from dataclasses import dataclass, field
+from typing import Optional
+import copy
 
-// Su dung
-public class EnemySpawner : MonoBehaviour
-{
-    public EnemyPrototype orcPrototype;
 
-    void SpawnOrc()
-    {
-        // Clone prototype de tao instance
-        GameObject orc = Instantiate(orcPrototype.prefab);
-        EnemyStats stats = orc.GetComponent<EnemyStats>();
-        stats.hp = orcPrototype.hp;
-        stats.attack = orcPrototype.attack;
-        // ...
-    }
-}
+@dataclass
+class EnemyPrototype:
+    """Prototype cho enemy — du lieu shared."""
+    enemy_name: str = ""
+    hp: int = 100
+    attack: int = 10
+    defense: int = 5
+    prefab_path: str = ""
+    animator_path: str = ""
+    skills: list = field(default_factory=list)
+
+    def clone(self, **overrides) -> "EnemyPrototype":
+        cloned = copy.deepcopy(self)
+        for key, value in overrides.items():
+            if hasattr(cloned, key):
+                setattr(cloned, key, value)
+        return cloned
+
+
+class EnemySpawner:
+    """Spawner dung Prototype pattern."""
+
+    def __init__(self, orc_prototype: EnemyPrototype):
+        self.orc_prototype = orc_prototype
+
+    def spawn_orc(self) -> dict:
+        """Clone prototype de tao instance."""
+        proto = self.orc_prototype
+        return {
+            "name": proto.enemy_name,
+            "hp": proto.hp,
+            "attack": proto.attack,
+            "defense": proto.defense,
+            "prefab": proto.prefab_path,
+            "animator": proto.animator_path,
+        }
+
+
+# Su dung
+orc_proto = EnemyPrototype(
+    enemy_name="Orc Warrior",
+    hp=200, attack=35, defense=25,
+    prefab_path="enemies/orc.prefab",
+    animator_path="animators/orc.controller",
+)
+spawner = EnemySpawner(orc_proto)
+orc = spawner.spawn_orc()
+print(f"Spawned {orc['name']} with HP={orc['hp']}")
 ```
 
 ### 4. Redis Lua Script — cached compilation

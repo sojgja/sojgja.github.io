@@ -240,20 +240,25 @@ print(c is d)  # False — too long to intern
 
 **3. Game Development (Unity, Unreal Engine)**: Unity dùng Flyweight qua ScriptableObject để chia sẻ dữ liệu giữa nhiều GameObjects. Một Material được chia sẻ giữa hàng ngàn mesh instances:
 
-```csharp
-// Unity ScriptableObject — Flyweight Pattern
-public class ItemData : ScriptableObject {
-    public string itemName;
-    public Sprite icon;
-    public Mesh mesh;
-    public Material material;
-}
+```python
+# Unity ScriptableObject — Flyweight Pattern (conceptual)
+from dataclasses import dataclass
 
-// Mỗi Item trong game chỉ tham chiếu đến ItemData dùng chung
-public class Item : MonoBehaviour {
-    public ItemData data;  // Flyweight
-    public int quantity;    // Extrinsic state
-}
+
+@dataclass(frozen=True)
+class ItemData:
+    """Flyweight — dữ liệu item dùng chung."""
+    item_name: str
+    icon: str  # Path to sprite
+    mesh: str  # Path to mesh
+    material: str  # Path to material
+
+
+@dataclass
+class Item:
+    """Context — tham chiếu ItemData dùng chung + extrinsic state."""
+    data: ItemData  # Flyweight
+    quantity: int = 1  # Extrinsic state
 ```
 
 **4. Text Editor — Glyph Rendering**: Trong trình soạn thảo văn bản, mỗi ký tự là một object với font, size, style, color. Flyweight cho phép chia sẻ glyph data giữa các ký tự giống nhau:

@@ -392,12 +392,13 @@ conn = sqlite3.connect("test.db")
 
 **3. GUI Framework (Qt, Tkinter)**: Các framework GUI sử dụng Bridge để tách platform-independent API (abstraction) khỏi platform-specific rendering (implementation). Qt QWindow abstraction làm việc với các QPlatformWindow implementor khác nhau cho Windows, macOS, Linux:
 
-```cpp
-// Qt internals — Bridge Pattern
-class QWindow {  // Abstraction
-    QPlatformWindow *d;  // Implementor
-};
-// QWindowsWindow, QXcbWindow, QCocoaWindow: Concrete Implementors
+```python
+# Qt internals — Bridge Pattern (conceptual)
+class QWindow:  # Abstraction
+    def __init__(self) -> None:
+        self._d: QPlatformWindow  # Implementor
+
+# QWindowsWindow, QXcbWindow, QCocoaWindow: Concrete Implementors
 ```
 
 **4. Logging framework**: SLF4J (Java) / structlog (Python) là Bridge giữa logging API và logging backend:

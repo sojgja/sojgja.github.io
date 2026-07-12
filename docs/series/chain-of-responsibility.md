@@ -344,31 +344,29 @@ class RateLimitMiddleware:
 
 Tương tự Django, mỗi middleware quyết định gọi `next()` hoặc short-circuit.
 
-```csharp
-// ASP.NET middleware
-app.Use(async (context, next) =>
-{
-    // Pre-processing
-    if (context.Request.Headers.ContainsKey("X-Api-Key"))
-        await next(); // Gọi middleware tiếp
-    else
-        await context.Response.WriteAsync("Unauthorized");
-});
+```python
+# ASP.NET middleware (conceptual)
+async def middleware(context: dict, next_handler: callable) -> None:
+    # Pre-processing
+    if "X-Api-Key" in context.get("headers", {}):
+        await next_handler()  # Gọi middleware tiếp
+    else:
+        context["response"] = "Unauthorized"
 ```
 
 **3. Java Servlet Filters (Jakarta EE):**
 
 `FilterChain` là chain of responsibility cổ điển. Mỗi `Filter` gọi `chain.doFilter()` để chuyển request.
 
-```java
-public class AuthFilter implements Filter {
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
-        if (((HttpServletRequest) req).getSession().getAttribute("user") != null)
-            chain.doFilter(req, res); // Chuyển tiếp
-        else
-            ((HttpServletResponse) res).sendError(401);
-    }
-}
+```python
+class AuthFilter:
+    """Java Servlet Filter concept — Chain of Responsibility."""
+    def do_filter(self, request: dict, response: dict, chain: callable) -> None:
+        session = request.get("session", {})
+        if session.get("user") is not None:
+            chain(request, response)  # Chuyển tiếp
+        else:
+            response["status"] = 401
 ```
 
 **4. Python Logging Handlers:**

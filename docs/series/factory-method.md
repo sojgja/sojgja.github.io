@@ -598,8 +598,8 @@ if __name__ == "__main__":
 classDiagram
     class PaymentFactory {
         <<interface>>
-        + create_payment(**kwargs) PaymentMethod
-        + process_payment(order, **kwargs) Transaction
+        + create_payment(params) PaymentMethod
+        + process_payment(order, params) Transaction
     }
     class CreditCardFactory {
         + create_payment() PaymentMethod
@@ -640,7 +640,7 @@ classDiagram
     class PaymentService {
         - factories: dict[str, PaymentFactory]
         + register_factory(name, factory)
-        + pay(order, method, **kwargs)
+        + pay(order, method, params)
     }
     PaymentFactory <|-- CreditCardFactory
     PaymentFactory <|-- PayPalFactory

@@ -616,15 +616,45 @@ Pilot B ──┘         │
 **4. JavaScript / Redux:**
 Redux store là mediator cho state management. Component dispatch action → store gọi reducer → store notify subscriber.
 
-```javascript
-// Redux store = Mediator
-const store = createStore(reducer);
+```python
+# Redux store = Mediator (conceptual)
+from dataclasses import dataclass, field
+from typing import Any, Callable
 
-// Component gửi action qua store (không gọi component khác)
-store.dispatch({ type: 'INCREMENT' });
 
-// Store thông báo cho subscriber
-store.subscribe(() => console.log(store.getState()));
+class Store:
+    """Redux-inspired store — Mediator pattern."""
+
+    def __init__(self, reducer: Callable, initial_state: dict = None):
+        self._state = initial_state or {}
+        self._reducer = reducer
+        self._subscribers: list[Callable] = []
+
+    def dispatch(self, action: dict) -> None:
+        """Component gửi action qua store (không gọi component khác)."""
+        self._state = self._reducer(self._state, action)
+        for subscriber in self._subscribers:
+            subscriber()
+
+    def subscribe(self, listener: Callable) -> Callable:
+        """Store thông báo cho subscriber."""
+        self._subscribers.append(listener)
+        return lambda: self._subscribers.remove(listener)
+
+    def get_state(self) -> dict:
+        return dict(self._state)
+
+
+# Usage
+def reducer(state: dict, action: dict) -> dict:
+    if action["type"] == "INCREMENT":
+        return {"count": state.get("count", 0) + 1}
+    return state
+
+
+store = Store(reducer)
+store.dispatch({"type": "INCREMENT"})
+store.subscribe(lambda: print(store.get_state()))
 ```
 
 ## Kiểm thử

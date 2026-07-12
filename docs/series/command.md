@@ -538,15 +538,22 @@ git cherry-pick def456                # replay command
 
 `javax.swing.Action` interface định nghĩa `actionPerformed()` (execute). Menu item, button, toolbar đều dùng chung Action object.
 
-```java
-// Java Swing Action = Command pattern
-Action saveAction = new AbstractAction("Save") {
-    public void actionPerformed(ActionEvent e) {
-        // Save logic
-    }
-};
-JButton saveButton = new JButton(saveAction);
-JMenuItem saveMenuItem = new JMenuItem(saveAction);
+```python
+# Java Swing Action = Command pattern (conceptual)
+from dataclasses import dataclass
+
+
+@dataclass
+class SaveAction:
+    """Command pattern implementation."""
+    def action_performed(self, event: dict = None) -> None:
+        # Save logic
+        ...
+
+save_action = SaveAction()
+# Action có thể gắn vào cả button và menu item
+save_button = Button("Save", command=save_action.action_performed)
+save_menu_item = MenuItem("Save", command=save_action.action_performed)
 ```
 
 ## Kiểm thử
