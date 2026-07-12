@@ -741,58 +741,87 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│                    «interface» CloudFactory                    │
-├────────────────────────────────────────────────────────────────┤
-│ + create_storage() -> StorageService                          │
-│ + create_queue() -> MessageQueueService                       │
-│ + create_database() -> DatabaseService                        │
-│ + provider_name() -> str                                      │
-└────────────────────────────────────────────────────────────────┘
-            ▲                      ▲                      ▲
-            │                      │                      │
-┌───────────┴──────────┐ ┌────────┴──────────┐ ┌─────────┴──────────┐
-│   AWSCloudFactory    │ │ AzureCloudFactory  │ │   GCPCloudFactory  │
-├──────────────────────┤ ├────────────────────┤ ├────────────────────┤
-│ + create_storage()   │ │ + create_storage() │ │ + create_storage() │
-│   -> S3Storage       │ │   -> AzureBlob     │ │   -> GCSStorage    │
-│ + create_queue()     │ │ + create_queue()   │ │ + create_queue()   │
-│   -> SQSQueue        │ │   -> ServiceBus    │ │   -> PubSub        │
-│ + create_database()  │ │ + create_database()│ │ + create_database()│
-│   -> DynamoDB        │ │   -> CosmosDB      │ │   -> Firestore     │
-└──────────────────────┘ └────────────────────┘ └────────────────────┘
-
-┌──────────────┐  ┌──────────────────┐  ┌──────────────────┐
-│ StorageService│  │MessageQueueService│  │DatabaseService   │
-│  «interface»  │  │   «interface»    │  │  «interface»     │
-├──────────────┤  ├──────────────────┤  ├──────────────────┤
-│ + upload()   │  │ + send()         │  │ + save()         │
-│ + download() │  │ + receive()      │  │ + get()          │
-│ + delete()   │  │ + delete_message()│ │ + query()        │
-│ + exists()   │  │ + queue_exists() │  │ + delete()       │
-│ + list_keys()│  └──────────────────┘  │ + batch_save()   │
-└──────────────┘                       └──────────────────┘
-       ▲              ▲                        ▲
-       │              │                        │
-  ┌────┴────┐   ┌────┴────┐             ┌─────┴─────┐
-  │ S3      │   │ SQS     │             │ DynamoDB  │
-  │ AzureBlob│  │ ServiceBus│            │ CosmosDB  │
-  │ GCS     │   │ PubSub  │             │ Firestore │
-  └─────────┘   └─────────┘             └───────────┘
-
-┌───────────────────────────────────────────┐
-│        AnalyticsPipeline (Client)         │
-├───────────────────────────────────────────┤
-│ - factory: CloudFactory                   │
-│ - storage: StorageService                 │
-│ - queue: MessageQueueService              │
-│ - db: DatabaseService                     │
-├───────────────────────────────────────────┤
-│ + ingest(payload) -> str                  │
-│ + get_record(id) -> Optional[DataRecord]  │
-│ + export_to_report(key) -> StorageResult  │
-└───────────────────────────────────────────┘
+```mermaid
+classDiagram
+    class CloudFactory {
+        <<interface>>
+        + create_storage() StorageService
+        + create_queue() MessageQueueService
+        + create_database() DatabaseService
+        + provider_name() str
+    }
+    class AWSCloudFactory {
+        + create_storage() StorageService
+        + create_queue() MessageQueueService
+        + create_database() DatabaseService
+    }
+    class AzureCloudFactory {
+        + create_storage() StorageService
+        + create_queue() MessageQueueService
+        + create_database() DatabaseService
+    }
+    class GCPCloudFactory {
+        + create_storage() StorageService
+        + create_queue() MessageQueueService
+        + create_database() DatabaseService
+    }
+    class StorageService {
+        <<interface>>
+        + upload()
+        + download()
+        + delete()
+        + exists()
+        + list_keys()
+    }
+    class MessageQueueService {
+        <<interface>>
+        + send()
+        + receive()
+        + delete_message()
+        + queue_exists()
+    }
+    class DatabaseService {
+        <<interface>>
+        + save()
+        + get()
+        + query()
+        + delete()
+        + batch_save()
+    }
+    class S3Storage
+    class AzureBlobStorage
+    class GCSStorage
+    class SQSQueue
+    class ServiceBusQueue
+    class PubSubQueue
+    class DynamoDBStore
+    class CosmosDBStore
+    class FirestoreStore
+    class AnalyticsPipeline {
+        - factory: CloudFactory
+        - storage: StorageService
+        - queue: MessageQueueService
+        - db: DatabaseService
+        + ingest(payload) str
+        + get_record(id) DataRecord
+        + export_to_report(key) StorageResult
+    }
+    CloudFactory <|-- AWSCloudFactory
+    CloudFactory <|-- AzureCloudFactory
+    CloudFactory <|-- GCPCloudFactory
+    StorageService <|-- S3Storage
+    StorageService <|-- AzureBlobStorage
+    StorageService <|-- GCSStorage
+    MessageQueueService <|-- SQSQueue
+    MessageQueueService <|-- ServiceBusQueue
+    MessageQueueService <|-- PubSubQueue
+    DatabaseService <|-- DynamoDBStore
+    DatabaseService <|-- CosmosDBStore
+    DatabaseService <|-- FirestoreStore
+    AnalyticsPipeline --> CloudFactory
+    AnalyticsPipeline --> StorageService
+    AnalyticsPipeline --> MessageQueueService
+    AnalyticsPipeline --> DatabaseService
 ```
 
 ## So sánh với Pattern liên quan

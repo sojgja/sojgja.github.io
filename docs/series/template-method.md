@@ -561,35 +561,43 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌───────────────────────────────┐
-│  ReportGenerator (Abstract)   │
-├───────────────────────────────┤
-│ # connect(ctx)                │
-│ # extract(ctx)                │
-│ # transform(ctx)              │
-│ # compute_metrics(ctx)        │
-│ # format_output(ctx)          │
-│ # export(ctx)                 │
-│ # pre_process(ctx)    [hook]  │
-│ # post_process(ctx)   [hook]  │
-│ # validate(ctx)       [hook]  │
-│ # cleanup(ctx)        [hook]  │
-├───────────────────────────────┤
-│ + generate(output_path)       │ ← Template Method
-└───────────────────────────────┘
-           ▲          ▲              ▲
-           │          │              │
-  ┌────────┴──┐  ┌───┴────────┐  ┌──┴────────────┐
-  │ Daily     │  │ RiskReport │  │ CSVExport      │
-  │ Revenue   │  │            │  │ Report         │
-  │ Report    │  │            │  │                │
-  ├───────────┤  ├────────────┤  ├────────────────┤
-  │+connect() │  │+connect()  │  │+connect()      │
-  │+extract() │  │+extract()  │  │+extract()      │
-  │+compute() │  │+transform()│  │+shouldValidate │
-  │+export()  │  │+compute()  │  │ = False        │
-  └───────────┘  └────────────┘  └────────────────┘
+```mermaid
+classDiagram
+    class ReportGenerator {
+        <<abstract>>
+        # connect(ctx)
+        # extract(ctx)
+        # transform(ctx)
+        # compute_metrics(ctx)
+        # format_output(ctx)
+        # export(ctx)
+        # pre_process(ctx)
+        # post_process(ctx)
+        # validate(ctx)
+        # cleanup(ctx)
+        + generate(output_path)
+    }
+    class DailyRevenueReport {
+        + connect()
+        + extract()
+        + compute_metrics()
+        + export()
+    }
+    class RiskReport {
+        + connect()
+        + extract()
+        + transform()
+        + compute_metrics()
+        + export()
+    }
+    class CSVExportReport {
+        + connect()
+        + extract()
+        + should_validate() bool
+    }
+    ReportGenerator <|-- DailyRevenueReport
+    ReportGenerator <|-- RiskReport
+    ReportGenerator <|-- CSVExportReport
 ```
 
 ---

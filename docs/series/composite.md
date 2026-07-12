@@ -311,33 +311,48 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────────────────┐
-│    WorkItemComponent         │
-│    (Component)               │
-│──────────────────────────────│
-│+ get_estimated_hours()→float │
-│+ get_cost()→float            │
-│+ get_progress()→float        │
-│+ display(indent)             │
-│+ add(WorkItemComponent)      │
-│+ remove(WorkItemComponent)   │
-│+ get_child(int)→Component    │
-└──────────┬───────────────────┘
-           │
-    ┌──────┼──────────────────┐
-    │      │                  │
-┌───┴──┐ ┌─┴──────┐  ┌───────┴──────┐
-│ Task │ │Milestone│  │ WorkPackage  │
-│(Leaf)│ │(Leaf)   │  │ (Composite)  │
-│──────│ │─────────│  │──────────────│
-│-hours│ │-date    │  │- children:   │
-│-cost │ │         │  │ List<Component│
-│-prog.│ │         │  │──────────────│
-│──────│ │         │  │+ add()       │
-│+ get_│ │         │  │+ remove()    │
-│ hours│ │         │  │+ get_child() │
-└──────┘ └─────────┘  └──────────────┘
+```mermaid
+classDiagram
+    class WorkItemComponent {
+        <<interface>>
+        +get_estimated_hours() float
+        +get_cost() float
+        +get_progress() float
+        +display(indent) void
+        +add(WorkItemComponent) void
+        +remove(WorkItemComponent) void
+        +get_child(int) WorkItemComponent
+    }
+    class Task {
+        -hours float
+        -cost float
+        -progress float
+        +get_estimated_hours() float
+        +get_cost() float
+        +get_progress() float
+        +display(indent) void
+    }
+    class Milestone {
+        -date str
+        +get_estimated_hours() float
+        +get_cost() float
+        +get_progress() float
+        +display(indent) void
+    }
+    class WorkPackage {
+        -children List~WorkItemComponent~
+        +get_estimated_hours() float
+        +get_cost() float
+        +get_progress() float
+        +display(indent) void
+        +add(WorkItemComponent) void
+        +remove(WorkItemComponent) void
+        +get_child(int) WorkItemComponent
+    }
+    WorkItemComponent <|-- Task
+    WorkItemComponent <|-- Milestone
+    WorkItemComponent <|-- WorkPackage
+    WorkPackage o--> WorkItemComponent
 ```
 
 ## So sánh với Pattern liên quan

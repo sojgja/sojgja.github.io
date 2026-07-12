@@ -362,39 +362,55 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────────────────┐
-│         Beverage             │
-│       (Component)            │
-│──────────────────────────────│
-│+ get_cost()→int              │
-│+ get_description()→str       │
-│+ get_calories()→int          │
-│+ get_size_ml()→int           │
-└──────────┬───────────────────┘
-           │
-     ┌─────┴──────┬──────────────────────────────┐
-     │            │                              │
-┌────┴────┐ ┌─────┴──────┐     ┌────────────────┴─────────────────┐
-│ Espresso│ │   Latte    │     │   BeverageDecorator (abstract)   │
-│(Concrete│ │ (Concrete  │     │──────────────────────────────────│
-│Component)│ │ Component) │     │ # _beverage: Beverage            │
-└─────────┘ └────────────┘     └────────────────┬─────────────────┘
-                                                │
-                    ┌───────────────────────────┼───────────────────┐
-                    │                           │                    │
-          ┌─────────┴──────┐          ┌─────────┴──────┐  ┌────────┴─────────┐
-          │ MilkDecorator  │          │CaramelDecorator│  │WhippedCream      │
-          │(Concrete       │          │(Concrete       │  │Decorator         │
-          │ Decorator)     │          │ Decorator)     │  │(Concrete Decor.) │
-          │────────────────│          │────────────────│  │──────────────────│
-          │+ get_cost()    │          │+ extra_shot    │  │+ get_cost()      │
-          │  → super+5000  │          │+ get_cost()    │  │  → super+10000   │
-          │+ get_desc()    │          │  → super+8000  │  └──────────────────┘
-          │  → super +     │          │+ get_desc()    │
-          │  " + Sữa tươi" │          │  → super +     │
-          └────────────────┘          │  " + Caramel"  │
-                                      └────────────────┘
+```mermaid
+classDiagram
+    class Beverage {
+        <<interface>>
+        +get_cost() int
+        +get_description() str
+        +get_calories() int
+        +get_size_ml() int
+    }
+    class Espresso {
+        +get_cost() int
+        +get_description() str
+        +get_calories() int
+        +get_size_ml() int
+    }
+    class Latte {
+        +get_cost() int
+        +get_description() str
+        +get_calories() int
+        +get_size_ml() int
+    }
+    class BeverageDecorator {
+        <<abstract>>
+        #_beverage Beverage
+        +get_cost() int
+        +get_description() str
+        +get_calories() int
+        +get_size_ml() int
+    }
+    class MilkDecorator {
+        +get_cost() int
+        +get_description() str
+    }
+    class CaramelDecorator {
+        -extra_shot bool
+        +get_cost() int
+        +get_description() str
+    }
+    class WhippedCreamDecorator {
+        +get_cost() int
+        +get_description() str
+    }
+    Beverage <|-- Espresso
+    Beverage <|-- Latte
+    Beverage <|-- BeverageDecorator
+    BeverageDecorator <|-- MilkDecorator
+    BeverageDecorator <|-- CaramelDecorator
+    BeverageDecorator <|-- WhippedCreamDecorator
+    BeverageDecorator o--> Beverage
 ```
 
 ## So sánh với Pattern liên quan

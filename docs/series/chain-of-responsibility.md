@@ -271,32 +271,40 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────┐     ┌──────────────────────────────┐
-│   Client     │────>│        Handler (ABC)          │
-└──────────────┘     │──────────────────────────────│
-                     │ - _next: Optional[Handler]    │
-                     │ + set_next(h): Handler        │
-                     │ + handle(c): Optional[str]    │
-                     │ # _handle_next(c): Optional   │
-                     └───────────┬──────────────────┘
-                                 │
-          ┌──────────────────────┼──────────┬─────────────────────┐
-          │                      │          │                     │
-  ┌───────┴────────┐  ┌─────────┴──────┐  ┌─┴──────────┐  ┌─────┴───────────┐
-  │ValidationHandler│  │  CSHandler     │  │TeamLeadHdl  │  │ ManagerHandler  │
-  │ (Lớp xác thực)  │  │  (Low)         │  │(Medium)     │  │ (High)          │
-  └────────────────┘  └───────────────┘  └────────────┘  └────────────────┘
-                                                                   │
-                                                    ┌───────────────┴──────┐
-                                                    │  DirectorHandler     │
-                                                    │  (Critical)          │
-                                                    └───────────────┬──────┘
-                                                                    │
-                                                    ┌───────────────┴──────┐
-                                                    │  DefaultHandler     │
-                                                    │  (Fallback)          │
-                                                    └─────────────────────┘
+```mermaid
+classDiagram
+    class Handler {
+        <<abstract>>
+        -_next Handler
+        +set_next(Handler) Handler
+        +handle(Complaint) str
+        #_handle_next(Complaint) str
+    }
+    class ValidationHandler {
+        +handle(Complaint) str
+    }
+    class CSHandler {
+        +handle(Complaint) str
+    }
+    class TeamLeadHandler {
+        +handle(Complaint) str
+    }
+    class ManagerHandler {
+        +handle(Complaint) str
+    }
+    class DirectorHandler {
+        +handle(Complaint) str
+    }
+    class DefaultHandler {
+        +handle(Complaint) str
+    }
+    Handler <|-- ValidationHandler
+    Handler <|-- CSHandler
+    Handler <|-- TeamLeadHandler
+    Handler <|-- ManagerHandler
+    Handler <|-- DirectorHandler
+    Handler <|-- DefaultHandler
+    Handler --> Handler : next
 ```
 
 ## So sánh với Pattern liên quan

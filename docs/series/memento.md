@@ -423,35 +423,40 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
+```mermaid
+classDiagram
+    class Originator {
+        -content
+        -cursor_position
+        -selection
+        -formatting
+        +save() Memento
+        +restore(m)
+        +type_text()
+        +delete_text()
+        +set_formatting()
+        +get_content()
+    }
+    class Memento {
+        -_content
+        -_cursor
+        -_formatting
+        -_timestamp
+        +get_snapshot_info()
+        #_restore_content()
+    }
+    class Caretaker {
+        -undo_stack: list[M]
+        -redo_stack: list[M]
+        -max_size: int
+        +push(m)
+        +undo() Optional[M]
+        +redo() Optional[M]
+        +get_history_xxx()
+    }
+    Originator --> Memento : tạo
+    Caretaker --> Memento : sử dụng
 ```
-┌─────────────────────┐       ┌──────────────────────┐
-│     Originator      │       │      Memento          │
-│    (TextEditor)     │       │  (Snapshot bất biến)  │
-│─────────────────────│       │──────────────────────│
-│ - content           │──────>│ - _content            │
-│ - cursor_position   │ tạo   │ - _cursor             │
-│ - selection         │       │ - _formatting         │
-│ - formatting        │       │ - _timestamp          │
-│─────────────────────│       │──────────────────────│
-│ + save(): Memento   │       │ + get_snapshot_info() │
-│ + restore(m)        │       │ # _restore_content()  │
-│ + type_text()       │       └──────────────────────┘
-│ + delete_text()     │                  ▲
-│ + set_formatting()  │                  │ sử dụng
-│ + get_content()     │                  │
-└─────────────────────┘       ┌──────────┴────────────┐
-                              │      Caretaker         │
-                              │   (HistoryManager)     │
-                              │────────────────────────│
-                              │ - undo_stack: list[M]  │
-                              │ - redo_stack: list[M]  │
-                              │ - max_size: int        │
-                              │────────────────────────│
-                              │ + push(m)              │
-                              │ + undo(): Optional[M]  │
-                              │ + redo(): Optional[M]  │
-                              │ + get_history_xxx()    │
-                              └────────────────────────┘
 
 Luồng tương tác:
   1. Client gọi editor.type_text()
@@ -460,7 +465,6 @@ Luồng tương tác:
   4. Client gọi editor.restore(memento) → state khôi phục
 
   Caretaker KHÔNG BAO GIỜ đọc nội dung Memento.
-```
 
 ## So sánh với Pattern liên quan
 

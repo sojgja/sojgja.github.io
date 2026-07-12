@@ -382,31 +382,40 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────┐        ┌──────────────────────────────┐
-│   «interface»      │        │        TradePublisher        │
-│   TradingObserver    │        ├──────────────────────────────┤
-├─────────────────────┤        │ - observers: Dict[EventType, │
-│ + on_event(event)   │◄───────│     List[WeakRef[Observer]]] │
-│ + name: str         │        ├──────────────────────────────┤
-└─────────────────────┘        │ + attach(observer, type?)    │
-         ▲                      │ + detach(observer)          │
-         │                      │ + notify(event)             │
-         │                      └──────────────────────────────┘
-         │
-   ┌─────┴─────────┬──────────────┬───────────────┐
-   │                │              │               │
-   ▼                ▼              ▼               ▼
-┌──────────┐ ┌────────────┐ ┌──────────┐ ┌──────────────┐
-│ Portfolio│ │AlertEngine │ │AuditLog │ │ RiskManager  │
-│ Manager  │ │            │ │         │ │              │
-├──────────┤ ├────────────┤ ├─────────┤ ├──────────────┤
-│+on_event │ │+on_event   │ │+on_event│ │+on_event     │
-│+getHold. │ │+getAlerts  │ │+getLogs │ │+max_exposure │
-└──────────┘ └────────────┘ └─────────┘ └──────────────┘
-         ▲                ▲
-         │                │
-         └─── TradeEvent ─┘  (immutable event object)
+```mermaid
+classDiagram
+    class TradingObserver {
+        <<interface>>
+        +on_event(event)
+        +name: str
+    }
+    class TradePublisher {
+        -observers: Dict[EventType, List[WeakRef[Observer]]]
+        +attach(observer, type?)
+        +detach(observer)
+        +notify(event)
+    }
+    class PortfolioManager {
+        +on_event(event)
+        +getHoldings()
+    }
+    class AlertEngine {
+        +on_event(event)
+        +getAlerts()
+    }
+    class AuditLogger {
+        +on_event(event)
+        +getLogs()
+    }
+    class RiskManager {
+        +on_event(event)
+        +max_exposure
+    }
+    TradingObserver <|.. PortfolioManager
+    TradingObserver <|.. AlertEngine
+    TradingObserver <|.. AuditLogger
+    TradingObserver <|.. RiskManager
+    TradePublisher --> TradingObserver
 ```
 
 ---

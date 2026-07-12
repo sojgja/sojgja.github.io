@@ -590,51 +590,56 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────────────────┐
-│       Document (Context)     │
-├──────────────────────────────┤
-│ - state: DocumentState       │
-│ - title: str                 │
-│ - content: str               │
-│ - author: str                │
-│ - version: int               │
-│ - reviewer: Optional[str]    │
-│ - rejection_reason: ...      │
-│ - approved_amount: ...       │
-├──────────────────────────────┤
-│ + edit(content)              │
-│ + submit()                   │
-│ + approve(reviewer)          │
-│ + reject(reviewer, reason)   │
-│ + pay(amount)                │
-│ + archive()                  │
-│ + status(): str              │
-└──────┬───────────────────────┘
-       │  state ──────┐
-       ▼              ▼
-┌────────────────────────────────────┐
-│  «interface»                     │
-│  DocumentState                     │
-├────────────────────────────────────┤
-│ + edit(doc, content)               │
-│ + submit(doc)                      │
-│ + approve(doc, reviewer)           │
-│ + reject(doc, reviewer, reason)    │
-│ + pay(doc, amount)                 │
-│ + archive(doc)                     │
-│ + status_name: str                 │
-│ + can_edit: bool                   │
-│ + can_submit: bool                 │
-└──────────┬─────────────────────────┘
-           │
-    ┌──────┼──────────┬──────────┬──────────┬──────────┬──────────┐
-    ▼      ▼          ▼          ▼          ▼          ▼          ▼
-┌──────┐┌────────┐┌─────────┐┌──────────┐┌──────────┐┌──────────┐
-│Draft ││Pending ││Under    ││Approved  ││Rejected  ││Paid      │
-│State ││Review  ││Review   ││State     ││State     ││State     │
-│      ││State   ││State    ││          ││          ││          │
-└──────┘└────────┘└─────────┘└──────────┘└──────────┘└──────────┘
+```mermaid
+classDiagram
+    class Document {
+        -state: DocumentState
+        -title: str
+        -content: str
+        -author: str
+        -version: int
+        -reviewer: Optional[str]
+        -rejection_reason
+        -approved_amount
+        +edit(content)
+        +submit()
+        +approve(reviewer)
+        +reject(reviewer, reason)
+        +pay(amount)
+        +archive()
+        +status() str
+    }
+    class DocumentState {
+        <<interface>>
+        +edit(doc, content)
+        +submit(doc)
+        +approve(doc, reviewer)
+        +reject(doc, reviewer, reason)
+        +pay(doc, amount)
+        +archive(doc)
+        +status_name: str
+        +can_edit: bool
+        +can_submit: bool
+    }
+    class DraftState {
+    }
+    class PendingReviewState {
+    }
+    class UnderReviewState {
+    }
+    class ApprovedState {
+    }
+    class RejectedState {
+    }
+    class PaidState {
+    }
+    Document --> DocumentState : state
+    DocumentState <|.. DraftState
+    DocumentState <|.. PendingReviewState
+    DocumentState <|.. UnderReviewState
+    DocumentState <|.. ApprovedState
+    DocumentState <|.. RejectedState
+    DocumentState <|.. PaidState
 ```
 
 ---

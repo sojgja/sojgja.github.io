@@ -104,6 +104,8 @@ Tôi cũng muốn chia sẻ thật — **Strategy không phải lúc nào cũng 
 
 ### Cách sai: God Class với if-else
 
+Nhìn vào đây — **God Class** điển hình. Một class làm tất cả, ôm đồm mọi thứ:
+
 ```python
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -231,6 +233,8 @@ class NaivePaymentProcessor:
 ```
 
 ### Cách đúng: Strategy Pattern
+
+Và bây giờ — cách làm sạch sẽ, chuyên nghiệp. **Mỗi strategy là một class độc lập:**
 
 ```python
 from abc import ABC, abstractmethod
@@ -686,42 +690,46 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌───────────────────────┐
-│    PaymentService     │
-│      (Context)        │
-├───────────────────────┤
-│ - strategy: PaymentSt.│
-│ - history: List[Res]  │
-├───────────────────────┤
-│ + process(request)    │
-│ + strategy (setter)   │
-│ + getStrategyForMethd │
-└──────────┬────────────┘
-           │ strategy ────────┐
-           ▼                  ▼
-┌───────────────────────────────────────────┐
-│  «interface»                             │
-│  PaymentStrategy                           │
-├───────────────────────────────────────────┤
-│ + validate(request): Optional[str]        │
-│ + calculate_fee(amount): Decimal          │
-│ + process(request): PaymentResult         │
-│ + method: PaymentMethod                   │
-│ + name: str                               │
-└───────────────────────────────────────────┘
-           ▲            ▲           ▲           ▲           ▲           ▲
-           │            │           │           │           │           │
-  ┌────────┴──┐  ┌─────┴──────┐ ┌──┴───┐  ┌───┴────┐  ┌──┴──────┐  ┌──┴─────────┐
-  │  Bank     │  │ CreditCard │ │MoMo  │  │ ZaloPay │  │   COD   │  │ Installment│
-  │ Transfer  │  │ Strategy   │ │Strat │  │ Strategy│  │ Strategy│  │  Strategy  │
-  │ Strategy  │  │            │ │egy   │  │         │  │         │  │            │
-  └───────────┘  └────────────┘ └──────┘  └─────────┘  └─────────┘  └────────────┘
+```mermaid
+classDiagram
+    class PaymentService {
+        -strategy: PaymentStrategy
+        -history: List[Result]
+        +process(request)
+        +strategy (setter)
+        +getStrategyForMethod()
+    }
+    class PaymentStrategy {
+        <<interface>>
+        +validate(request) Optional[str]
+        +calculate_fee(amount) Decimal
+        +process(request) PaymentResult
+        +method: PaymentMethod
+        +name: str
+    }
+    class BankTransferStrategy {
+    }
+    class CreditCardStrategy {
+    }
+    class MobileWalletStrategy {
+    }
+    class CODStrategy {
+    }
+    class InstallmentStrategy {
+    }
+    PaymentService --> PaymentStrategy : strategy
+    PaymentStrategy <|.. BankTransferStrategy
+    PaymentStrategy <|.. CreditCardStrategy
+    PaymentStrategy <|.. MobileWalletStrategy
+    PaymentStrategy <|.. CODStrategy
+    PaymentStrategy <|.. InstallmentStrategy
 ```
 
 ---
 
 ## So sánh với Pattern liên quan
+
+Nhiều bạn hỏi tôi: "Strategy khác State ở chỗ nào?". Đây là câu trả lời:
 
 ### 1. Strategy vs State
 
@@ -732,7 +740,7 @@ if __name__ == "__main__":
 | Strategy biết nhau? | ❌ Hoàn toàn độc lập | ✅ Thường biết state kế tiếp |
 | Khi nào thay đổi? | Khi client gọi setter | Khi state tự quyết định |
 
-**Cách phân biệt**: Nếu object **tự đổi** implementation → State. Nếu **client đổi** → Strategy.
+**Cách phân biệt**: Nếu object **tự đổi** implementation → State. Nếu **client đổi** → Strategy. **Nhớ cái này là không bao giờ nhầm.**
 
 ### 2. Strategy vs Bridge
 
@@ -743,7 +751,7 @@ if __name__ == "__main__":
 | Khi nào dùng | Nhiều thuật toán cho một tác vụ | Nhiều implementation cho abstraction |
 | Ví dụ | Nhiều phương thức thanh toán | Nhiều database driver (PostgreSQL, MySQL) |
 
-**Điểm chung**: Cả hai đều dùng composition và delegate.
+**Điểm chung**: Cả hai đều dùng composition và delegate. **Nhưng mục đích khác xa nhau.**
 
 ### 3. Strategy vs Template Method
 
@@ -754,11 +762,13 @@ if __name__ == "__main__":
 | Số lượng thuật toán | Nhiều, độc lập | Một, các bước khác nhau |
 | Độ phức tạp | Strategy class riêng biệt | Subclass override từng bước |
 
-**Kết hợp**: Dùng Template Method để định nghĩa khung xử lý, Strategy để cắm các bước chi tiết.
+**Kết hợp**: Dùng Template Method để định nghĩa khung xử lý, Strategy để cắm các bước chi tiết. Tôi hay dùng cả hai cùng nhau.
 
 ---
 
 ## Ứng dụng thực tế
+
+Strategy pattern xuất hiện **khắp mọi nơi**. Đây là vài cái tôi gặp hàng ngày:
 
 ### 1. Django Authentication Backends
 
@@ -795,7 +805,7 @@ AUTHENTICATION_BACKENDS = [
 
 ### 2. Python Serialization (Pickle, JSON, etc.)
 
-Thư viện `pickle` sử dụng Strategy pattern:
+Thư viện `pickle` cũng dùng Strategy pattern — **nhưng tinh tế hơn nhiều:**
 
 ```python
 import pickle
@@ -820,6 +830,8 @@ json_serializer = Serializer(json)
 ```
 
 ### 3. Compression Algorithms (zlib, gzip, bz2)
+
+Nén dữ liệu — kinh điển của Strategy pattern:
 
 ```python
 import gzip
@@ -856,6 +868,8 @@ class Compressor:
 
 ### 4. Route Calculation (Google Maps)
 
+Cuối cùng — ví dụ dễ hiểu nhất. Bạn dùng Google Maps mỗi ngày mà không biết nó đang dùng Strategy pattern:
+
 ```python
 # Chiến lược định tuyến khác nhau
 class RouteStrategy(ABC):
@@ -886,6 +900,8 @@ class Navigator:
 ---
 
 ## Kiểm thử
+
+Strategy pattern rất dễ test — test từng strategy riêng biệt, test context với mock strategy:
 
 ```python
 import unittest
@@ -1079,22 +1095,30 @@ if __name__ == "__main__":
 
 ---
 
+---
+
 ## Kết luận
 
-Strategy là pattern cơ bản và cực kỳ hữu ích, xuất hiện ở khắp mọi nơi trong thực tế. Pattern này chính là hiện thực của nguyên lý **Favor Composition over Inheritance** và **Open/Closed Principle**.
+Có câu nói tôi rất thích: *"Khi người ta có nhiều lựa chọn, họ thường chọn không làm gì cả — nhưng khi không có lựa chọn, họ chọn bừa."* Strategy pattern cho bạn **cả một tủ công cụ** để lựa chọn một cách thông minh.
 
-### Khi nào áp dụng
+Strategy là pattern cơ bản nhưng cực kỳ hữu ích. Nó xuất hiện ở khắp mọi nơi. **Nó chính là hiện thực của "Favor Composition over Inheritance" và "Open/Closed Principle".** Hai nguyên lý mà bất kỳ dev nào cũng cần nằm lòng.
 
-- ✅ Có nhiều thuật toán khác nhau cho cùng một tác vụ
-- ✅ Cần chọn thuật toán tại runtime (dựa vào input, config, user preference)
-- ✅ Cần thêm thuật toán mới mà không sửa code hiện tại
+### Khi nào mang Strategy ra xài
+
+- ✅ Có nhiều thuật toán khác nhau cho cùng một tác vụ — **đừng gói hết vào một class**
+- ✅ Cần chọn thuật toán tại runtime — dựa vào input, config, hay user preference
+- ✅ Cần thêm thuật toán mới mà không sửa code hiện tại — **Strategy sinh ra cho việc này**
 - ✅ Các thuật toán có cùng interface đầu vào/đầu ra
-- ✅ Muốn ẩn chi tiết implementation khỏi client
+- ✅ Muốn ẩn chi tiết implementation khỏi client — "đừng hỏi tôi làm thế nào, chỉ cần biết kết quả"
 
-### Golden Rules
+### Golden Rules — những gì tôi học được sau nhiều năm
 
-1. **Đơn giản nhất có thể**: Trong Python, nếu strategy chỉ là một hàm, dùng function thay vì class. `PaymentStrategy` có thể là một `Protocol` hoặc `Callable`.
-2. **Strategy + Factory**: Kết hợp với Factory Method để client không cần biết tất cả strategy. Ví dụ: `get_strategy_for_method()`.
-3. **Strategy Registry**: Dùng dictionary để map key → strategy class, cho phép đăng ký strategy động.
-4. **Immutable Strategies**: Strategy nên stateless nếu có thể. Nếu cần state, dùng context object riêng.
-5. **Đừng lạm dụng**: Nếu bạn chỉ có 2 strategy và không có kế hoạch thêm, hãy cân nhắc dùng `if-else` hoặc `match-case` cho đơn giản.
+1. **Đơn giản nhất có thể**: Python có first-class functions. Nếu strategy chỉ là một hàm — **dùng function, đừng class**. `PaymentStrategy` có thể là một `Protocol` hoặc `Callable`.
+2. **Strategy + Factory**: Luôn kết hợp với Factory Method. Client không cần biết tất cả strategy — như `get_strategy_for_method()`. **Che giấu là sức mạnh.**
+3. **Strategy Registry**: Dùng dictionary map key → strategy class. Cho phép đăng ký strategy động. **Mở rộng dễ dàng.**
+4. **Immutable Strategies**: Strategy nên stateless nếu có thể. Giống như một công thức nấu ăn — nó không thay đổi, người nấu mới thay đổi.
+5. **Đừng lạm dụng**: 2 strategy và không định thêm? Dùng `if-else` hoặc `match-case`. **Công cụ nào việc nấy.**
+
+---
+
+*Trân trọng!*

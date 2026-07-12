@@ -177,42 +177,30 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────┐
-│   Flyweight      │
-│   (TreeType)     │
-│──────────────────│
-│ + species: str   │
-│ + texture: str   │
-│ + colorPalette   │
-│──────────────────│
-│ + render(x,y,z,  │
-│    scale, rot)   │
-└────────┬─────────┘
-         │
-         │ created by
-         ▼
-┌────────────────────────┐
-│  FlyweightFactory      │
-│  (TreeTypeFactory)     │
-│────────────────────────│
-│ - _tree_types: dict    │
-│────────────────────────│
-│ + get_tree_type()      │
-│ + total_types() → int  │
-└────────────────────────┘
-
-         ▲ uses
-         │
-┌────────────────────────┐
-│  Context (Tree)        │
-│────────────────────────│
-│ - x, y, z: float      │
-│ - scale, rotation      │
-│ - _tree_type: TreeType │
-│────────────────────────│
-│ + render() → str       │
-└────────────────────────┘
+```mermaid
+classDiagram
+    class TreeType {
+        +species str
+        +texture str
+        +color_palette tuple
+        +render(x, y, z, scale, rot) str
+    }
+    class TreeTypeFactory {
+        -_tree_types dict
+        +get_tree_type(species) TreeType
+        +total_types() int
+    }
+    class Tree {
+        -x float
+        -y float
+        -z float
+        -scale float
+        -rotation float
+        -_tree_type TreeType
+        +render() str
+    }
+    TreeTypeFactory --> TreeType : creates
+    Tree --> TreeType : uses
 ```
 
 ## So sánh với Pattern liên quan

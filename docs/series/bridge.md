@@ -305,52 +305,53 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-       ┌─────────────────────────┐
-       │     RemoteControl       │──────┐
-       │  (Abstraction)          │      │
-       │─────────────────────────│      │
-       │ # _device: Device       │      │
-       │─────────────────────────│      │
-       │ + toggle_power()        │      │
-       │ + level_up()            │      │
-       │ + level_down()          │      │
-       │ + show_status()         │      │
-       └──────────┬──────────────┘      │
-                  │                     │
-       ┌──────────┴──────────────┐      │
-       │AdvancedRemoteControl    │      │
-       │ (RefinedAbstraction)    │      │
-       │─────────────────────────│      │
-       │ + mute()                │      │
-       │ + schedule()            │      │
-       │ + boost()               │      │
-       │ + scene()               │      │
-       └─────────────────────────┘      │
-                                         │
-                ┌────────────────────────┘
-                │
-       ┌────────┴─────────────────┐
-       │   «interface»            │
-       │      Device              │
-       │  (Implementor)           │
-       │──────────────────────────│
-       │ + power_on()             │
-       │ + power_off()            │
-       │ + is_powered()           │
-       │ + set_level(int)         │
-       │ + get_level() → int      │
-       │ + get_status() → dict    │
-       └──────────┬───────────────┘
-                  │
-         ┌────────┼────────┐
-         │        │        │
-   ┌─────┴──┐ ┌──┴────┐ ┌─┴─────┐
-   │Smart   │ │Smart  │ │Smart  │
-   │ Light  │ │  AC   │ │ Blinds│
-   │(Concrete│ │(Concr.)│ │(Concr)│
-   │Implem.)│ │       │ │       │
-   └────────┘ └───────┘ └───────┘
+```mermaid
+classDiagram
+    class RemoteControl {
+        # _device: Device
+        + toggle_power()
+        + level_up()
+        + level_down()
+        + show_status()
+    }
+    class AdvancedRemoteControl {
+        + mute()
+        + schedule(hour, minute, action)
+        + boost()
+        + scene(scene_name)
+    }
+    class Device {
+        <<interface>>
+        + power_on()
+        + power_off()
+        + is_powered() bool
+        + set_level(int)
+        + get_level() int
+        + get_status() dict
+    }
+    class SmartLight {
+        + device_type() str
+        + set_level(level)
+        + get_level() int
+        + get_status() dict
+    }
+    class SmartAC {
+        + device_type() str
+        + set_level(level)
+        + get_level() int
+        + get_status() dict
+    }
+    class SmartBlinds {
+        + device_type() str
+        + set_level(level)
+        + get_level() int
+        + get_status() dict
+    }
+    RemoteControl <|-- AdvancedRemoteControl
+    RemoteControl --> Device
+    Device <|-- SmartLight
+    Device <|-- SmartAC
+    Device <|-- SmartBlinds
 ```
 
 ## So sánh với Pattern liên quan

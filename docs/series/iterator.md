@@ -435,39 +435,50 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────────┐
-│      Iterator<T>        │
-│     (Protocol/ABC)      │
-│─────────────────────────│
-│ + __next__(): T         │
-│ + __iter__(): Iterator  │
-└────────────┬────────────┘
-             │ implements
-    ┌────────┼──────────┬────────────────┐
-    │        │          │                │
-┌───┴────┐ ┌─┴────┐  ┌─┴───────┐  ┌─────┴──────┐
-│FileLine│ │DB    │  │Directory│  │KafkaStream │
-│Iterator│ │Cursor│  │TreeIter │  │Iterator    │
-│        │ │Iter  │  │         │  │            │
-└───┬────┘ └──────┘  └──┬──────┘  └────────────┘
-    │                    │
-    │                    ├─ pre_order()
-    │                    ├─ post_order()
-    │                    └─ level_order()
-    │
-┌───┴───────────────────────┐
-│  CompositeIterator        │
-│  - iterators: list[Iter]  │
-│  + __next__(): T          │
-└───────────────────────────┘
-
-┌──────────────────┐     ┌──────────────────┐
-│  Iterable        │     │    Client        │
-│  (Aggregate)     │     │ (AnalyticsEngine)│
-│──────────────────│     │──────────────────│
-│ + __iter__(): It │────>│ + run(): list    │
-└──────────────────┘     └──────────────────┘
+```mermaid
+classDiagram
+    class Iterator {
+        <<interface>>
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class FileLineIterator {
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class DBCursorIterator {
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class DirectoryTreeIterator {
+        +pre_order()
+        +post_order()
+        +level_order()
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class KafkaStreamIterator {
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class CompositeIterator {
+        -iterators: list[Iter]
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class Iterable {
+        <<interface>>
+        +__iter__() Iterator
+    }
+    class Client {
+        +run() list
+    }
+    Iterator <|.. FileLineIterator
+    Iterator <|.. DBCursorIterator
+    Iterator <|.. DirectoryTreeIterator
+    Iterator <|.. KafkaStreamIterator
+    Iterator <|.. CompositeIterator
+    Client --> Iterable
 ```
 
 ## So sánh với Pattern liên quan

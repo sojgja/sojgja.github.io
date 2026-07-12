@@ -497,32 +497,50 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────┐         ┌──────────────────────┐
-│    Mediator (ABC)   │«uses»  │     Colleague (ABC)   │
-│─────────────────────│         │──────────────────────│
-│ + register(c)       │         │ - name: str          │
-│ + notify(s, e)      │         │ - mediator: Mediator │
-└────────┬────────────┘         │──────────────────────│
-         │                      │ + receive(e)         │
-         │                      │ + send(e)            │
-         │                      │ + status(): str      │
-         │                      └──────────┬───────────┘
-         │                                 │
-┌────────┴────────────┐         ┌──────────┼──────────┐
-│FlightControlMediator│         │          │          │
-│─────────────────────│    ┌────┴───┐  ┌───┴────┐  ┌──┴────┐
-│ - colleagues: dict  │    │Aircraft│  │ Runway │  │ Gate  │
-│ - queue: deque      │    │        │  │        │  │       │
-│ - landing_log: list │    └────────┘  └────────┘  └───────┘
-│─────────────────────│         │          │          │
-│ + notify(s, e)      │    ┌────┴───┐  ┌───┴────┐  ┌──┴──────┐
-│ - _handle_landing() │    │Ground  │  │Weather │  │Control  │
-│ - _handle_emergency │    │Crew    │  │Service │  │Tower    │
-│ - _handle_xxx()     │    └────────┘  └────────┘  └─────────┘
-└─────────────────────┘
-
-Giao tiếp: Colleague → Mediator → Colleague (không direct)
+```mermaid
+classDiagram
+    class Mediator {
+        <<abstract>>
+        +register(c)
+        +notify(s, e)
+    }
+    class Colleague {
+        <<abstract>>
+        -name: str
+        -mediator: Mediator
+        +receive(e)
+        +send(e)
+        +status() str
+    }
+    class FlightControlMediator {
+        -colleagues: dict
+        -queue: deque
+        -landing_log: list
+        +notify(s, e)
+        -_handle_landing()
+        -_handle_emergency()
+        -_handle_xxx()
+    }
+    class Aircraft {
+    }
+    class Runway {
+    }
+    class Gate {
+    }
+    class GroundCrew {
+    }
+    class WeatherService {
+    }
+    class ControlTower {
+    }
+    Mediator <|-- FlightControlMediator
+    Colleague <|-- Aircraft
+    Colleague <|-- Runway
+    Colleague <|-- Gate
+    Colleague <|-- GroundCrew
+    Colleague <|-- WeatherService
+    Colleague <|-- ControlTower
+    Mediator --> Colleague : uses
 ```
 
 ## So sánh với Pattern liên quan
