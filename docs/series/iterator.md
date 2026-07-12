@@ -435,39 +435,50 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────────┐
-│      Iterator<T>        │
-│     (Protocol/ABC)      │
-│─────────────────────────│
-│ + __next__(): T         │
-│ + __iter__(): Iterator  │
-└────────────┬────────────┘
-             │ implements
-    ┌────────┼──────────┬────────────────┐
-    │        │          │                │
-┌───┴────┐ ┌─┴────┐  ┌─┴───────┐  ┌─────┴──────┐
-│FileLine│ │DB    │  │Directory│  │KafkaStream │
-│Iterator│ │Cursor│  │TreeIter │  │Iterator    │
-│        │ │Iter  │  │         │  │            │
-└───┬────┘ └──────┘  └──┬──────┘  └────────────┘
-    │                    │
-    │                    ├─ pre_order()
-    │                    ├─ post_order()
-    │                    └─ level_order()
-    │
-┌───┴───────────────────────┐
-│  CompositeIterator        │
-│  - iterators: list[Iter]  │
-│  + __next__(): T          │
-└───────────────────────────┘
-
-┌──────────────────┐     ┌──────────────────┐
-│  Iterable        │     │    Client        │
-│  (Aggregate)     │     │ (AnalyticsEngine)│
-│──────────────────│     │──────────────────│
-│ + __iter__(): It │────>│ + run(): list    │
-└──────────────────┘     └──────────────────┘
+```mermaid
+classDiagram
+    class Iterator {
+        <<interface>>
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class FileLineIterator {
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class DBCursorIterator {
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class DirectoryTreeIterator {
+        +pre_order()
+        +post_order()
+        +level_order()
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class KafkaStreamIterator {
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class CompositeIterator {
+        -iterators: list[Iter]
+        +__next__() T
+        +__iter__() Iterator
+    }
+    class Iterable {
+        <<interface>>
+        +__iter__() Iterator
+    }
+    class Client {
+        +run() list
+    }
+    Iterator <|.. FileLineIterator
+    Iterator <|.. DBCursorIterator
+    Iterator <|.. DirectoryTreeIterator
+    Iterator <|.. KafkaStreamIterator
+    Iterator <|.. CompositeIterator
+    Client --> Iterable
 ```
 
 ## So sánh với Pattern liên quan
@@ -529,34 +540,37 @@ for user in User.objects.filter(is_active=True).iterator(chunk_size=1000):
 **3. Java Iterable / Iterator Interface:**
 Java có `Iterable<T>` (for-each) và `Iterator<T>` core interfaces. Mọi collection (List, Set, Queue) implement Iterable.
 
-```java
-// Java Iterator pattern — built-in
-List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
-Iterator<String> it = names.iterator();
-while (it.hasNext()) {
-    System.out.println(it.next());
-}
+```python
+# Python Iterator pattern — built-in
+names = ["Alice", "Bob", "Charlie"]
+it = iter(names)
+for name in it:
+    print(name)
 
-// Custom iterable
-class TreeNode<T> implements Iterable<T> {
-    @Override
-    public Iterator<T> iterator() {
-        return new TreeIterator<>(this);
-    }
-}
+
+# Custom iterable
+class TreeNode:
+    """Custom iterable — Python Iterator Protocol."""
+    def __init__(self, value, children=None):
+        self.value = value
+        self.children = children or []
+
+    def __iter__(self):
+        return TreeIterator(self)
 ```
 
 **4. C# IEnumerable / IEnumerator:**
 .NET dùng IEnumerable (iterable) và IEnumerator (iterator). LINQ mở rộng với lazy evaluation qua `yield return`.
 
-```csharp
-// C# Iterator pattern — yield return
-IEnumerable<int> GetEven(IEnumerable<int> source) {
-    foreach (int num in source) {
-        if (num % 2 == 0)
-            yield return num;  // Lazy — mỗi lần next()
-    }
-}
+```python
+# Python Iterator pattern — generator (yield)
+from typing import Iterator
+
+
+def get_even(source: list[int]) -> Iterator[int]:
+    for num in source:
+        if num % 2 == 0:
+            yield num  # Lazy — mỗi lần next()
 ```
 
 ## Kiểm thử

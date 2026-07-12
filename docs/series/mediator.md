@@ -497,32 +497,50 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────┐         ┌──────────────────────┐
-│    Mediator (ABC)   │«uses»  │     Colleague (ABC)   │
-│─────────────────────│         │──────────────────────│
-│ + register(c)       │         │ - name: str          │
-│ + notify(s, e)      │         │ - mediator: Mediator │
-└────────┬────────────┘         │──────────────────────│
-         │                      │ + receive(e)         │
-         │                      │ + send(e)            │
-         │                      │ + status(): str      │
-         │                      └──────────┬───────────┘
-         │                                 │
-┌────────┴────────────┐         ┌──────────┼──────────┐
-│FlightControlMediator│         │          │          │
-│─────────────────────│    ┌────┴───┐  ┌───┴────┐  ┌──┴────┐
-│ - colleagues: dict  │    │Aircraft│  │ Runway │  │ Gate  │
-│ - queue: deque      │    │        │  │        │  │       │
-│ - landing_log: list │    └────────┘  └────────┘  └───────┘
-│─────────────────────│         │          │          │
-│ + notify(s, e)      │    ┌────┴───┐  ┌───┴────┐  ┌──┴──────┐
-│ - _handle_landing() │    │Ground  │  │Weather │  │Control  │
-│ - _handle_emergency │    │Crew    │  │Service │  │Tower    │
-│ - _handle_xxx()     │    └────────┘  └────────┘  └─────────┘
-└─────────────────────┘
-
-Giao tiếp: Colleague → Mediator → Colleague (không direct)
+```mermaid
+classDiagram
+    class Mediator {
+        <<abstract>>
+        +register(c)
+        +notify(s, e)
+    }
+    class Colleague {
+        <<abstract>>
+        -name: str
+        -mediator: Mediator
+        +receive(e)
+        +send(e)
+        +status() str
+    }
+    class FlightControlMediator {
+        -colleagues: dict
+        -queue: deque
+        -landing_log: list
+        +notify(s, e)
+        -_handle_landing()
+        -_handle_emergency()
+        -_handle_xxx()
+    }
+    class Aircraft {
+    }
+    class Runway {
+    }
+    class Gate {
+    }
+    class GroundCrew {
+    }
+    class WeatherService {
+    }
+    class ControlTower {
+    }
+    Mediator <|-- FlightControlMediator
+    Colleague <|-- Aircraft
+    Colleague <|-- Runway
+    Colleague <|-- Gate
+    Colleague <|-- GroundCrew
+    Colleague <|-- WeatherService
+    Colleague <|-- ControlTower
+    Mediator --> Colleague : uses
 ```
 
 ## So sánh với Pattern liên quan
@@ -598,15 +616,45 @@ Pilot B ──┘         │
 **4. JavaScript / Redux:**
 Redux store là mediator cho state management. Component dispatch action → store gọi reducer → store notify subscriber.
 
-```javascript
-// Redux store = Mediator
-const store = createStore(reducer);
+```python
+# Redux store = Mediator (conceptual)
+from dataclasses import dataclass, field
+from typing import Any, Callable
 
-// Component gửi action qua store (không gọi component khác)
-store.dispatch({ type: 'INCREMENT' });
 
-// Store thông báo cho subscriber
-store.subscribe(() => console.log(store.getState()));
+class Store:
+    """Redux-inspired store — Mediator pattern."""
+
+    def __init__(self, reducer: Callable, initial_state: dict = None):
+        self._state = initial_state or {}
+        self._reducer = reducer
+        self._subscribers: list[Callable] = []
+
+    def dispatch(self, action: dict) -> None:
+        """Component gửi action qua store (không gọi component khác)."""
+        self._state = self._reducer(self._state, action)
+        for subscriber in self._subscribers:
+            subscriber()
+
+    def subscribe(self, listener: Callable) -> Callable:
+        """Store thông báo cho subscriber."""
+        self._subscribers.append(listener)
+        return lambda: self._subscribers.remove(listener)
+
+    def get_state(self) -> dict:
+        return dict(self._state)
+
+
+# Usage
+def reducer(state: dict, action: dict) -> dict:
+    if action["type"] == "INCREMENT":
+        return {"count": state.get("count", 0) + 1}
+    return state
+
+
+store = Store(reducer)
+store.dispatch({"type": "INCREMENT"})
+store.subscribe(lambda: print(store.get_state()))
 ```
 
 ## Kiểm thử

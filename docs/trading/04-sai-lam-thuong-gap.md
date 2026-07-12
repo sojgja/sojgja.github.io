@@ -1,3 +1,8 @@
+---
+sidebar_label: ⚠️ Sai lầm thường gặp
+sidebar_position: 4
+---
+
 # NHỮNG SAI LẦM NGUY HIỂM VÀ CÁCH TRÁNH
 
 

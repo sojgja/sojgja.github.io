@@ -446,49 +446,65 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────────────┐
-│      Expression (ABC)    │
-│──────────────────────────│
-│ + interpret(ctx): bool   │
-│ + validate(): list[str]  │
-└────────────┬─────────────┘
-             │
-    ┌────────┼───────────┬──────────────┐
-    │        │           │              │
-    │  ┌─────┴─────┐  ┌──┴──────┐  ┌───┴────────┐
-    │  │ Terminal  │  │ Nonterm │  │Comparison  │
-    │  │ Expression│  │Expression│  │Expression  │
-    │  └─────┬─────┘  └──┬──────┘  └────────────┘
-    │        │           │
- ┌──┴────┐ ┌─┴───┐  ┌───┴────┐  ┌────┴───┐  ┌───────┐
- │Field  │ │Lit  │  │AndExpr │  │OrExpr  │  │NotExpr│
- │Expr   │ │Expr │  │        │  │        │  │       │
- └───────┘ └─────┘  └────────┘  └────────┘  └───────┘
-
-┌────────────────────────┐
-│    RuleParser          │
-│────────────────────────│
-│ - tokens: list[str]    │
-│ - pos: int             │
-│────────────────────────│
-│ + parse(s): Expression │
-│ - _parse_or(): Expr    │
-│ - _parse_and(): Expr   │
-│ - _parse_not(): Expr   │
-│ - _parse_atom(): Expr  │
-└────────────────────────┘
-
-┌────────────────┐
-│  SensorData    │
-│  (Context)     │
-│────────────────│
-│ temperature    │
-│ pressure       │
-│ vibration      │
-│ zone           │
-│ ...            │
-└────────────────┘
+```mermaid
+classDiagram
+    class Expression {
+        <<abstract>>
+        +interpret(SensorData) bool
+        +validate() list~str~
+    }
+    class FieldExpression {
+        -field_name str
+        +interpret(SensorData) bool
+    }
+    class LiteralExpression {
+        -value Any
+        +interpret(SensorData) Any
+    }
+    class ComparisonExpression {
+        -field str
+        -op ComparisonOp
+        -value Any
+        +interpret(SensorData) bool
+        +validate() list~str~
+    }
+    class AndExpression {
+        -left Expression
+        -right Expression
+        +interpret(SensorData) bool
+    }
+    class OrExpression {
+        -left Expression
+        -right Expression
+        +interpret(SensorData) bool
+    }
+    class NotExpression {
+        -expr Expression
+        +interpret(SensorData) bool
+    }
+    class RuleParser {
+        -tokens list~str~
+        -pos int
+        +parse(str) Expression
+    }
+    class SensorData {
+        +temperature float
+        +pressure float
+        +vibration float
+        +humidity float
+        +zone str
+        +status str
+    }
+    Expression <|-- FieldExpression
+    Expression <|-- LiteralExpression
+    Expression <|-- ComparisonExpression
+    Expression <|-- AndExpression
+    Expression <|-- OrExpression
+    Expression <|-- NotExpression
+    AndExpression o--> Expression
+    OrExpression o--> Expression
+    NotExpression o--> Expression
+    RuleParser --> Expression : creates
 ```
 
 ## So sánh với Pattern liên quan

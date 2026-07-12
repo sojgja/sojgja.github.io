@@ -1,3 +1,8 @@
+---
+sidebar_label: 🧠 Tâm lý giao dịch
+sidebar_position: 1
+---
+
 # TÂM LÝ GIAO DỊCH — NỀN TẢNG CỦA MỌI THÀNH CÔNG
 
 

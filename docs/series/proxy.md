@@ -329,33 +329,47 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────────┐
-│     «interface»      │
-│       Video           │
-│──────────────────────│
-│+ get_info() → dict   │
-│+ play(User) → str    │
-└──────────┬───────────┘
-           │
-     ┌─────┼─────┬──────────────────┬──────────────────┐
-     │     │     │                  │                  │
-┌────┴──┐ ┌┴────┐│           ┌─────┴──────┐   ┌──────┴──────┐
-│Real   │ │Video││           │LoggingProxy│   │CachingProxy │
-│Video  │ │Proxy││           │- target    │   │- target     │
-│(Real  │ │(Virt││           │- accessLog │   │- cache      │
-│Subject)│ │ual) ││           └────────────┘   └─────────────┘
-└───────┘ └─────┘│
-                  │
-          ┌───────┴────────────┐
-          │ProtectedVideoProxy │
-          │- target            │
-          │- requiredRole      │
-          │+ play(User)        │
-          └────────────────────┘
-
-Kết hợp (nested proxies):
-client → LoggingProxy → ProtectedProxy → CachingProxy → VideoProxy → RealVideo
+```mermaid
+classDiagram
+    class Video {
+        <<interface>>
+        +get_info() dict
+        +play(User) str
+    }
+    class RealVideo {
+        +get_info() dict
+        +play(User) str
+    }
+    class VideoProxy {
+        -_real_video RealVideo
+        +get_info() dict
+        +play(User) str
+    }
+    class ProtectedVideoProxy {
+        -_target Video
+        -_required_role UserRole
+        +play(User) str
+    }
+    class LoggingVideoProxy {
+        -_target Video
+        -_access_log list
+        +play(User) str
+        +get_access_log() list
+    }
+    class CachingVideoProxy {
+        -_target Video
+        -_cache dict
+        +get_info() dict
+        +play(User) str
+    }
+    Video <|-- RealVideo
+    Video <|-- VideoProxy
+    Video <|-- ProtectedVideoProxy
+    Video <|-- LoggingVideoProxy
+    Video <|-- CachingVideoProxy
+    ProtectedVideoProxy --> Video : target
+    LoggingVideoProxy --> Video : target
+    CachingVideoProxy --> Video : target
 ```
 
 ## So sánh với Pattern liên quan

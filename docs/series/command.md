@@ -395,39 +395,78 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────┐     ┌──────────────────────┐     ┌──────────────┐
-│   Invoker    │────>│      Command         │<────│   Client     │
-│ (Controller) │     │ (ABC)                │     │ (Dashboard)  │
-│──────────────│     │──────────────────────│     └──────────────┘
-│ - history[]  │     │ + execute(): void    │            │
-│ + press()    │     │ + undo(): void       │            │
-│ + undo()     │     │ + to_dict(): dict    │            │
-│ + redo()     │     └──────────┬───────────┘            │
-└──────────────┘                │                        │
-                                │ implements              │
-                    ┌───────────┼───────────┬─────────────┼───────────┐
-                    │           │           │             │           │
-            ┌───────┴────┐ ┌───┴────┐ ┌────┴────┐ ┌─────┴──────┐  │
-            │LightOnCmd  │ │LightOff│ │LockDoor │ │SetTempCmd  │  │
-            │ execute()  │ │        │ │         │ │            │  │
-            │ undo()     │ │        │ │         │ │            │  │
-            └────────────┘ └────────┘ └─────────┘ └────────────┘  │
-                                                                   │
-            ┌──────────────────┐    ┌──────────────────┐           │
-            │  MacroCommand    │    │  NullCommand     │           │
-            │ (Composite)      │    │ (Null Object)    │           │
-            │ - commands[]     │    └──────────────────┘           │
-            │ + execute(): for │                                   │
-            │ + undo(): reverse│                                   │
-            └──────────────────┘                                   │
-                                                                   │
-            ┌──────────────────────────────────────────────────────┘
-            │
-     ┌──────┴────────┐   ┌──────────────┐   ┌─────────────┐
-     │  LightBulb    │   │  DoorLock    │   │ Thermostat  │
-     │ (Receiver)    │   │ (Receiver)   │   │ (Receiver)  │
-     └───────────────┘   └──────────────┘   └─────────────┘
+```mermaid
+classDiagram
+    class Command {
+        <<abstract>>
+        +execute() void
+        +undo() void
+        +to_dict() dict
+    }
+    class LightOnCommand {
+        -light LightBulb
+        +execute() void
+        +undo() void
+    }
+    class LightOffCommand {
+        -light LightBulb
+        +execute() void
+        +undo() void
+    }
+    class LockDoorCommand {
+        -door DoorLock
+        +execute() void
+        +undo() void
+    }
+    class SetTemperatureCommand {
+        -thermostat Thermostat
+        -temperature float
+        +execute() void
+        +undo() void
+    }
+    class MacroCommand {
+        -commands List~Command~
+        +execute() void
+        +undo() void
+    }
+    class NullCommand {
+        +execute() void
+        +undo() void
+    }
+    class SmartHomeController {
+        -history List~Command~
+        -redo_stack List~Command~
+        +press_button(slot) void
+        +execute_command(Command) void
+        +undo() void
+        +redo() void
+        +schedule(Command, delay) void
+    }
+    class LightBulb {
+        +turn_on() void
+        +turn_off() void
+        +set_brightness(level) void
+    }
+    class DoorLock {
+        +lock() void
+        +unlock() void
+    }
+    class Thermostat {
+        +set_temperature(temp) void
+        +set_mode(mode) void
+    }
+    Command <|-- LightOnCommand
+    Command <|-- LightOffCommand
+    Command <|-- LockDoorCommand
+    Command <|-- SetTemperatureCommand
+    Command <|-- MacroCommand
+    Command <|-- NullCommand
+    SmartHomeController --> Command
+    MacroCommand o--> Command
+    LightOnCommand --> LightBulb
+    LightOffCommand --> LightBulb
+    LockDoorCommand --> DoorLock
+    SetTemperatureCommand --> Thermostat
 ```
 
 ## So sánh với Pattern liên quan
@@ -499,15 +538,22 @@ git cherry-pick def456                # replay command
 
 `javax.swing.Action` interface định nghĩa `actionPerformed()` (execute). Menu item, button, toolbar đều dùng chung Action object.
 
-```java
-// Java Swing Action = Command pattern
-Action saveAction = new AbstractAction("Save") {
-    public void actionPerformed(ActionEvent e) {
-        // Save logic
-    }
-};
-JButton saveButton = new JButton(saveAction);
-JMenuItem saveMenuItem = new JMenuItem(saveAction);
+```python
+# Java Swing Action = Command pattern (conceptual)
+from dataclasses import dataclass
+
+
+@dataclass
+class SaveAction:
+    """Command pattern implementation."""
+    def action_performed(self, event: dict = None) -> None:
+        # Save logic
+        ...
+
+save_action = SaveAction()
+# Action có thể gắn vào cả button và menu item
+save_button = Button("Save", command=save_action.action_performed)
+save_menu_item = MenuItem("Save", command=save_action.action_performed)
 ```
 
 ## Kiểm thử

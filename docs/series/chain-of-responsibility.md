@@ -271,32 +271,40 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────┐     ┌──────────────────────────────┐
-│   Client     │────>│        Handler (ABC)          │
-└──────────────┘     │──────────────────────────────│
-                     │ - _next: Optional[Handler]    │
-                     │ + set_next(h): Handler        │
-                     │ + handle(c): Optional[str]    │
-                     │ # _handle_next(c): Optional   │
-                     └───────────┬──────────────────┘
-                                 │
-          ┌──────────────────────┼──────────┬─────────────────────┐
-          │                      │          │                     │
-  ┌───────┴────────┐  ┌─────────┴──────┐  ┌─┴──────────┐  ┌─────┴───────────┐
-  │ValidationHandler│  │  CSHandler     │  │TeamLeadHdl  │  │ ManagerHandler  │
-  │ (Lớp xác thực)  │  │  (Low)         │  │(Medium)     │  │ (High)          │
-  └────────────────┘  └───────────────┘  └────────────┘  └────────────────┘
-                                                                   │
-                                                    ┌───────────────┴──────┐
-                                                    │  DirectorHandler     │
-                                                    │  (Critical)          │
-                                                    └───────────────┬──────┘
-                                                                    │
-                                                    ┌───────────────┴──────┐
-                                                    │  DefaultHandler     │
-                                                    │  (Fallback)          │
-                                                    └─────────────────────┘
+```mermaid
+classDiagram
+    class Handler {
+        <<abstract>>
+        -_next Handler
+        +set_next(Handler) Handler
+        +handle(Complaint) str
+        #_handle_next(Complaint) str
+    }
+    class ValidationHandler {
+        +handle(Complaint) str
+    }
+    class CSHandler {
+        +handle(Complaint) str
+    }
+    class TeamLeadHandler {
+        +handle(Complaint) str
+    }
+    class ManagerHandler {
+        +handle(Complaint) str
+    }
+    class DirectorHandler {
+        +handle(Complaint) str
+    }
+    class DefaultHandler {
+        +handle(Complaint) str
+    }
+    Handler <|-- ValidationHandler
+    Handler <|-- CSHandler
+    Handler <|-- TeamLeadHandler
+    Handler <|-- ManagerHandler
+    Handler <|-- DirectorHandler
+    Handler <|-- DefaultHandler
+    Handler --> Handler : next
 ```
 
 ## So sánh với Pattern liên quan
@@ -336,31 +344,29 @@ class RateLimitMiddleware:
 
 Tương tự Django, mỗi middleware quyết định gọi `next()` hoặc short-circuit.
 
-```csharp
-// ASP.NET middleware
-app.Use(async (context, next) =>
-{
-    // Pre-processing
-    if (context.Request.Headers.ContainsKey("X-Api-Key"))
-        await next(); // Gọi middleware tiếp
-    else
-        await context.Response.WriteAsync("Unauthorized");
-});
+```python
+# ASP.NET middleware (conceptual)
+async def middleware(context: dict, next_handler: callable) -> None:
+    # Pre-processing
+    if "X-Api-Key" in context.get("headers", {}):
+        await next_handler()  # Gọi middleware tiếp
+    else:
+        context["response"] = "Unauthorized"
 ```
 
 **3. Java Servlet Filters (Jakarta EE):**
 
 `FilterChain` là chain of responsibility cổ điển. Mỗi `Filter` gọi `chain.doFilter()` để chuyển request.
 
-```java
-public class AuthFilter implements Filter {
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
-        if (((HttpServletRequest) req).getSession().getAttribute("user") != null)
-            chain.doFilter(req, res); // Chuyển tiếp
-        else
-            ((HttpServletResponse) res).sendError(401);
-    }
-}
+```python
+class AuthFilter:
+    """Java Servlet Filter concept — Chain of Responsibility."""
+    def do_filter(self, request: dict, response: dict, chain: callable) -> None:
+        session = request.get("session", {})
+        if session.get("user") is not None:
+            chain(request, response)  # Chuyển tiếp
+        else:
+            response["status"] = 401
 ```
 
 **4. Python Logging Handlers:**

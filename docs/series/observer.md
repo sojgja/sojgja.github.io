@@ -382,31 +382,40 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────┐        ┌──────────────────────────────┐
-│   «interface»      │        │        TradePublisher        │
-│   TradingObserver    │        ├──────────────────────────────┤
-├─────────────────────┤        │ - observers: Dict[EventType, │
-│ + on_event(event)   │◄───────│     List[WeakRef[Observer]]] │
-│ + name: str         │        ├──────────────────────────────┤
-└─────────────────────┘        │ + attach(observer, type?)    │
-         ▲                      │ + detach(observer)          │
-         │                      │ + notify(event)             │
-         │                      └──────────────────────────────┘
-         │
-   ┌─────┴─────────┬──────────────┬───────────────┐
-   │                │              │               │
-   ▼                ▼              ▼               ▼
-┌──────────┐ ┌────────────┐ ┌──────────┐ ┌──────────────┐
-│ Portfolio│ │AlertEngine │ │AuditLog │ │ RiskManager  │
-│ Manager  │ │            │ │         │ │              │
-├──────────┤ ├────────────┤ ├─────────┤ ├──────────────┤
-│+on_event │ │+on_event   │ │+on_event│ │+on_event     │
-│+getHold. │ │+getAlerts  │ │+getLogs │ │+max_exposure │
-└──────────┘ └────────────┘ └─────────┘ └──────────────┘
-         ▲                ▲
-         │                │
-         └─── TradeEvent ─┘  (immutable event object)
+```mermaid
+classDiagram
+    class TradingObserver {
+        <<interface>>
+        +on_event(event)
+        +name: str
+    }
+    class TradePublisher {
+        -observers: Dict[EventType, List[WeakRef[Observer]]]
+        +attach(observer, type?)
+        +detach(observer)
+        +notify(event)
+    }
+    class PortfolioManager {
+        +on_event(event)
+        +getHoldings()
+    }
+    class AlertEngine {
+        +on_event(event)
+        +getAlerts()
+    }
+    class AuditLogger {
+        +on_event(event)
+        +getLogs()
+    }
+    class RiskManager {
+        +on_event(event)
+        +max_exposure
+    }
+    TradingObserver <|.. PortfolioManager
+    TradingObserver <|.. AlertEngine
+    TradingObserver <|.. AuditLogger
+    TradingObserver <|.. RiskManager
+    TradePublisher --> TradingObserver
 ```
 
 ---
@@ -531,21 +540,40 @@ for message in consumer:
 
 Cuối cùng, cái mà bất kỳ frontend dev nào cũng dùng — event listener:
 
-```javascript
-// Observer pattern trong frontend
-const button = document.getElementById('submit-btn');
+```python
+# Observer pattern trong frontend (conceptual)
 
-// attach observer
-button.addEventListener('click', (event) => {
-    console.log('Observer 1: Button clicked');
-    validateForm();
-});
+class Button:
+    def __init__(self, element_id: str):
+        self.element_id = element_id
+        self._click_observers: list = []
 
-// attach another observer
-button.addEventListener('click', (event) => {
-    console.log('Observer 2: Sending analytics');
-    trackEvent('button-click');
-});
+    def add_event_listener(self, event_type: str, handler: callable) -> None:
+        if event_type == "click":
+            self._click_observers.append(handler)
+
+    def click(self, event: dict = None) -> None:
+        for observer in self._click_observers:
+            observer(event or {})
+
+
+button = Button("submit-btn")
+
+
+# attach observer
+def observer1(event):
+    print("Observer 1: Button clicked")
+    validate_form()
+
+
+def observer2(event):
+    print("Observer 2: Sending analytics")
+    track_event("button-click")
+
+
+button.add_event_listener("click", observer1)
+# attach another observer
+button.add_event_listener("click", observer2)
 ```
 
 ---

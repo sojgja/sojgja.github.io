@@ -523,53 +523,50 @@ if __name__ == "__main__":
     print(f"[JSON] Sections: {list(json_report.sections.keys())}")
 ```
 
-## So do UML
+## Sơ đồ UML
 
-```
-+-----------------------------------------------+
-|              «interface»                     |
-|              ReportBuilder                     |
-+-----------------------------------------------+
-| + reset()                                      |
-| + build_header(logo, name, created, ref)       |
-| + build_summary(revenue, expenses, profit, kpi)|
-| + add_transaction(transaction)                 |
-| + set_transaction_columns(columns)             |
-| + add_chart(chart)                             |
-| + build_footer(sig, disc, qr, comp)            |
-| + get_result() -> Report                       |
-+-----------------------------------------------+
-          ^              ^              ^
-          |              |              |
-+---------+------+ +----+-------+ +----+----------+
-|PDFReportBuilder| |HTMLBuilder| | JSONBuilder    |
-+----------------+ +-----------+ +----------------+
-| - page_size    | | - report  | | - report       |
-| - report       | | + methods | | + methods      |
-+----------------+ +-----------+ +----------------+
-          ^
-          |  su dung
-+---------+----------+
-|  ReportDirector    |
-+--------------------+
-| - builder          |
-+--------------------+
-| + build_daily_rpt  |
-| + build_monthly    |
-+--------------------+
-
-+--------------------------+
-|         Report           |
-+--------------------------+
-| - _sections: dict        |
-| - _metadata: dict        |
-+--------------------------+
-| + set_section()          |
-| + set_metadata()         |
-| + get_section()          |
-| + validate()             |
-| + export()               |
-+--------------------------+
+```mermaid
+classDiagram
+    class ReportBuilder {
+        <<interface>>
+        +reset() void
+        +build_header(logo, name, created, ref) void
+        +build_summary(revenue, expenses, profit, kpi) void
+        +add_transaction(transaction) void
+        +set_transaction_columns(columns) void
+        +add_chart(chart) void
+        +build_footer(sig, disc, qr, comp) void
+        +get_result() Report
+    }
+    class PDFReportBuilder {
+        -page_size
+        -report
+    }
+    class HTMLBuilder {
+        -report
+    }
+    class JSONBuilder {
+        -report
+    }
+    class ReportDirector {
+        -builder
+        +build_daily_rpt() void
+        +build_monthly() void
+    }
+    class Report {
+        -_sections: dict
+        -_metadata: dict
+        +set_section() void
+        +set_metadata() void
+        +get_section()
+        +validate() bool
+        +export()
+    }
+    ReportBuilder <|-- PDFReportBuilder
+    ReportBuilder <|-- HTMLBuilder
+    ReportBuilder <|-- JSONBuilder
+    ReportDirector --> ReportBuilder
+    ReportDirector --> Report
 ```
 
 ## So sanh voi Pattern lien quan

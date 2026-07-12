@@ -305,52 +305,53 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-       ┌─────────────────────────┐
-       │     RemoteControl       │──────┐
-       │  (Abstraction)          │      │
-       │─────────────────────────│      │
-       │ # _device: Device       │      │
-       │─────────────────────────│      │
-       │ + toggle_power()        │      │
-       │ + level_up()            │      │
-       │ + level_down()          │      │
-       │ + show_status()         │      │
-       └──────────┬──────────────┘      │
-                  │                     │
-       ┌──────────┴──────────────┐      │
-       │AdvancedRemoteControl    │      │
-       │ (RefinedAbstraction)    │      │
-       │─────────────────────────│      │
-       │ + mute()                │      │
-       │ + schedule()            │      │
-       │ + boost()               │      │
-       │ + scene()               │      │
-       └─────────────────────────┘      │
-                                         │
-                ┌────────────────────────┘
-                │
-       ┌────────┴─────────────────┐
-       │   «interface»            │
-       │      Device              │
-       │  (Implementor)           │
-       │──────────────────────────│
-       │ + power_on()             │
-       │ + power_off()            │
-       │ + is_powered()           │
-       │ + set_level(int)         │
-       │ + get_level() → int      │
-       │ + get_status() → dict    │
-       └──────────┬───────────────┘
-                  │
-         ┌────────┼────────┐
-         │        │        │
-   ┌─────┴──┐ ┌──┴────┐ ┌─┴─────┐
-   │Smart   │ │Smart  │ │Smart  │
-   │ Light  │ │  AC   │ │ Blinds│
-   │(Concrete│ │(Concr.)│ │(Concr)│
-   │Implem.)│ │       │ │       │
-   └────────┘ └───────┘ └───────┘
+```mermaid
+classDiagram
+    class RemoteControl {
+        # _device: Device
+        + toggle_power()
+        + level_up()
+        + level_down()
+        + show_status()
+    }
+    class AdvancedRemoteControl {
+        + mute()
+        + schedule(hour, minute, action)
+        + boost()
+        + scene(scene_name)
+    }
+    class Device {
+        <<interface>>
+        + power_on()
+        + power_off()
+        + is_powered() bool
+        + set_level(int)
+        + get_level() int
+        + get_status() dict
+    }
+    class SmartLight {
+        + device_type() str
+        + set_level(level)
+        + get_level() int
+        + get_status() dict
+    }
+    class SmartAC {
+        + device_type() str
+        + set_level(level)
+        + get_level() int
+        + get_status() dict
+    }
+    class SmartBlinds {
+        + device_type() str
+        + set_level(level)
+        + get_level() int
+        + get_status() dict
+    }
+    RemoteControl <|-- AdvancedRemoteControl
+    RemoteControl --> Device
+    Device <|-- SmartLight
+    Device <|-- SmartAC
+    Device <|-- SmartBlinds
 ```
 
 ## So sánh với Pattern liên quan
@@ -391,12 +392,13 @@ conn = sqlite3.connect("test.db")
 
 **3. GUI Framework (Qt, Tkinter)**: Các framework GUI sử dụng Bridge để tách platform-independent API (abstraction) khỏi platform-specific rendering (implementation). Qt QWindow abstraction làm việc với các QPlatformWindow implementor khác nhau cho Windows, macOS, Linux:
 
-```cpp
-// Qt internals — Bridge Pattern
-class QWindow {  // Abstraction
-    QPlatformWindow *d;  // Implementor
-};
-// QWindowsWindow, QXcbWindow, QCocoaWindow: Concrete Implementors
+```python
+# Qt internals — Bridge Pattern (conceptual)
+class QWindow:  # Abstraction
+    def __init__(self) -> None:
+        self._d: QPlatformWindow  # Implementor
+
+# QWindowsWindow, QXcbWindow, QCocoaWindow: Concrete Implementors
 ```
 
 **4. Logging framework**: SLF4J (Java) / structlog (Python) là Bridge giữa logging API và logging backend:

@@ -307,39 +307,50 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌─────────────────────────────────────────────────────┐
-│                   Client                            │
-│              (BuildingManager)                      │
-└────────────────────┬────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────┐
-│              SmartBuildingFacade                    │
-│─────────────────────────────────────────────────────│
-│ - _lighting: LightingSystem                         │
-│ - _hvac: HVACSystem                                 │
-│ - _security: SecuritySystem                         │
-│ - _fire: FireSystem                                 │
-│─────────────────────────────────────────────────────│
-│ + activate_emergency_mode() → list[str]             │
-│ + deactivate_emergency_mode() → list[str]           │
-│ + leave_building() → list[str]                      │
-│ + start_workday() → list[str]                       │
-│ + run_fire_drill() → list[str]                      │
-│ + get_building_status() → dict                      │
-└──────┬─────────────┬──────────────┬─────────────────┘
-       │             │              │
-       ▼             ▼              ▼
-┌──────────┐ ┌──────────┐ ┌──────────────┐ ┌──────────┐
-│Lighting  │ │ HVAC     │ │ Security     │ │ Fire     │
-│ System   │ │ System   │ │ System       │ │ System   │
-│──────────│ │──────────│ │──────────────│ │──────────│
-│+ set_zone│ │+ shutdown│ │+ arm()       │ │+ trigger │
-│ brightness││+ setTemp │ │+ disarm()    │ │+ silence │
-│+ emerge- │ │+ getStat │ │+ unlockAll() │ │+ reset() │
-│ ncyLight │ └──────────┘ └──────────────┘ └──────────┘
-└──────────┘
+```mermaid
+classDiagram
+    class Client {
+        -_facade SmartBuildingFacade
+        +handle_emergency() void
+        +end_of_day() void
+        +morning_setup() void
+    }
+    class SmartBuildingFacade {
+        -_lighting LightingSystem
+        -_hvac HVACSystem
+        -_security SecuritySystem
+        -_fire FireSystem
+        +activate_emergency_mode() list~str~
+        +deactivate_emergency_mode() list~str~
+        +leave_building() list~str~
+        +start_workday() list~str~
+        +run_fire_drill() list~str~
+        +get_building_status() dict
+    }
+    class LightingSystem {
+        +set_zone_brightness(zone, level) str
+        +emergency_lighting(active) str
+    }
+    class HVACSystem {
+        +shutdown() str
+        +set_temperature(zone, temp) str
+        +get_status() dict
+    }
+    class SecuritySystem {
+        +arm(token) str
+        +disarm(token) str
+        +unlock_all_exits(token) str
+    }
+    class FireSystem {
+        +trigger_test() str
+        +silence() str
+        +reset() str
+    }
+    Client --> SmartBuildingFacade
+    SmartBuildingFacade --> LightingSystem
+    SmartBuildingFacade --> HVACSystem
+    SmartBuildingFacade --> SecuritySystem
+    SmartBuildingFacade --> FireSystem
 ```
 
 ## So sánh với Pattern liên quan

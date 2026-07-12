@@ -292,33 +292,47 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────┐        ┌──────────────────────┐
-│    Client    │        │   «interface»        │
-│ (OrderService)│──────▶│  PaymentProcessor    │
-└──────────────┘        │──────────────────────│
-                        │+ process_payment()   │
-                        │+ refund_payment()    │
-                        └────────┬─────────────┘
-                                 │
-                    ┌────────────┼────────────┐
-                    │            │            │
-        ┌───────────┴───┐ ┌──────┴──────┐ ┌───┴──────────┐
-        │LegacyPayment  │ │StripeAdapter│ │PayPalAdapter │
-        │   Adapter     │ │             │ │              │
-        │───────────────│ │─────────────│ │──────────────│
-        │- legacy:      │ │- stripe:    │ │- client_id   │
-        │  LegacyPayment│ │  StripeClient│ │- secret      │
-        │  Processor    │ │- currency   │ │              │
-        └───────┬───────┘ └──────┬──────┘ └──────────────┘
-                │                │
-        ┌───────┴───────┐ ┌──────┴──────┐
-        │LegacyPayment  │ │StripeClient │
-        │  Processor    │ │(Adaptee)    │
-        │───────────────│ │─────────────│
-        │+ process_     │ │+ charge()   │
-        │  payment()    │ │+ refund()   │
-        └───────────────┘ └─────────────┘
+```mermaid
+classDiagram
+    class PaymentProcessor {
+        <<interface>>
+        + process_payment(order_id, amount) PaymentResult
+        + refund_payment(transaction_id) PaymentResult
+    }
+    class LegacyPaymentAdapter {
+        - legacy: LegacyPaymentProcessor
+        + process_payment(order_id, amount) PaymentResult
+        + refund_payment(transaction_id) PaymentResult
+    }
+    class StripeAdapter {
+        - stripe: StripeClient
+        - currency
+        + process_payment(order_id, amount) PaymentResult
+        + refund_payment(transaction_id) PaymentResult
+    }
+    class PayPalAdapter {
+        - client_id
+        - secret
+        + process_payment(order_id, amount) PaymentResult
+        + refund_payment(transaction_id) PaymentResult
+    }
+    class LegacyPaymentProcessor {
+        + process_payment(order_id, amount) bool
+    }
+    class StripeClient {
+        + charge(amount_cents, currency, source) dict
+        + refund(charge_id) dict
+    }
+    class OrderService {
+        - payment_processor: PaymentProcessor
+        + checkout(order_id, total)
+    }
+    PaymentProcessor <|-- LegacyPaymentAdapter
+    PaymentProcessor <|-- StripeAdapter
+    PaymentProcessor <|-- PayPalAdapter
+    OrderService --> PaymentProcessor
+    LegacyPaymentAdapter --> LegacyPaymentProcessor
+    StripeAdapter --> StripeClient
 ```
 
 ## So sánh với Pattern liên quan

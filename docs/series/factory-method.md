@@ -594,49 +594,61 @@ if __name__ == "__main__":
 
 ## Sơ đồ UML
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                     «interface»                              │
-│                     PaymentFactory                           │
-├──────────────────────────────────────────────────────────────┤
-│ + create_payment(**kwargs): PaymentMethod      «factory»     │
-│ + process_payment(order, **kwargs): Transaction «template»   │
-└──────────────────────────────────────────────────────────────┘
-            ▲                              ▲
-            │                              │
-┌───────────┴──────────────┐    ┌──────────┴──────────────────┐
-│    CreditCardFactory     │    │     PayPalFactory            │
-├──────────────────────────┤    ├─────────────────────────────┤
-│ + create_payment()       │    │ + create_payment()          │
-│   -> CreditCardPayment   │    │   -> PayPalPayment          │
-└──────────────────────────┘    └─────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────────┐
-│                  «interface» PaymentMethod                   │
-├──────────────────────────────────────────────────────────────┤
-│ + validate(): bool                                           │
-│ + charge(order: Order) -> Transaction                        │
-│ + refund(transaction: Transaction) -> Transaction            │
-│ + name(): str                                                │
-└──────────────────────────────────────────────────────────────┘
-            ▲                    ▲                    ▲
-            │                    │                    │
-┌───────────┴──────┐  ┌─────────┴────────┐  ┌───────┴──────────┐
-│CreditCardPayment │  │ PayPalPayment    │  │  VNPayPayment    │
-├──────────────────┤  ├──────────────────┤  ├──────────────────┤
-│ - card_info      │  │ - oauth_token    │  │ - qr_data        │
-│ + validate()     │  │ - email          │  │ - bank_code      │
-│ + charge()       │  │ + validate()     │  │ + validate()     │
-│ + refund()       │  │ + charge()       │  │ + charge()       │
-└──────────────────┘  └──────────────────┘  └──────────────────┘
-
-┌─────────────────────────────────────┐
-│        PaymentService (Client)      │
-├─────────────────────────────────────┤
-│ - factories: dict[str, PaymentFactory] │
-│ + register_factory(name, factory)   │
-│ + pay(order, method, **kwargs)      │
-└─────────────────────────────────────┘
+```mermaid
+classDiagram
+    class PaymentFactory {
+        <<interface>>
+        + create_payment(params) PaymentMethod
+        + process_payment(order, params) Transaction
+    }
+    class CreditCardFactory {
+        + create_payment() PaymentMethod
+    }
+    class PayPalFactory {
+        + create_payment() PaymentMethod
+    }
+    class VNPayFactory {
+        + create_payment() PaymentMethod
+    }
+    class PaymentMethod {
+        <<interface>>
+        + validate() bool
+        + charge(order) Transaction
+        + refund(transaction) Transaction
+        + name() str
+    }
+    class CreditCardPayment {
+        - card_info
+        + validate()
+        + charge()
+        + refund()
+    }
+    class PayPalPayment {
+        - oauth_token
+        - email
+        + validate()
+        + charge()
+        + refund()
+    }
+    class VNPayPayment {
+        - qr_data
+        - bank_code
+        + validate()
+        + charge()
+        + refund()
+    }
+    class PaymentService {
+        - factories: dict[str, PaymentFactory]
+        + register_factory(name, factory)
+        + pay(order, method, params)
+    }
+    PaymentFactory <|-- CreditCardFactory
+    PaymentFactory <|-- PayPalFactory
+    PaymentFactory <|-- VNPayFactory
+    PaymentMethod <|-- CreditCardPayment
+    PaymentMethod <|-- PayPalPayment
+    PaymentMethod <|-- VNPayPayment
+    PaymentService --> PaymentFactory
 ```
 
 ## So sánh với Pattern liên quan
