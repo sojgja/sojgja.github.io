@@ -9,11 +9,13 @@ sidebar_position: 3
 
 > *"Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses."* — Gang of Four, *Design Patterns: Elements of Reusable Object-Oriented Software*, 1994.
 
-**Factory Method** thuộc nhóm **Creational Patterns**, cung cấp một interface để tạo object nhưng cho phép subclass quyết định class cụ thể nào được khởi tạo. Pattern này chuyển trách nhiệm khởi tạo object từ client code sang các class con — thực hiện đúng **Dependency Inversion Principle**: module cấp cao không phụ thuộc vào module cấp thấp, cả hai đều phụ thuộc vào abstraction.
+Bạn có bao giờ cảm thấy mệt mỏi với những câu lệnh `if/elif` lằng nhằng để chọn class cần khởi tạo? Tôi thì có — rất nhiều lần.
+
+**Factory Method** thuộc nhóm **Creational Patterns**. Nó cung cấp một interface để tạo object, nhưng cho phép subclass quyết định class cụ thể nào được khởi tạo. Nghe có vẻ đơn giản, nhưng sức mạnh của nó nằm ở chỗ: **chuyển trách nhiệm khởi tạo từ client code sang subclass**. Đây chính là **Dependency Inversion Principle** trong thực tế — module cấp cao không phụ thuộc vào module cấp thấp, cả hai đều phụ thuộc vào abstraction.
 
 ## Bài toán chi tiết
 
-Giả sử bạn đang phát triển một **hệ thống thanh toán trực tuyến** cho một sàn thương mại điện tử đa quốc gia. Ban đầu, sàn chỉ hỗ trợ thanh toán qua **thẻ tín dụng** (Visa, MasterCard). Logic xử lý thanh toán được viết trực tiếp trong class `OrderProcessor`:
+Hãy tưởng tượng bạn đang phát triển một **hệ thống thanh toán trực tuyến** cho một sàn thương mại điện tử đa quốc gia. Ban đầu, sàn chỉ hỗ trợ thanh toán qua **thẻ tín dụng** (Visa, MasterCard). Logic xử lý thanh toán được viết trực tiếp trong class `OrderProcessor`:
 
 ```python
 class OrderProcessor:
@@ -22,7 +24,7 @@ class OrderProcessor:
         payment.charge(order.total)
 ```
 
-Mọi thứ đều ổn cho đến khi sàn mở rộng ra các thị trường mới. Khách hàng ở châu Âu yêu cầu **PayPal**, khách hàng ở châu Á yêu cầu **VNPay** và **WeChat Pay**, khách hàng doanh nghiệp yêu cầu **chuyển khoản ngân hàng**. Mỗi phương thức thanh toán có:
+Mọi thứ đều ổn... cho đến khi sàn mở rộng ra các thị trường mới. Khách hàng ở châu Âu yêu cầu **PayPal**, khách hàng ở châu Á yêu cầu **VNPay** và **WeChat Pay**, khách hàng doanh nghiệp yêu cầu **chuyển khoản ngân hàng**. Mỗi phương thức thanh toán có:
 - Cách xác thực khác nhau (OAuth token, mã QR, chữ ký số).
 - Cách tính phí khác nhau (phần trăm, fixed fee, hoặc miễn phí).
 - Cách xử lý hoàn tiền khác nhau.
@@ -45,6 +47,8 @@ class OrderProcessor:
         payment.charge(order.total)
 ```
 
+Tôi từng chứng kiến một dự án với hơn 20 `elif` trong một hàm. Bạn biết kết cục không? Mỗi lần thêm method mới là một lần cầu nguyện — "xin đừng hỏng chỗ cũ."
+
 Vấn đề với cách tiếp cận này:
 1. **Vi phạm Open/Closed Principle**: Mỗi lần thêm phương thức thanh toán mới, bạn phải sửa class `OrderProcessor`.
 2. **Rủi ro regression**: Sửa một dòng trong `process_payment` có thể làm hỏng toàn bộ logic thanh toán.
@@ -53,7 +57,9 @@ Vấn đề với cách tiếp cận này:
 
 ## Giải pháp với Pattern
 
-Factory Method giải quyết triệt để bằng cách tách **phần khởi tạo object** ra khỏi **phần sử dụng object**. Cụ thể:
+Factory Method giải quyết triệt để bằng cách tách **phần khởi tạo object** ra khỏi **phần sử dụng object**. Nghe như chia tay vậy — mỗi bên một trách nhiệm.
+
+Cụ thể:
 
 1. **Product interface** (`PaymentMethod`): Định nghĩa interface chung cho tất cả các phương thức thanh toán.
 2. **Concrete Products** (`CreditCardPayment`, `PayPalPayment`, ...): Implement cụ thể từng phương thức.
@@ -63,7 +69,7 @@ Factory Method giải quyết triệt để bằng cách tách **phần khởi t
 Khi cần thêm phương thức thanh toán mới (ví dụ: `CryptoPayment`), bạn chỉ cần:
 1. Tạo class `CryptoPayment` implements `PaymentMethod`.
 2. Tạo class `CryptoFactory` implements `PaymentFactory`.
-3. Không động gì đến code đang chạy.
+3. **Không động gì đến code đang chạy.**
 
 Client code (`OrderProcessor`) chỉ làm việc với interface `PaymentFactory` — nó không biết và không cần biết class cụ thể nào được tạo ra. Điều này đảm bảo **loose coupling** giữa client và concrete classes.
 
@@ -883,9 +889,13 @@ class TestPaymentService:
 | **Consistency**: Mọi product được tạo theo cùng một quy trình | **Static methods không mở rộng được**: Nếu dùng @staticmethod làm factory |
 | **Lazy initialization**: Có thể kết hợp với lazy loading | **Phân tán logic**: Đôi khi logic khởi tạo phức tạp nằm rải rác ở nhiều factory |
 
+---
+
 ## Kết luận
 
-Factory Method là một trong những pattern quan trọng nhất của GoF — nó là nền tảng cho hầu hết các framework hiện đại. **Golden rule**: Hãy dùng Factory Method khi bạn thấy mình đang dùng `if/elif` để chọn class cụ thể dựa trên một điều kiện nào đó, và điều kiện này có thể thay đổi hoặc mở rộng trong tương lai.
+Factory Method là một trong những pattern quan trọng nhất của GoF — tôi dám nói nó là nền tảng cho hầu hết các framework hiện đại. **Golden rule**: Hãy dùng Factory Method khi bạn thấy mình đang dùng `if/elif` để chọn class cụ thể dựa trên một điều kiện nào đó, và điều kiện này có thể thay đổi hoặc mở rộng trong tương lai.
+
+Như Warren Buffett từng nói: *"Risk comes from not knowing what you're doing."* — rủi ro đến từ việc không biết mình đang làm gì. Factory Method giúp bạn biết chính xác ai chịu trách nhiệm tạo object nào.
 
 Pattern này đặc biệt hữu ích khi:
 1. Bạn xây dựng một thư viện/framework và muốn cho phép người dùng mở rộng.
@@ -894,3 +904,7 @@ Pattern này đặc biệt hữu ích khi:
 4. Bạn muốn chuẩn hóa cách tạo object trong toàn bộ codebase.
 
 Hãy nhớ: Factory Method không phải là việc *thay thế `new` bằng factory*, mà là việc *cho phép subclass quyết định class nào được tạo*. Nếu factory của bạn không có subclass nào override nó, thì đó chỉ là **Simple Factory** — không sai, nhưng không tận dụng được sức mạnh của pattern.
+
+---
+
+*Trân trọng!*

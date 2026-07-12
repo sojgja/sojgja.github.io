@@ -1,6 +1,6 @@
 # TÂM LÝ GIAO DỊCH — NỀN TẢNG CỦA MỌI THÀNH CÔNG
 
-*Tổng hợp và biên tập từ Nhật Ký Forex (nhatkyforex.com)*
+
 
 ---
 

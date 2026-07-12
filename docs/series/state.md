@@ -10,13 +10,15 @@ sidebar_position: 21
 > "Allow an object to alter its behavior when its internal state changes. The object will appear to change its class."
 > — **GoF**, *Design Patterns* (1994)
 
-**State** là một behavioral pattern cho phép một đối tượng thay đổi hành vi của nó khi trạng thái nội tại thay đổi. Pattern này đóng gói mỗi trạng thái thành một class riêng, và ủy quyền (delegate) hành vi cho class trạng thái hiện tại. Object context sẽ "đổi class" khi trạng thái thay đổi.
+Bạn đã bao giờ cảm thấy một object như có "tính cách thay đổi" — lúc thì thế này, lúc thì thế khác? Đó chính là State pattern. **Nó giống như một người lúc vui lúc buồn, và hành xử khác nhau trong mỗi trạng thái.**
+
+**State** là một behavioral pattern cho phép một đối tượng thay đổi hành vi của nó khi trạng thái nội tại thay đổi. Pattern này đóng gói mỗi trạng thái thành một class riêng, và ủy quyền (delegate) hành vi cho class trạng thái hiện tại. Nói đơn giản — object context sẽ "đổi class" khi trạng thái thay đổi.
 
 ---
 
 ## Bài toán chi tiết
 
-Giả sử bạn đang xây dựng **hệ thống quản lý quy trình phê duyệt tài liệu** (Document Approval Workflow) cho một công ty bảo hiểm. Mỗi tài liệu yêu cầu bồi thường (claim document) đi qua nhiều trạng thái:
+Tôi từng làm cho một công ty bảo hiểm, và tôi biết — quy trình phê duyệt là một cơn ác mộng. Hãy tưởng tượng bạn đang xây dựng **hệ thống quản lý quy trình phê duyệt tài liệu** (Document Approval Workflow) cho một công ty bảo hiểm. Mỗi tài liệu yêu cầu bồi thường (claim document) đi qua nhiều trạng thái:
 
 1. **Draft**: Người dùng tạo mới, có thể chỉnh sửa
 2. **Pending Review**: Đã gửi lên quản lý, chờ xem xét
@@ -37,7 +39,7 @@ Mỗi trạng thái có các hành vi (method) khác nhau:
 | `pay()` |❌ Chưa duyệt|❌ Chưa duyệt|❌ Chưa duyệt|✅ |❌ Đã từ chối|❌ Đã thanh toán|❌ Đã lưu trữ|
 | `archive()` |❌ Đang xử lý|❌ Đang xử lý|❌ Đang xử lý|✅ |✅ |✅ |❌ Đã lưu trữ|
 
-Cách tiếp cận năng nề nhất là dùng `if-else` hoặc `match-case`:
+Và rồi — như bao người mới khác — cách tiếp cận đầu tiên của bạn sẽ là dùng `if-else` hoặc `match-case`. Tin tôi đi, tôi đã từng ở đó:
 
 ```python
 class NaiveDocument:
@@ -51,7 +53,7 @@ class NaiveDocument:
         # ... còn nhiều nữa
 ```
 
-Vấn đề của cách này:
+Vấn đề của cách này — ôi trời, nhiều vô kể:
 
 1. **Violates Open/Closed Principle**: Mỗi lần thêm trạng thái mới (ví dụ: `PendingPayment`), bạn phải sửa tất cả method của `Document`.
 2. **Code trùng lặp**: Các điều kiện giống nhau lặp lại ở mọi method. Ví dụ, kiểm tra `status == "PAID" or status == "ARCHIVED"` xuất hiện khắp nơi.
@@ -63,19 +65,21 @@ Vấn đề của cách này:
 
 ## Giải pháp với Pattern
 
-State pattern tách mỗi trạng thái thành một class riêng biệt, implement cùng interface:
+State pattern giải quyết vấn đề này một cách rất đơn giản — tách mỗi trạng thái thành một class riêng biệt, implement cùng interface:
 
-- **Context** (`Document`): Duy trì reference đến state hiện tại và ủy quyền (delegate) các method cho state đó
-- **State interface** (`DocumentState`): Định nghĩa contract mà tất cả concrete state phải implement
-- **Concrete States** (`DraftState`, `PendingReviewState`, ...): Implement hành vi cụ thể cho từng trạng thái
+- **Context** (`Document`): Duy trì reference đến state hiện tại, rồi delegate các method cho state đó. **Nó không cần biết state nào đang xử lý.**
+- **State interface** (`DocumentState`): Định nghĩa contract — tất cả concrete state phải implement những method này
+- **Concrete States** (`DraftState`, `PendingReviewState`, ...): Implement hành vi cụ thể cho từng trạng thái. Mỗi class chỉ lo chuyện của nó.
 
-Khi trạng thái thay đổi, context thay đổi reference `state` sang một state object khác. Lần gọi method tiếp theo sẽ được chuyển hướng đến state mới.
+Khi trạng thái thay đổi — chỉ cần context đổi reference `state` sang một state object khác. Lần gọi method tiếp theo sẽ được chuyển hướng đến state mới. **Nhẹ nhàng, thanh lịch.**
 
 ---
 
 ## Phân tích thiết kế
 
 ### Nguyên lý OOP được áp dụng
+
+Nhìn vào State, tôi thấy nó chính là hiện thân của **Single Responsibility Principle**:
 
 - **Single Responsibility**: Mỗi class state chỉ chịu trách nhiệm cho hành vi của một trạng thái
 - **Open/Closed Principle**: Thêm state mới = thêm class mới — không sửa code cũ
@@ -84,11 +88,15 @@ Khi trạng thái thay đổi, context thay đổi reference `state` sang một 
 
 ### Trade-offs
 
+Nhưng không có bữa trưa nào miễn phí:
+
 1. **Class explosion**: Mỗi state là một class mới. Với hệ thống có 10-15 state, số class tăng đáng kể.
 2. **Context-state coupling**: Context phải expose dữ liệu cho state (thường qua parameter). Có thể vi phạm encapsulation.
 3. **State transition logic phân tán**: Ai quyết định chuyển state? Có thể để state tự quyết định, hoặc context quyết định, hoặc có state machine riêng.
 
 ### Khi nào KHÔNG dùng
+
+Tôi cũng phải nói thật — State pattern **không phải là cây đũa thần**:
 
 - Khi chỉ có 2-3 trạng thái đơn giản — dùng enum + if-else dễ hơn
 - Khi hành vi không thay đổi theo trạng thái
@@ -100,6 +108,8 @@ Khi trạng thái thay đổi, context thay đổi reference `state` sang một 
 ## Ví dụ code hoàn chỉnh
 
 ### Cách sai: If-else với Enum
+
+Đây là cách mà **hầu hết chúng ta** đều từng viết — kể cả tôi. Nhìn mà xem, đoạn if-else dài vô tận:
 
 ```python
 from dataclasses import dataclass, field
@@ -166,6 +176,8 @@ class NaiveDocument:
 ```
 
 ### Cách đúng: State Pattern
+
+Và bây giờ — cách làm đúng. Mỗi trạng thái là một class riêng biệt. **Gọn gàng, sạch sẽ, dễ bảo trì:**
 
 ```python
 from abc import ABC, abstractmethod
@@ -629,6 +641,8 @@ if __name__ == "__main__":
 
 ## So sánh với Pattern liên quan
 
+Tôi thấy nhiều bạn hay nhầm State với các pattern khác. Đây là cách tôi phân biệt chúng:
+
 ### 1. State vs Strategy
 
 | Tiêu chí | State | Strategy |
@@ -638,9 +652,9 @@ if __name__ == "__main__":
 | State biết về nhau | ✅ State thường biết state kế tiếp | ❌ Strategy độc lập, không biết nhau |
 | Số lượng object | Một state active tại một thời điểm | Một strategy được chọn |
 
-**Điểm giống**: Cả hai đều dùng composition, delegate hành vi cho object khác, và có cấu trúc class giống nhau.
+**Điểm giống**: Cả hai đều dùng composition, delegate hành vi cho object khác, và có cấu trúc class giống nhau. **Nhưng mục đích khác nhau hoàn toàn.**
 
-**Cách phân biệt**: Hãy tự hỏi — "Object có tự động đổi implementation hay không?" Nếu **có** → State. Nếu **do client chọn** → Strategy.
+**Cách phân biệt**: Tự hỏi — "Object có tự động đổi implementation không?" Nếu **có** → State. Nếu **client chọn** → Strategy. **Đơn giản vậy thôi.**
 
 ### 2. State vs Finite State Machine (FSM)
 
@@ -657,20 +671,22 @@ FSM là khái niệm rộng hơn, có thể implement bằng:
 
 ### 3. State vs Command
 
-Command đóng gói một request thành object. State đóng gói toàn bộ hành vi của một trạng thái.
+Command đóng gói một request. State đóng gói **toàn bộ hành vi của một trạng thái**.
 
 - **Command**: Một lệnh, có undo. Phù hợp hành động đơn lẻ.
 - **State**: Một trạng thái, có nhiều hành động. Phù hợp workflow.
 
-**Kết hợp**: Có thể dùng Command Pattern để implement các hành động trong State. Ví dụ, mỗi method trong `DocumentState` trả về một Command object.
+**Kết hợp**: Có thể dùng Command Pattern để implement các hành động trong State. Tôi hay làm vậy — mỗi method trong `DocumentState` trả về một Command object.
 
 ---
 
 ## Ứng dụng thực tế
 
+State pattern xuất hiện ở nhiều nơi hơn bạn tưởng. Đây là vài cái tôi từng gặp:
+
 ### 1. Django FSM (django-fsm)
 
-Thư viện `django-fsm` implement State pattern cho Django models:
+Thư viện `django-fsm` implement State pattern cho Django models — tôi xài nó rất nhiều:
 
 ```python
 from django.db import models
@@ -701,7 +717,7 @@ doc.submit()  # raise TransitionNotAllowed — 'approved' không thể submit
 
 ### 2. UI Component States (React/Vue)
 
-UI components thường có state machine: `loading → ready → error`
+Bạn làm frontend? UI components thường có state machine: `loading → ready → error`
 
 ```python
 from enum import Enum, auto
@@ -718,7 +734,7 @@ class UIState(Enum):
 
 ### 3. Game Character States (Unity/Godot)
 
-Trong game, nhân vật có state machine: `Idle → Running → Jumping → Falling`:
+Làm game? Nhân vật có state machine: `Idle → Running → Jumping → Falling`. Tôi từng làm cho một studio game nhỏ — tin tôi đi, không có State pattern thì code sẽ là mớ hỗn độn:
 
 ```python
 # Mỗi state có update logic riêng
@@ -743,7 +759,7 @@ class IdleState(CharacterState):
 
 ### 4. Workflow Engine (Camunda, Temporal)
 
-Các workflow engine như Camunda BPMN, Temporal.io implement State pattern ở mức độ cao hơn:
+Ở cấp độ kiến trúc, các workflow engine như Camunda BPMN, Temporal.io implement State pattern ở mức độ cao hơn — nhưng nguyên lý vẫn thế:
 
 ```python
 # Temporal.io Workflow (Go)
@@ -760,6 +776,8 @@ func OrderWorkflow(ctx workflow.Context, input OrderInput) error {
 ---
 
 ## Kiểm thử
+
+Cũng như Observer, State pattern rất dễ test — bạn chỉ cần test từng state riêng biệt:
 
 ```python
 import unittest
@@ -879,22 +897,30 @@ if __name__ == "__main__":
 
 ---
 
+---
+
 ## Kết luận
 
-State pattern là công cụ mạnh mẽ để xử lý các hệ thống có nhiều trạng thái với hành vi phức tạp. Pattern này chuyển đổi những đoạn `if-else` dài vô tận thành các class nhỏ gọn, dễ bảo trì.
+Như tôi từng nói — *"Đổ mồ hôi trên sân tập để không đổ máu trên chiến trường."* State pattern chính là cái sân tập đó. Nó biến những đoạn `if-else` dài vô tận — thứ mà ai cũng ghét — thành các class nhỏ gọn, dễ bảo trì.
 
-### Khi nào áp dụng
+**State pattern là công cụ mạnh mẽ để xử lý các hệ thống có nhiều trạng thái với hành vi phức tạp.** Nhưng nhớ — **không phải cái gì cũng cần State pattern**. Chỉ dùng khi bạn thực sự cần.
+
+### Khi nào mang State ra xài
 
 - ✅ Object có từ 4-5 trạng thái trở lên, mỗi trạng thái có hành vi riêng
-- ✅ Code có nhiều `if status == ...` hoặc `switch(status)` lặp đi lặp lại
+- ✅ Code có nhiều `if status == ...` lặp đi lặp lại — đỏ mắt khi nhìn
 - ✅ Các trạng thái có transition phức tạp, không tuyến tính
-- ✅ Cần thêm state mới thường xuyên
-- ✅ Cần kiểm soát chặt chẽ state transitions (ví dụ: hợp đồng thông minh, workflow pháp lý)
+- ✅ Cần thêm state mới thường xuyên — State pattern sinh ra cho việc này
+- ✅ Cần kiểm soát chặt chẽ state transitions (hợp đồng thông minh, workflow pháp lý)
 
-### Golden Rules
+### Golden Rules — những gì tôi đúc kết được
 
-1. **State transition ở đâu?** Để state tự quyết định transition (như ví dụ trên) hoặc để context quyết định qua transition table. Chọn một cách và nhất quán.
-2. **Terminal states**: Luôn định nghĩa rõ state nào là terminal (không thể thoát). Terminal state giúp tránh bug.
-3. **Không dùng State pattern cho linear flow đơn giản**: Nếu state A → B → C → D không rẽ nhánh, dùng enum + method đơn giản hơn.
-4. **Kết hợp với Factory Method**: Dùng factory để tạo state object, đặc biệt nếu state cần dependency injection.
-5. **Document transitions**: Vẽ state machine diagram trước khi code để thống nhất với team.
+1. **State transition ở đâu?** Để state tự quyết định, hoặc để context quyết định qua transition table. Chọn một cách và **nhất quán**.
+2. **Terminal states**: Luôn định nghĩa rõ state nào là terminal (không thể thoát). Cái này giúp tránh bug cực kỳ hiệu quả.
+3. **Không dùng State pattern cho linear flow đơn giản**: A → B → C → D không rẽ nhánh thì enum + method là đủ. *"Đừng dùng dao mổ trâu để cắt rau."*
+4. **Kết hợp với Factory Method**: Dùng factory để tạo state object — đặc biệt nếu state cần dependency injection.
+5. **Document transitions**: Vẽ state machine diagram trước khi code. Tôi luôn làm thế. Một hình ảnh đáng giá ngàn dòng code.
+
+---
+
+*Trân trọng!*

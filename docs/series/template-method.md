@@ -10,13 +10,15 @@ sidebar_position: 23
 > "Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure."
 > — **GoF**, *Design Patterns* (1994)
 
-**Template Method** là một behavioral pattern định nghĩa khung (skeleton) của một thuật toán trong một method của base class, để các subclass cài đặt chi tiết các bước mà không thay đổi cấu trúc tổng thể của thuật toán. Pattern này còn được gọi là **Hollywood Principle**: "Don't call us, we'll call you."
+Có bao giờ bạn cảm thấy mình đang viết đi viết lại cùng một cấu trúc code, chỉ khác nhau vài dòng lẻ tẻ? Bạn copy nguyên một hàm từ class này sang class khác, đổi vài tham số, rồi tự nhủ "lần sau sẽ refactor"? Tôi cũng từng như vậy đấy.
+
+**Template Method** là một behavioral pattern — nó định nghĩa **khung** (skeleton) của một thuật toán trong base class, để subclass cài đặt chi tiết các bước mà không thay đổi cấu trúc tổng thể. Pattern này còn được gọi là **Hollywood Principle**: "Don't call us, we'll call you." — nghe như một ông trùm Hollywood nói với diễn viên vậy.
 
 ---
 
 ## Bài toán chi tiết
 
-Giả sử bạn đang xây dựng **hệ thống trích xuất và báo cáo dữ liệu** (Data Report Generator) cho một công ty tài chính. Hệ thống cần tạo báo cáo từ nhiều nguồn dữ liệu khác nhau và xuất ra nhiều định dạng:
+Hãy tưởng tượng bạn đang xây dựng **hệ thống trích xuất và báo cáo dữ liệu** (Data Report Generator) cho một công ty tài chính. Hệ thống cần tạo báo cáo từ nhiều nguồn dữ liệu khác nhau và xuất ra nhiều định dạng:
 
 **Quy trình chung cho mọi báo cáo:**
 1. **Kết nối nguồn dữ liệu** (Connect)
@@ -36,7 +38,7 @@ Giả sử bạn đang xây dựng **hệ thống trích xuất và báo cáo d�
 | Giao dịch real-time | Kafka Stream | Lọc, windowing, aggregate | JSON |
 | Thuế cuối năm | CSV + API Thuế | Mapping mã số thuế | XML |
 
-Cách tiếp cận ngây thơ là viết từng class riêng biệt, dẫn đến code trùng lặp nghiêm trọng: mỗi class đều có cấu trúc giống hệt nhau (connect → extract → transform → compute → format → export → close), vi phạm DRY, không nhất quán trong error handling, và khó thay đổi quy trình chung.
+Bạn biết cảm giác khi nhìn vào code và thấy nó lặp đi lặp lại chứ? Cách tiếp cập ngây thơ là viết từng class riêng biệt... và thế là bạn có một núi code trùng lặp. Mỗi class đều có cấu trúc giống hệt nhau: connect → extract → transform → compute → format → export → close. Vi phạm DRY. Không nhất quán trong error handling. Và quan trọng nhất — **khó thay đổi quy trình chung**.
 
 ---
 
@@ -47,7 +49,7 @@ Template Method định nghĩa **khung thuật toán** (template method) trong b
 - **AbstractClass** (`ReportGenerator`): Chứa template method `generate()` và khai báo các abstract method cho các bước
 - **ConcreteClass** (`DailyRevenueReport`, `RiskReport`): Override các bước cụ thể
 
-Template method gọi các method theo thứ tự cố định. Subclass chỉ override những method cần thay đổi, các method mặc định (hook) có thể giữ nguyên.
+Template method gọi các method theo thứ tự cố định. Subclass chỉ override những method cần thay đổi, các method mặc định (hook) có thể giữ nguyên. **Đơn giản mà hiệu quả.**
 
 ---
 
@@ -72,7 +74,7 @@ def pre_process(self, ctx) -> None:
     pass  # hook — mặc định không làm gì
 ```
 
-Hook cho phép subclass can thiệp vào thuật toán mà không phải override toàn bộ template method.
+Hook cho phép subclass can thiệp vào thuật toán mà không phải override toàn bộ template method. **Như một cánh cửa phụ — chỉ mở khi cần.**
 
 ### Trade-offs
 
@@ -914,7 +916,9 @@ if __name__ == "__main__":
 
 ## Kết luận
 
-Template Method là một trong những pattern đơn giản nhất nhưng cực kỳ hữu ích. Nó là nền tảng cho hầu hết các framework hiện đại (Django CBV, Spring, Rails). Pattern này dạy chúng ta một bài học quan trọng: **đừng viết lại cấu trúc, hãy định nghĩa khung và để phần chi tiết cho subclass**.
+Tôi đã thấy Template Method xuất hiện ở khắp mọi nơi — từ Django CBV, threading.Thread, đến Airflow DAG. Nó là một trong những pattern đơn giản nhất nhưng cực kỳ hữu ích. Pattern này dạy chúng ta một bài học quan trọng: **đừng viết lại cấu trúc, hãy định nghĩa khung và để phần chi tiết cho subclass**.
+
+Như một người thợ mộc lành nghề — ông ta không đẽo từng cái bàn từ đầu mỗi lần. Ông ta có một cái khung, một quy trình. Mỗi cái bàn chỉ khác nhau ở chi tiết trang trí. Đó chính xác là những gì Template Method làm cho code của bạn.
 
 ### Khi nào áp dụng
 
@@ -930,3 +934,7 @@ Template Method là một trong những pattern đơn giản nhất nhưng cực
 3. **Hook nên có default implementation hợp lý**: `should_validate()` mặc định trả `True`, `cleanup()` mặc định không làm gì.
 4. **Giữ template method ngắn**: Nếu template method dài hơn 20 dòng, hãy xem xét tách thành nhiều method nhỏ hơn.
 5. **Dùng Strategy khi cần linh hoạt hơn**: Nếu các bước cần thay đổi runtime hoặc thứ tự, Strategy pattern phù hợp hơn.
+
+---
+
+*Trân trọng!*

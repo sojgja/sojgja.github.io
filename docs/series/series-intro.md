@@ -7,12 +7,14 @@ sidebar_position: 1
 
 # Design Patterns — 23 mẫu thiết kế
 
-> "Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can use this solution a million times over, without ever doing it the same way twice."
+> *"Mỗi pattern mô tả một vấn đề xuất hiện đi xuất hiện lại trong môi trường của chúng ta, và sau đó mô tả cốt lõi của giải pháp cho vấn đề đó, theo cách bạn có thể dùng giải pháp đó hàng triệu lần mà không bao giờ làm nó theo cùng một cách hai lần."*
 > — **Christopher Alexander**, *A Pattern Language* (1977)
 
-**Design Patterns** (còn gọi là **Gang of Four patterns** hay **GoF patterns**) là tập hợp 23 mẫu thiết kế phần mềm được đúc kết bởi Erich Gamma, Richard Helm, Ralph Johnson và John Vlissides trong cuốn sách *Design Patterns: Elements of Reusable Object-Oriented Software* (1994). Đây được coi là kinh thánh của lập trình hướng đối tượng.
+Bạn có bao giờ tự hỏi, tại sao có những lập trình viên viết code hàng giờ đồng hồ không biết mệt, trong khi người khác cứ loay hoay sửa bug hết ngày này qua ngày khác? Câu trả lời không nằm ở việc họ thông minh hơn bạn, mà nằm ở thứ đơn giản hơn nhiều: họ biết dùng **design patterns**.
 
-Mỗi pattern là một **giải pháp tổng quát, đã được kiểm chứng** cho một vấn đề thiết kế thường gặp. Pattern không phải là thư viện hay framework — bạn không thể `pip install observer` — mà là một **khuôn mẫu tư duy** để bạn áp dụng linh hoạt vào code của mình.
+**Design Patterns** (còn gọi là **Gang of Four patterns**) là tập hợp 23 mẫu thiết kế được đúc kết bởi 4 ông lớn: Erich Gamma, Richard Helm, Ralph Johnson và John Vlissides trong cuốn sách *Design Patterns: Elements of Reusable Object-Oriented Software* (1994). Cuốn sách này được coi là kinh thánh của lập trình hướng đối tượng.
+
+Mỗi pattern là một **giải pháp tổng quát, đã được kiểm chứng** cho một vấn đề thiết kế thường gặp. Pattern không phải là thư viện hay framework — bạn không thể `pip install observer` — mà là một **khuôn mẫu tư duy** để bạn linh hoạt áp dụng vào code của mình.
 
 ---
 
@@ -41,28 +43,28 @@ Mỗi pattern là một **giải pháp tổng quát, đã được kiểm chứn
 | Pattern | Mục đích | Ví dụ thực tế |
 |---------|----------|--------------|
 | **Adapter** | Chuyển interface của một class thành interface khác mà client mong đợi | Tích hợp third-party API, legacy code |
-| **Bridge** | Tách abstraction khỏi implementation để cả hai có thể thay đổi độc lập | Cross-platform GUI, database drivers |
-| **Composite** | Tổ chức các đối tượng thành cấu trúc cây để biểu diễn quan hệ whole-part | UI component tree, file system |
-| **Decorator** | Gắn thêm trách nhiệm vào đối tượng một cách linh hoạt | Middleware trong web framework, I/O streams |
-| **Facade** | Cung cấp interface đơn giản cho một hệ thống phức tạp | REST API wrapper, ORM |
-| **Flyweight** | Chia sẻ các đối tượng nhỏ để tiết kiệm bộ nhớ | Text rendering, game particle systems |
-| **Proxy** | Cung cấp đối tượng thay thế để kiểm soát truy cập đến đối tượng khác | Lazy loading, access control, logging |
+| **Bridge** | Tách abstraction khỏi implementation để cả hai độc lập thay đổi | Cross-platform GUI, database drivers |
+| **Composite** | Tổ chức đối tượng thành cấu trúc cây whole-part | UI component tree, file system |
+| **Decorator** | Gắn thêm trách nhiệm vào đối tượng linh hoạt | Middleware, I/O streams |
+| **Facade** | Interface đơn giản cho hệ thống phức tạp | REST API wrapper, ORM |
+| **Flyweight** | Chia sẻ đối tượng nhỏ để tiết kiệm bộ nhớ | Text rendering, game particle systems |
+| **Proxy** | Đối tượng thay thế kiểm soát truy cập | Lazy loading, access control |
 
 ### Behavioral Patterns (11 mẫu)
 
 | Pattern | Mục đích | Ví dụ thực tế |
 |---------|----------|--------------|
-| **Chain of Responsibility** | Cho nhiều object có cơ hội xử lý request, chuyển tiếp nhau | Middleware pipeline, logging handlers |
-| **Command** | Đóng gói request thành đối tượng, cho phép parameterize và queue | Undo/redo, task queue, macro recording |
-| **Interpreter** | Định nghĩa ngữ pháp và interpreter cho một ngôn ngữ | Regex, SQL parser, template engine |
-| **Iterator** | Truy cập các phần tử của collection mà không lộ cấu trúc bên trong | Database cursor, tree traversal |
-| **Mediator** | Định nghĩa đối tượng trung gian để giảm coupling giữa các component | Chat room, GUI dialog, event bus |
-| **Memento** | Lưu và khôi phục trạng thái của đối tượng mà không vi phạm encapsulation | Undo/redo, save game, transaction rollback |
-| **Observer** | Định nghĩa cơ chế one-to-many dependency để thông báo khi state thay đổi | Event system, pub/sub, reactive programming |
-| **State** | Cho phép đối tượng thay đổi hành vi khi trạng thái thay đổi | Workflow engine, UI state machine |
-| **Strategy** | Định nghĩa họ thuật toán, đóng gói và hoán đổi cho nhau | Payment methods, sorting algorithms |
-| **Template Method** | Định nghĩa khung thuật toán, để subclass cài đặt các bước chi tiết | CI/CD pipeline, data processing |
-| **Visitor** | Thêm thao tác mới vào object hierarchy mà không sửa class | AST analysis, code generation, export formats |
+| **Chain of Responsibility** | Request được chuyển tiếp qua chuỗi xử lý | Middleware pipeline, logging handlers |
+| **Command** | Đóng gói request thành đối tượng | Undo/redo, task queue |
+| **Interpreter** | Định nghĩa ngữ pháp cho một ngôn ngữ | Regex, SQL parser |
+| **Iterator** | Duyệt collection không lộ cấu trúc bên trong | Database cursor, tree traversal |
+| **Mediator** | Giảm coupling giữa các component | Chat room, event bus |
+| **Memento** | Lưu và khôi phục trạng thái | Undo/redo, save game |
+| **Observer** | Thông báo khi state thay đổi | Event system, pub/sub |
+| **State** | Hành vi thay đổi theo trạng thái | Workflow engine, state machine |
+| **Strategy** | Họ thuật toán có thể hoán đổi | Payment methods, sorting |
+| **Template Method** | Khung thuật toán, để subclass cài đặt chi tiết | CI/CD pipeline, data processing |
+| **Visitor** | Thêm thao tác mới không sửa class cũ | AST analysis, code generation |
 
 ---
 
@@ -73,89 +75,87 @@ Mỗi pattern là một **giải pháp tổng quát, đã được kiểm chứn
 ### 1. Lập trình hướng đối tượng (OOP)
 
 - **Bốn tính chất**: Encapsulation, Inheritance, Polymorphism, Abstraction
-- **Abstract class và Interface**: Phân biệt giữa kế thừa implementation và kế thừa contract
+- **Abstract class và Interface**: Kế thừa implementation vs kế thừa contract
 - **Composition over Inheritance**: Tại sao ưu tiên composition hơn inheritance
-- **SOLID principles**: Đặc biệt là Open/Closed Principle và Dependency Inversion Principle
+- **SOLID principles**: Đặc biệt là Open/Closed và Dependency Inversion
 
 ### 2. Python (phiên bản 3.10+)
 
-Các ví dụ trong series này sử dụng Python 3.10+ với:
+Tôi dùng Python cho các ví dụ trong series này:
 - **`abc.ABC`** và **`@abstractmethod`** cho interface
 - **`dataclasses`** cho value objects
-- **`enum.Enum`** và **`enum.auto`** cho hằng số
-- **`typing`** module với type hints (`Protocol`, `Generic`, `Optional`, etc.)
+- **`typing`** module với type hints
 - **`contextlib`**, **`functools`** cho patterns nâng cao
 
-Người dùng thành thạo Java, C#, C++ cũng có thể đọc được dễ dàng vì Python syntax rất clear.
+Người dùng Java, C#, C++ cũng có thể đọc được dễ dàng.
 
 ### 3. Kiến thức bổ trợ
 
-- **UML class diagram**: Hiểu các ký hiệu (inheritance, association, dependency)
-- **Testing**: Cách viết unit test với `unittest` hoặc `pytest`
+- **UML class diagram**: Ký hiệu inheritance, association, dependency
+- **Testing**: Unit test với `unittest` hoặc `pytest`
 - **Design principles**: GRASP, DRY, KISS, YAGNI
 
 ---
 
 ## Cấu trúc mỗi bài viết
 
-Mỗi pattern trong series được trình bày theo cấu trúc 11 phần nhất quán:
+Mỗi pattern trong series được trình bày theo cấu trúc nhất quán:
 
 | Phần | Nội dung |
 |------|----------|
-| **Mở đầu** | Định nghĩa pattern kèm trích dẫn GoF gốc |
-| **Bài toán chi tiết** | Tình huống thực tế với context cụ thể, phân tích pain points |
-| **Giải pháp với Pattern** | Pattern giải quyết bài toán như thế nào, mapping giữa vấn đề và giải pháp |
-| **Phân tích thiết kế** | Nguyên lý OOP, trade-offs, anti-patterns, khi nào KHÔNG dùng |
-| **Code hoàn chỉnh** | Code sai → code đúng, type hints, ABC, test scenarios |
-| **Sơ đồ UML** | ASCII UML class diagram minh họa mối quan hệ |
-| **So sánh với pattern liên quan** | So sánh 2-3 pattern gần giống, cách phân biệt |
-| **Ứng dụng thực tế** | Pattern xuất hiện ở đâu trong thư viện/framework nổi tiếng |
-| **Kiểm thử** | Unit test cho pattern, mock objects, assertion strategies |
-| **Ưu và nhược điểm** | Bảng so sánh ưu/nhược điểm chi tiết |
-| **Kết luận** | Khi nào áp dụng, dấu hiệu nhận biết, golden rules |
+| **Mở đầu** | Pattern là gì, trích dẫn GoF gốc |
+| **Bài toán** | Tình huống thực tế, vấn đề cụ thể |
+| **Giải pháp** | Pattern giải quyết vấn đề ra sao |
+| **Phân tích thiết kế** | Trade-offs, anti-patterns, khi nào KHÔNG dùng |
+| **Code** | Cách sai → cách đúng, code hoàn chỉnh |
+| **UML** | Sơ đồ minh họa quan hệ |
+| **So sánh** | Phân biệt với pattern tương tự |
+| **Ứng dụng** | Pattern xuất hiện ở framework/thư viện nào |
+| **Kiểm thử** | Unit test cho pattern |
+| **Kết luận** | Khi nào áp dụng, golden rules |
 
 ---
 
-## Lộ trình đề xuất
+## Lộ trình học
 
-### Cách 1: Theo nhóm (recommended)
+### Cách 1: Theo nhóm (khuyên dùng)
 
-Đọc lần lượt từng nhóm để thấy sự liên quan giữa các pattern:
+Đọc từng nhóm để thấy sự liên quan giữa các pattern:
 
-1. **Creational** (Singleton → Factory Method → Abstract Factory → Builder → Prototype)
-2. **Structural** (Adapter → Bridge → Composite → Decorator → Facade → Flyweight → Proxy)
-3. **Behavioral** (Template Method → Strategy → State → Observer → Chain → Command → Iterator → Mediator → Memento → Visitor → Interpreter)
+1. **Creational**: Singleton → Factory Method → Abstract Factory → Builder → Prototype
+2. **Structural**: Adapter → Bridge → Composite → Decorator → Facade → Flyweight → Proxy
+3. **Behavioral**: Template Method → Strategy → State → Observer → Chain → Command → Iterator → Mediator → Memento → Visitor → Interpreter
 
 ### Cách 2: Theo mức độ phổ biến
 
-Bắt đầu với các pattern hay dùng nhất:
+- **Rất phổ biến**: Singleton, Factory Method, Strategy, Observer, Decorator, Adapter
+- **Phổ biến**: Builder, Facade, Proxy, Command, State, Template Method, Iterator
+- **Ít phổ biến hơn**: Abstract Factory, Bridge, Composite, Prototype, Flyweight, Chain of Responsibility, Mediator, Memento, Visitor, Interpreter
 
-1. **Rất phổ biến**: Singleton, Factory Method, Strategy, Observer, Decorator, Adapter
-2. **Phổ biến**: Builder, Facade, Proxy, Command, State, Template Method, Iterator
-3. **Ít phổ biến hơn**: Abstract Factory, Bridge, Composite, Prototype, Flyweight, Chain of Responsibility, Mediator, Memento, Visitor, Interpreter
+### Cách 3: Theo vấn đề gặp phải
 
-### Cách 3: Theo tình huống thực tế
-
-Nếu bạn đang gặp vấn đề cụ thể:
-- "Code của tôi có quá nhiều if-else để xử lý trạng thái" → **State**
-- "Tôi muốn thêm algorithm mới mà không sửa code cũ" → **Strategy**
-- "Tôi cần thông báo cho nhiều component khi dữ liệu thay đổi" → **Observer**
-- "Tôi muốn định nghĩa quy trình xử lý chuẩn" → **Template Method**
-- "Tôi có object hierarchy ổn định và muốn thêm thao tác mới" → **Visitor**
+- "Code có quá nhiều if-else xử lý trạng thái" → **State**
+- "Muốn thêm algorithm mới không sửa code cũ" → **Strategy**
+- "Cần thông báo cho nhiều component khi dữ liệu thay đổi" → **Observer**
 
 ---
 
 ## Lưu ý khi học Design Patterns
 
-1. **Không phải solution cho mọi vấn đề**: Pattern có trade-off riêng. Đừng áp dụng pattern chỉ vì nó "ngầu" — hãy áp dụng khi nó giải quyết được vấn đề thực sự.
-2. **Pattern là ngôn ngữ chung**: Biết pattern giúp bạn trao đổi với đồng nghiệp hiệu quả hơn. "Dùng Strategy pattern cho payment methods" nhanh hơn nhiều so với giải thích dài dòng.
-3. **Pattern sống trong code, không trong sách**: Đọc xong pattern, hãy viết code ngay. Pattern chỉ trở nên hữu ích khi bạn đã implement nó ít nhất một lần.
-4. **Ngôn ngữ ảnh hưởng đến pattern**: Một số pattern dễ dàng hơn trong ngôn ngữ này so với ngôn ngữ khác. Ví dụ, Python có first-class functions nên Strategy đơn giản hơn Java. Hãy hiểu bản chất, không chỉ implementation.
-5. **Không học thuộc lòng**: Mục tiêu không phải nhớ tên 23 pattern, mà là phát triển **tư duy thiết kế** — khả năng nhìn ra vấn đề và chọn giải pháp phù hợp.
+Tôi đã từng mắc sai lầm khi mới học: cố nhồi nhét pattern vào mọi chỗ, bất kể nó có phù hợp hay không. Hãy rút kinh nghiệm từ tôi.
+
+1. **Không phải solution cho mọi vấn đề**: Pattern có trade-off riêng. Đừng áp dụng pattern chỉ vì nó "ngầu". Hãy áp dụng khi nó thực sự giải quyết được vấn đề.
+2. **Pattern là ngôn ngữ chung**: "Dùng Strategy pattern cho payment methods" nhanh hơn giải thích dài dòng.
+3. **Pattern sống trong code, không trong sách**: Đọc xong, hãy viết code ngay. Pattern chỉ có ích khi bạn đã implement nó ít nhất một lần.
+4. **Ngôn ngữ ảnh hưởng đến pattern**: Python có first-class functions nên Strategy đơn giản hơn Java. Hiểu bản chất, không chỉ implementation.
+5. **Không học thuộc lòng**: Mục tiêu không phải nhớ tên 23 pattern, mà là phát triển **tư duy thiết kế**.
 
 ---
 
-> "Design patterns are not about design. They are about common solutions to common problems."
+> *"Design patterns không phải là về thiết kế. Chúng là về những giải pháp chung cho những vấn đề chung."*
 > — **Erich Gamma**
 
 Hãy bắt đầu hành trình chinh phục 23 mẫu thiết kế phần mềm. Bài đầu tiên là **Template Method** — pattern đơn giản nhất trong nhóm Behavioral, nền tảng cho nhiều pattern khác.
+
+---
+*Trân trọng!*

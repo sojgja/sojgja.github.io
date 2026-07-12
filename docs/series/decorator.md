@@ -9,13 +9,15 @@ sidebar_position: 10
 
 > "Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality." — Erich Gamma, *Design Patterns: Elements of Reusable Object-Oriented Software*
 
+Có bao giờ bạn đặt một ly cà phê với đủ loại topping và tự hỏi: "Làm sao để code được cái này nhỉ?" Tôi cũng từng trăn trở như vậy...
+
 ## Bài toán chi tiết
 
-Một công ty khởi nghiệp trong lĩnh vực foodtech đang xây dựng hệ thống đặt đồ uống trực tuyến. Trung tâm của hệ thống là một module tính giá cho các loại đồ uống với topping. Một ly cà phê có thể kết hợp với nhiều loại topping khác nhau: sữa tươi (5,000đ), caramel (8,000đ), kem tươi (10,000đ), siro vanilla (6,000đ), bột cacao (4,000đ), và nhiều hơn nữa. Khách hàng có thể chọn bất kỳ tổ hợp topping nào, với số lượng tùy ý.
+Hãy tưởng tượng bạn đang xây dựng hệ thống đặt đồ uống trực tuyến. Một ly cà phê có thể kết hợp với nhiều loại topping: sữa tươi (5,000đ), caramel (8,000đ), kem tươi (10,000đ), siro vanilla (6,000đ), bột cacao (4,000đ), và nhiều hơn nữa. Khách hàng có thể chọn bất kỳ tổ hợp topping nào, với số lượng tùy ý.
 
-Ban đầu, các kỹ sư dùng kế thừa để giải quyết. Họ tạo ra `Espresso`, `Latte`, `Cappuccino` là các class nền tảng. Sau đó, họ tạo ra `EspressoWithMilk`, `EspressoWithMilkAndCaramel`, `LatteWithWhippedCream`, v.v. Mỗi tổ hợp là một class riêng. Với 5 loại đồ uống nền và 10 loại topping, số class có thể lên tới 5 × 2¹⁰ = 5.120 tổ hợp — một con số khủng khiếp. Rõ ràng, kế thừa là bất khả thi.
+Ban đầu, các kỹ sư dùng kế thừa. Họ tạo ra `Espresso`, `Latte`, `Cappuccino` là các class nền tảng. Sau đó, họ tạo ra `EspressoWithMilk`, `EspressoWithMilkAndCaramel`, `LatteWithWhippedCream`, v.v. Mỗi tổ hợp là một class riêng. Với 5 loại đồ uống nền và 10 loại topping, số class có thể lên tới **5 × 2¹⁰ = 5.120 tổ hợp** — một con số khủng khiếp. Rõ ràng, kế thừa là bất khả thi.
 
-Đội ngũ chuyển sang giải pháp "thông minh" hơn: một class `Beverage` khổng lồ với một danh sách topping và câu lệnh if-else trong method `get_cost()`:
+Đội ngũ chuyển sang giải pháp "thông minh" hơn: một class `Beverage` khổng lồ với danh sách topping và câu lệnh if-else:
 
 ```python
 def get_cost(self):
@@ -26,21 +28,21 @@ def get_cost(self):
         # ... thêm topping mới phải sửa đây
 ```
 
-Giải pháp này vi phạm Open/Closed Principle một cách nghiêm trọng: mỗi lần thêm topping mới, phải sửa class `Beverage`. Hơn nữa, logic nghiệp vụ như giảm giá theo combo (mua 3 topping được giảm 10%), topping theo mùa (chỉ có vào mùa hè), và giới hạn số lượng topping tối đa đều phải nhồi nhét vào một class duy nhất — class này trở thành "god object" với hàng nghìn dòng code, cực kỳ khó bảo trì và kiểm thử.
+Giải pháp này vi phạm **Open/Closed Principle** một cách nghiêm trọng: mỗi lần thêm topping mới, phải sửa class `Beverage`. Hơn nữa, logic nghiệp vụ như giảm giá theo combo, topping theo mùa, và giới hạn số lượng topping tối đa đều phải nhồi nhét vào một class duy nhất — class này trở thành **"god object"** với hàng nghìn dòng code, cực kỳ khó bảo trì và kiểm thử.
 
-Vấn đề cốt lõi: hành vi (topping) cần được thêm vào một cách linh hoạt tại runtime (khi khách chọn), với số lượng và tổ hợp không xác định trước. Kế thừa không giải quyết được vì nó tĩnh (compile-time). Cần một giải pháp động.
+Vấn đề cốt lõi: hành vi (topping) cần được thêm vào một cách linh hoạt tại runtime (khi khách chọn), với số lượng và tổ hợp không xác định trước. Kế thừa không giải quyết được vì nó tĩnh (compile-time). **Cần một giải pháp động.**
 
 ## Giải pháp với Pattern
 
-Decorator Pattern giải quyết vấn đề này bằng cách cho phép "bọc" (wrap) một đối tượng gốc trong các lớp wrapper, mỗi lớp thêm một hành vi mới. Tất cả đều chia sẻ cùng một interface, nên client không biết mình đang tương tác với đối tượng gốc hay với một chuỗi decorator. Đây là một dạng đệ quy lồng nhau: decorator này có thể chứa decorator khác, và cứ thế tạo thành một "stack".
+Decorator Pattern giải quyết vấn đề này bằng cách cho phép "bọc" (wrap) một đối tượng gốc trong các lớp wrapper, mỗi lớp thêm một hành vi mới. Tất cả đều chia sẻ cùng một interface, nên **client không biết mình đang tương tác với đối tượng gốc hay với một chuỗi decorator.** Đây là một dạng đệ quy lồng nhau: decorator này có thể chứa decorator khác, và cứ thế tạo thành một "stack".
 
 Cấu trúc Decorator gồm:
 - **Component**: Interface chung cho cả đối tượng gốc và decorator. Trong ví dụ, đây là `Beverage`.
 - **ConcreteComponent**: Đối tượng gốc có hành vi cơ sở — `Espresso`, `Latte`.
 - **Decorator (abstract)**: Lớp trừu tượng implement Component và chứa một tham chiếu đến Component khác. Tất cả method của Decorator đều ủy quyền (delegate) cho component được wrap.
-- **ConcreteDecorator**: Các lớp decorator cụ thể override một số method để thêm hành vi — `MilkDecorator`, `CaramelDecorator`.
+- **ConcreteDecorator**: Các lớp decorator cụ thể — `MilkDecorator`, `CaramelDecorator`.
 
-Khi client gọi `get_cost()` trên một đối tượng đã qua nhiều lớp wrap, mỗi decorator cộng thêm chi phí của mình vào kết quả từ lớp bên trong, tạo thành một chuỗi xử lý. Số lượng và tổ hợp decorator là vô hạn, hoàn toàn do client quyết định tại runtime.
+Khi client gọi `get_cost()` trên một đối tượng đã qua nhiều lớp wrap, mỗi decorator cộng thêm chi phí của mình vào kết quả từ lớp bên trong, tạo thành một chuỗi xử lý. **Số lượng và tổ hợp decorator là vô hạn**, hoàn toàn do client quyết định tại runtime.
 
 ## Phân tích thiết kế
 
@@ -397,7 +399,7 @@ if __name__ == "__main__":
 
 ## So sánh với Pattern liên quan
 
-**Decorator vs Composite**: Cả hai đều dùng cấu trúc đệ quy và chung interface. Decorator thường wrap một component duy nhất (single child) để thêm hành vi, tạo thành chuỗi (chain). Composite quản lý nhiều children (multiple children) để tạo cấu trúc cây. Decorator bổ sung, Composite tập hợp. Hai pattern có thể kết hợp: Decorator có thể wrap một Composite node.
+**Decorator vs Composite**: Cả hai đều dùng cấu trúc đệ quy và chung interface. Decorator wrap một component duy nhất (single child) để thêm hành vi, tạo thành chuỗi (chain). Composite quản lý nhiều children để tạo cấu trúc cây. Decorator bổ sung, Composite tập hợp. Hai pattern có thể kết hợp: Decorator có thể wrap một Composite node.
 
 **Decorator vs Strategy**: Strategy thay thế toàn bộ thuật toán bên trong một đối tượng, trong khi Decorator thêm hành vi vào bên ngoài. Strategy dùng composition để ủy quyền, Decorator cũng dùng composition nhưng theo kiểu wrapper chain. Strategy ảnh hưởng đến cách thức hoạt động của method, Decorator chỉ thêm vào kết quả trước/sau.
 
@@ -421,7 +423,7 @@ class Order:
         return "price" in item and "qty" in item
 ```
 
-**2. Django Middleware**: Middleware trong Django là một chuỗi decorator điển hình. Mỗi middleware nhận request, xử lý, có thể gọi middleware tiếp theo, và xử lý response trên đường về. Đây là decorator pattern ở cấp độ framework:
+**2. Django Middleware**: Middleware trong Django là một chuỗi decorator điển hình. Mỗi middleware nhận request, xử lý, có thể gọi middleware tiếp theo, và xử lý response trên đường về:
 
 ```python
 # Django middleware như decorator chain
@@ -564,8 +566,11 @@ class TestLiskovSubstitution:
 | Có thể thêm/bớt decorator ở runtime | Decorator phụ thuộc vào interface của component |
 | Giữ nguyên interface — client không bị ảnh hưởng | Không phù hợp khi cần thêm method mới |
 
-## Kết luận
+---
 
-Decorator Pattern là giải pháp tối ưu cho bài toán thêm hành vi động vào đối tượng mà không làm phình to class hierarchy. Nó đặc biệt hữu ích trong các hệ thống mà tổ hợp hành vi là không xác định trước và cần thay đổi linh hoạt dựa trên input người dùng — như đồ uống với topping, middleware stack, I/O stream, hay tính năng sản phẩm.
+Decorator Pattern là giải pháp tối ưu cho bài toán thêm hành vi động vào đối tượng mà không làm phình to class hierarchy. Nó đặc biệt hữu ích trong các hệ thống mà tổ hợp hành vi là không xác định trước và cần thay đổi linh hoạt dựa trên input người dùng — như đồ uống với topping, middleware stack, I/O stream, hay tính năng sản phẩm. Như tôi vẫn nói: **"Ít hơn, tốt hơn"** — đừng tạo hàng ngàn class, hãy tạo vài decorator và để runtime quyết định.
 
 **Nguyên tắc vàng**: Hãy dùng Decorator khi bạn cần thêm các "lớp" hành vi chồng lên nhau và mỗi lớp độc lập với nhau. Nếu bạn thấy mình đang viết class `BaseWithFeatureAAndFeatureBAndFeatureC`, đó là lúc cần Decorator. Hãy nhớ: mỗi decorator chỉ nên làm đúng một việc, và thứ tự các decorator quan trọng — hãy tài liệu hóa điều này.
+
+---
+*Trân trọng!*

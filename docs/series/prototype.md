@@ -9,6 +9,8 @@ sidebar_position: 6
 
 > *"Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype."* — Gang of Four, *Design Patterns: Elements of Reusable Object-Oriented Software*, 1994.
 
+Có bao giờ bạn cần tạo 100 object giống hệt nhau, và mỗi lần tạo là một lần load dữ liệu từ disk, parse config, khởi tạo kết nối... chậm như rùa bò? Tôi biết cảm giác đó — nó như kiểu mỗi lần muốn uống cà phê, bạn lại phải đi trồng cây cà phê vậy.
+
 **Prototype** thuộc nhóm **Creational Patterns**, tạo object mới bằng cách **clone** một object hiện có (prototype) thay vì gọi constructor. Điểm mạnh cốt lõi của Prototype nằm ở chỗ nó cho phép tạo object mà **không cần biết class cụ thể** — chỉ cần biết interface của prototype. Điều này đặc biệt hữu ích khi việc khởi tạo object từ constructor quá tốn kém hoặc phức tạp.
 
 ## Bài toán chi tiết
@@ -28,7 +30,7 @@ Mỗi quái vật khi được spawn (xuất hiện) trong game cần có toàn 
 4. Load animation frames.
 5. Thiết lập equipment mặc định.
 
-Quá trình này mất 50-200ms mỗi lần spawn. Với game, khi người chơi vào dungeon, hệ thống có thể spawn 50-100 quái vật cùng lúc — nghĩa là 5-20 giây loading. Không thể chấp nhận được.
+Quá trình này mất 50-200ms mỗi lần spawn. Với game, khi người chơi vào dungeon, hệ thống có thể spawn 50-100 quái vật cùng lúc — nghĩa là 5-20 giây loading. **Không thể chấp nhận được.**
 
 Cách tiếp cận ngây thơ: dùng constructor với tham số mặc định:
 
@@ -59,7 +61,7 @@ Prototype giải quyết bằng cách: tạo **một** instance "master" cho m�
 3. **Prototype Registry**: Dictionary lưu các prototype master — lấy ra và clone.
 
 Với Prototype:
-- **Performance**: Clone trong memory (microseconds) thay vì load từ disk (milliseconds) — nhanh hơn 1000x.
+- **Performance**: Clone trong memory (microseconds) thay vì load từ disk (milliseconds) — **nhanh hơn 1000x**.
 - **Simplicity**: Clone giữ nguyên toàn bộ state — không cần truyền tham số.
 - **Variation**: Clone rồi modify — spawn "Elite Orc" bằng cách clone Orc thường rồi tăng stats.
 - **Dynamic types**: Có thể clone mà không biết class cụ thể — chỉ biết interface.
@@ -561,6 +563,7 @@ if __name__ == "__main__":
 
     print(f"\nTotal spawned: {spawner.total_spawned}")
     print(f"Prototypes preserved: {id(goblin_proto)} vs spawned: {id(spawner.spawn_goblin())}")
+```
 
 ## So do UML
 
@@ -913,9 +916,13 @@ class TestEnemySpawner:
 | **Anti-telescoping**: Khong can constructor do so tham so | **Debugging**: Kho debug vi object duoc tao tu clone, khong ro nguon goc |
 | **Performance tuning**: Co the dung Object Pool + Prototype de toi uu spawn rate | **Thread-safety**: Clone trong moi truong da luong can co che dong bo |
 
+---
+
 ## Ket luan
 
 Prototype la pattern ly tuong khi **chi phi tao object tu constructor la qua dat** va ban can tao nhieu object co cau truc tuong tu nhau. **Golden rule**: Neu ban thay minh dang goi constructor voi 10+ tham so giong nhau nhieu lan, hoac neu ban can spawn nhieu object trong vong lap voi performance cao — do la luc Prototype toa sang.
+
+Tôi nhớ có lần đọc được câu nói của Jeff Bezos: *"We are stubborn on vision, but flexible on details."* Prototype cũng vậy — cứng nhắc về cấu trúc (clone từ master), linh hoạt về chi tiết (override sau clone).
 
 Cac truong hop dac biet phu hop voi Prototype:
 1. **Game development**: Spawn enemy, bullet, particle, item — hang ngan object trong 1 frame.
@@ -931,3 +938,7 @@ Hay nho:
 - **Dung Prototype Registry** de tap trung quan ly — de dang them/sua/xoa prototype.
 
 Prototype thuong duoc ket hop voi **Factory Method** (factory su dung prototype ben trong) va **Object Pool** (pool clone thay vi tao moi). Trong kien truc phan mem hien dai, Prototype la cong cu dam bao **performance va flexibility** khi tao object.
+
+---
+
+*Trân trọng!*

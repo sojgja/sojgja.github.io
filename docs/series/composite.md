@@ -9,11 +9,13 @@ sidebar_position: 9
 
 > "Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly." — Erich Gamma, *Design Patterns: Elements of Reusable Object-Oriented Software*
 
+Bạn đã bao giờ phải viết code với hàng tá câu lệnh `isinstance()` để phân biệt giữa "một cái" và "một đống" chưa? Tôi thì có, và nó không vui chút nào...
+
 ## Bài toán chi tiết
 
-Một công ty phát triển phần mềm quản lý dự án đang xây dựng hệ thống phân cấp công việc (Work Breakdown Structure — WBS). Mỗi dự án bao gồm nhiều giai đoạn (phase), mỗi giai đoạn có thể chứa nhiều đầu mục công việc (work package), và mỗi đầu mục có thể chứa các task nhỏ hơn. Mỗi node trong cây đều có các thuộc tính như thời gian ước tính (man-hours), ngân sách (cost), và trạng thái hoàn thành (progress percentage). Yêu cầu cốt lõi: tính toán tổng thời gian, tổng ngân sách, và tiến độ tổng thể của toàn bộ dự án dựa trên cây phân cấp này.
+Hãy tưởng tượng bạn đang xây dựng hệ thống quản lý dự án — Work Breakdown Structure (WBS). Mỗi dự án bao gồm nhiều giai đoạn (phase), mỗi giai đoạn có thể chứa nhiều đầu mục công việc (work package), và mỗi đầu mục có thể chứa các task nhỏ hơn. Mỗi node trong cây đều có các thuộc tính như thời gian ước tính, ngân sách, và trạng thái hoàn thành. Yêu cầu cốt lõi: tính toán tổng thời gian, tổng ngân sách, và tiến độ tổng thể của toàn bộ dự án.
 
-Ban đầu, các lập trình viên tạo ra hai class riêng biệt: `Task` (đại diện cho công việc đơn lẻ — leaf) và `ProjectPhase` (đại diện cho một nhóm công việc — composite). Khi cần tính tổng thời gian, client code phải kiểm tra kiểu của từng đối tượng:
+Ban đầu, các lập trình viên tạo ra hai class riêng biệt: `Task` (công việc đơn lẻ) và `ProjectPhase` (nhóm công việc). Khi cần tính tổng thời gian, client code phải kiểm tra kiểu của từng đối tượng:
 
 ```python
 def calculate_total_hours(items):
@@ -30,20 +32,20 @@ def calculate_total_hours(items):
                     ...
 ```
 
-Vấn đề trở nên trầm trọng hơn khi hệ thống mở rộng: có thêm các loại node khác như `Milestone` (cột mốc), `Deliverable` (sản phẩm bàn giao), `RiskItem` (rủi ro). Mỗi loại yêu cầu cách xử lý riêng trong vòng lặp. Client code tràn ngập các câu lệnh `isinstance()` và switch-case, vi phạm nghiêm trọng Open/Closed Principle — mỗi lần thêm loại node mới, tất cả các hàm xử lý cây đều phải sửa.
+Vấn đề trở nên trầm trọng hơn khi hệ thống mở rộng: có thêm các loại node khác như `Milestone`, `Deliverable`, `RiskItem`. Mỗi loại yêu cầu cách xử lý riêng trong vòng lặp. Client code tràn ngập các câu lệnh `isinstance()` và switch-case, vi phạm nghiêm trọng **Open/Closed Principle** — mỗi lần thêm loại node mới, tất cả các hàm xử lý cây đều phải sửa.
 
-Hơn nữa, việc thêm các thao tác mới như xuất báo cáo PDF, visualize cây Gantt, hoặc tính toán critical path đều yêu cầu viết lại toàn bộ logic duyệt cây từ đầu — không có sự tái sử dụng. Code trở nên cực kỳ khó bảo trì, và team dành 40% thời gian để debug các lỗi liên quan đến duyệt cây không đúng.
+Hơn nữa, việc thêm các thao tác mới như xuất báo cáo PDF, visualize cây Gantt, hoặc tính toán critical path đều yêu cầu viết lại toàn bộ logic duyệt cây từ đầu. Code trở nên cực kỳ khó bảo trì. Team dành 40% thời gian để debug các lỗi liên quan đến duyệt cây không đúng — **một con số khủng khiếp**.
 
 ## Giải pháp với Pattern
 
-Composite Pattern giải quyết vấn đề này bằng cách định nghĩa một interface chung (Component) cho cả leaf và composite, cho phép client tương tác với mọi đối tượng trong cây một cách đồng nhất — bất kể nó là một task đơn lẻ hay một phase phức tạp chứa hàng trăm task con. Từ đó, việc duyệt và xử lý cây trở nên đơn giản: mỗi component tự chịu trách nhiệm về hành vi của mình.
+Composite Pattern giải quyết vấn đề này bằng cách định nghĩa một interface chung (Component) cho cả leaf và composite, cho phép client tương tác với mọi đối tượng trong cây một cách đồng nhất — bất kể nó là một task đơn lẻ hay một phase phức tạp chứa hàng trăm task con. Từ đó, việc duyệt và xử lý cây trở nên đơn giản: **mỗi component tự chịu trách nhiệm về hành vi của mình.**
 
 Cấu trúc Composite gồm ba thành phần:
-- **Component (Leaf + Composite)**: Interface chung định nghĩa các method như `get_estimated_hours()`, `get_cost()`, `get_progress()`, và `display()`.
+- **Component**: Interface chung định nghĩa các method như `get_estimated_hours()`, `get_cost()`, `get_progress()`, và `display()`.
 - **Leaf**: Node lá không có con — implement trực tiếp các method. Ví dụ: `Task`, `Milestone`.
 - **Composite**: Node có con — lưu danh sách các Component con và implement các method bằng cách ủy quyền (delegate) cho từng con và tổng hợp kết quả.
 
-Client code khi đó chỉ đơn giản gọi `component.get_estimated_hours()` mà không cần quan tâm component đó là leaf (tự trả về giá trị của nó) hay composite (đệ quy tính tổng từ các con). Tính đa hình (polymorphism) xử lý mọi sự khác biệt. Thêm loại component mới không yêu cầu sửa client — chỉ cần implement interface Component.
+Client code khi đó chỉ đơn giản gọi `component.get_estimated_hours()` mà không cần quan tâm component đó là leaf (tự trả về giá trị của nó) hay composite (đệ quy tính tổng từ các con). **Tính đa hình (polymorphism) xử lý mọi sự khác biệt.** Thêm loại component mới không yêu cầu sửa client — chỉ cần implement interface Component.
 
 ## Phân tích thiết kế
 
@@ -499,8 +501,11 @@ class TestUniformity:
 | Phù hợp với cấu trúc dữ liệu dạng cây tự nhiên | Không phù hợp với cây có cấu trúc bất thường |
 | Tự nhiên cho UI, file system, parsing | Client có thể lạm dụng, tạo cây quá phức tạp |
 
-## Kết luận
+---
 
-Composite Pattern là giải pháp mạnh mẽ và tự nhiên cho mọi cấu trúc dữ liệu dạng cây với quan hệ whole-part. Nó cho phép client tương tác với cây một cách đơn giản, đồng thời tách biệt hoàn toàn logic duyệt cây khỏi logic nghiệp vụ. Với các hệ thống phức tạp như UI framework, HTML DOM, file system, hoặc WBS, Composite là lựa chọn gần như bắt buộc.
+Composite Pattern là giải pháp mạnh mẽ và tự nhiên cho mọi cấu trúc dữ liệu dạng cây với quan hệ whole-part. Nó cho phép client tương tác với cây một cách đơn giản, đồng thời tách biệt hoàn toàn logic duyệt cây khỏi logic nghiệp vụ. Với các hệ thống phức tạp như UI framework, HTML DOM, file system, hoặc WBS, Composite là lựa chọn gần như bắt buộc. Như tôi vẫn nói: "Ít hơn — tốt hơn." Composite giúp bạn viết ít code hơn, nhưng làm được nhiều hơn.
 
 **Nguyên tắc vàng**: Khi bạn thấy code có các câu lệnh `isinstance()` hoặc `type() ==` để phân biệt giữa "đối tượng đơn" và "nhóm đối tượng", đó là lúc bạn cần Composite. Hãy tạo một interface chung, cho leaf implement trực tiếp, cho composite implement thông qua children, và client sẽ không bao giờ phải biết mình đang xử lý một lá đơn lẻ hay cả một nhánh cây đồ sộ.
+
+---
+*Trân trọng!*

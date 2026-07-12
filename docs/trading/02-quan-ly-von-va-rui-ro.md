@@ -1,6 +1,6 @@
 # QUẢN LÝ VỐN VÀ RỦI RO — BẢO VỆ TÀI KHOẢN LÀ TRÊN HẾT
 
-*Tổng hợp và biên tập từ Nhật Ký Forex (nhatkyforex.com)*
+
 
 ---
 

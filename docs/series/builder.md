@@ -9,7 +9,9 @@ sidebar_position: 5
 
 > *"Separate the construction of a complex object from its representation so that the same construction process can create different representations."* — Gang of Four, *Design Patterns: Elements of Reusable Object-Oriented Software*, 1994.
 
-**Builder** thuộc nhóm **Creational Patterns**, tách quá trình xây dựng một object phức tạp ra khỏi biểu diễn của nó. Pattern này cho phép cùng một quy trình xây dựng (construction process) tạo ra nhiều biểu diễn (representations) khác nhau. Điểm mạnh cốt lõi của Builder nằm ở chỗ nó kiểm soát được **từng bước** của quá trình xây dựng — điều mà Factory Method và Abstract Factory không làm được.
+Có bao giờ bạn nhìn vào một constructor với 20 tham số và tự hỏi: "Cái quái gì đang xảy ra ở đây vậy?" Tôi thì có — và tôi ghét nó.
+
+**Builder** thuộc nhóm **Creational Patterns**, tách quá trình xây dựng một object phức tạp ra khỏi biểu diễn của nó. Pattern này cho phép cùng một quy trình xây dựng (construction process) tạo ra nhiều biểu diễn (representations) khác nhau. **Điểm mạnh cốt lõi** của Builder nằm ở chỗ nó kiểm soát được **từng bước** của quá trình xây dựng — điều mà Factory Method và Abstract Factory không làm được.
 
 ## Bài toán chi tiết
 
@@ -18,6 +20,8 @@ Giả sử bạn đang xây dựng một **hệ thống tạo báo cáo tài ch�
 Mỗi báo cáo có thể được xuất ra **nhiều định dạng**: PDF (cho khách hàng), Excel (cho nội bộ), HTML (cho web dashboard), và JSON (cho API). Mỗi định dạng có cách render khác nhau — PDF cần layout chính xác từng pixel, Excel cần cell references và formulas, HTML cần CSS và responsive design.
 
 Cách tiếp cận ngây thơ ban đầu là dùng một constructor khổng lồ với 20+ tham số. Điều này dẫn đến **telescoping constructor** — người dùng phải nhớ thứ tự và ý nghĩa của từng tham số. Object có thể được tạo với state không hợp lệ (thiếu header, thiếu footer). Cùng loại báo cáo nhưng khác format phải viết lại toàn bộ constructor.
+
+**Kinh nghiệm của tôi**: Mỗi khi thấy một constructor có hơn 5 tham số, đó là dấu hiệu bạn đang cần Builder.
 
 ## Giải pháp với Pattern
 
@@ -745,9 +749,13 @@ class TestReportDirector:
 | **Immutability**: De dang tao immutable product | **Memory overhead**: Builder luu intermediate state |
 | **Open/Closed**: Them representation khong sua code cu | **Learning curve**: Developer moi can hieu Builder + Director relationship |
 
+---
+
 ## Ket luan
 
 Builder la pattern ly tuong khi ban can xay dung object phuc tap voi nhieu buoc va nhieu bieu dien. **Golden rule**: Neu constructor cua ban co 5+ tham so (dac biet la optional parameters), hoac neu object co the duoc tao theo nhieu cach khac nhau — do la dau hieu ban can Builder.
+
+Tôi thường nói với các bạn trong team: *"Một constructor dài quá 5 tham số là một constructor cần được giải cứu."* Builder chính là đội cứu hộ đó.
 
 Hay nho su khac biet quan trong:
 - **Factory Method / Abstract Factory**: Tao object *ngay lap tuc* (goi factory, nhan product).
@@ -759,3 +767,7 @@ Builder dac biet manh khi ket hop voi **Fluent Interface** (method chaining) va 
 - **Configuration builders**: Dockerfile, Kubernetes manifests, CI/CD pipelines.
 
 Khong phai luc nao cung can Director. Neu client code co the tu dieu khien cac buoc (va muon su linh hoat do), chi can Builder voi fluent interface la du. Director chi thuc su can khi ban muon chuan hoa quy trinh xay dung.
+
+---
+
+*Trân trọng!*

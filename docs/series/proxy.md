@@ -9,24 +9,26 @@ sidebar_position: 13
 
 > "Provide a surrogate or placeholder for another object to control access to it." — Erich Gamma, *Design Patterns: Elements of Reusable Object-Oriented Software*
 
+Bạn có bao giờ vào một trang web học online mà danh sách video load... và load... mãi vẫn chưa xong? Tôi thì có, và tôi biết chính xác vấn đề nằm ở đâu.
+
 ## Bài toán chi tiết
 
-Một công ty công nghệ giáo dục (edtech) đang xây dựng nền tảng học trực tuyến với thư viện video bài giảng khổng lồ. Mỗi video bài giảng là file HD có dung lượng từ 200 MB đến 2 GB, được lưu trữ trên cloud storage (AWS S3). Nền tảng hiển thị danh sách khóa học với thumbnail, mỗi khóa học có thể chứa 50-100 video. Khi người dùng truy cập trang danh sách, hệ thống phải hiển thị thông tin của tất cả video (tên, thời lượng, kích thước, thumbnail).
+Một công ty edtech đang xây dựng nền tảng học trực tuyến với thư viện video bài giảng khổng lồ. Mỗi video là file HD từ 200 MB đến 2 GB, lưu trên cloud storage (AWS S3). Nền tảng hiển thị danh sách khóa học với thumbnail, mỗi khóa học có thể chứa 50-100 video.
 
-Vấn đề xảy ra khi implement theo cách thông thường: mỗi object Video, khi được khởi tạo, sẽ tải toàn bộ metadata và có thể prefetch một phần nội dung để lấy thông tin. Với 100 video trong một trang, điều này đồng nghĩa với việc tải 100 file metadata từ S3 — mỗi request mất 200-500ms, tổng cộng 20-50 giây cho một lần load trang. Kết quả là trang load cực kỳ chậm, người dùng thoát trang trước khi danh sách hiển thị xong.
+Vấn đề xảy ra khi implement theo cách thông thường: mỗi object Video, khi được khởi tạo, sẽ tải toàn bộ metadata và có thể prefetch một phần nội dung. Với 100 video trong một trang, điều này đồng nghĩa với việc tải 100 file metadata từ S3 — mỗi request mất 200-500ms, tổng cộng **20-50 giây cho một lần load trang.** Kết quả? Trang load cực kỳ chậm, người dùng thoát trang trước khi danh sách hiển thị xong.
 
-Giải pháp naive là lazy load — chỉ tải video khi người dùng click vào. Nhưng nếu client gọi trực tiếp constructor của class Video (với logic tải nặng bên trong), thì lazy load không khả thi vì constructor đã kích hoạt việc tải. Cần một đối tượng thay thế (placeholder) có thể khởi tạo nhanh, chỉ tải dữ liệu thật khi cần — đây chính là lúc Proxy Pattern phát huy tác dụng.
+Giải pháp naive là lazy load — chỉ tải video khi người dùng click vào. Nhưng nếu client gọi trực tiếp constructor của class Video (với logic tải nặng bên trong), thì lazy load không khả thi vì constructor đã kích hoạt việc tải. **Cần một đối tượng thay thế (placeholder)** có thể khởi tạo nhanh, chỉ tải dữ liệu thật khi cần — đây chính là lúc Proxy Pattern phát huy tác dụng.
 
 Ngoài ra, còn các vấn đề khác: kiểm soát quyền truy cập (chỉ student đã đăng ký mới xem được), caching (video phổ biến nên cache), logging (ai đã xem video nào), remote access (video từ server khác). Tất cả đều có thể giải quyết bằng các biến thể khác nhau của Proxy.
 
 ## Giải pháp với Pattern
 
-Proxy Pattern cung cấp một object thay thế (surrogate) có cùng interface với object thật. Proxy kiểm soát truy cập đến object thật, có thể thêm các hành vi bổ sung trước hoặc sau khi ủy quyền (delegate) cho object thật. Quan trọng: Proxy và RealSubject implement cùng một interface, nên client hoàn toàn không biết mình đang dùng proxy hay object thật.
+Proxy Pattern cung cấp một object thay thế (surrogate) có cùng interface với object thật. Proxy kiểm soát truy cập đến object thật, có thể thêm các hành vi bổ sung trước hoặc sau khi ủy quyền (delegate) cho object thật. **Quan trọng: Proxy và RealSubject implement cùng một interface**, nên client hoàn toàn không biết mình đang dùng proxy hay object thật.
 
 Các biến thể chính của Proxy:
-- **Virtual Proxy**: Lazy loading — chỉ tạo RealSubject khi thực sự cần. Phù hợp với video, hình ảnh, tài liệu lớn.
-- **Protection Proxy**: Kiểm soát quyền truy cập — kiểm tra authentication/authorization trước khi delegate.
-- **Remote Proxy**: Đại diện cho object ở remote location — che giấu chi tiết mạng (RPC, gRPC, REST).
+- **Virtual Proxy**: Lazy loading — chỉ tạo RealSubject khi thực sự cần.
+- **Protection Proxy**: Kiểm soát quyền truy cập — kiểm tra authentication/authorization.
+- **Remote Proxy**: Đại diện cho object ở remote location — che giấu chi tiết mạng.
 - **Logging Proxy**: Ghi log mỗi lần method được gọi — auditing, monitoring.
 - **Caching Proxy**: Lưu kết quả để tái sử dụng — giảm tải cho backend.
 
@@ -35,8 +37,8 @@ Các biến thể chính của Proxy:
 Proxy Pattern dựa trên nguyên lý **Single Responsibility Principle**: proxy chịu trách nhiệm kiểm soát truy cập (một việc cụ thể), không trộn lẫn với business logic của RealSubject. Nó cũng thể hiện **Lazy Initialization** và **Principle of Least Privilege** (bảo vệ tài nguyên).
 
 **Proxy vs other patterns:**
-- Proxy vs Decorator: Cả hai đều wrap object và giữ nguyên interface. Decorator thêm hành vi, Proxy kiểm soát truy cập. Decorator có thể wrap decorator khác tạo thành chain; Proxy thường chỉ wrap RealSubject. Decorator client biết mình đang dùng decorator (có thể), Proxy client không cần biết.
-- Proxy vs Adapter: Adapter thay đổi interface, Proxy giữ nguyên interface. Adapter làm cho class tương thích, Proxy kiểm soát truy cập.
+- Proxy vs Decorator: Cả hai đều wrap object và giữ nguyên interface. Decorator thêm hành vi, Proxy kiểm soát truy cập. Decorator có thể wrap thành chain; Proxy thường chỉ wrap RealSubject. Decorator client biết (hoặc không biết); Proxy client thường không biết.
+- Proxy vs Adapter: Adapter thay đổi interface, Proxy giữ nguyên interface.
 
 **Khi KHÔNG nên dùng Proxy:**
 - Khi object thật khởi tạo nhanh — virtual proxy là over-engineering.
@@ -358,7 +360,7 @@ client → LoggingProxy → ProtectedProxy → CachingProxy → VideoProxy → R
 
 ## So sánh với Pattern liên quan
 
-**Proxy vs Decorator**: Đây là hai pattern dễ nhầm nhất. Cả hai đều wrap một object và implement cùng interface. Decorator thêm hành vi mới một cách chủ động — nó bổ sung chức năng. Proxy kiểm soát truy cập một cách thụ động — nó quản lý việc sử dụng object thật. Decorator có thể wrap thành chain dài không giới hạn; Proxy thường chỉ có một lớp duy nhất. Decorator client biết (hoặc không biết) mình đang dùng decorator; Proxy client thường không biết.
+**Proxy vs Decorator**: Đây là hai pattern dễ nhầm nhất. Tôi muốn bạn nhớ thật kỹ: Decorator thêm hành vi mới một cách chủ động — nó bổ sung chức năng. Proxy kiểm soát truy cập một cách thụ động — nó quản lý việc sử dụng object thật. Decorator có thể wrap thành chain dài không giới hạn; Proxy thường chỉ có một lớp duy nhất.
 
 **Proxy vs Adapter**: Adapter thay đổi interface để tương thích; Proxy giữ nguyên interface. Adapter giải quyết vấn đề không tương thích; Proxy giải quyết vấn đề kiểm soát truy cập, lazy loading, remote access.
 
@@ -547,8 +549,11 @@ class TestProxyStack:
 | Tuân thủ SRP — proxy giữ access control tách biệt | Nếu thiết kế không cẩn thận, proxy trở nên phức tạp |
 | Client không cần thay đổi code — cùng interface | Cần đồng bộ interface giữa proxy và real subject |
 
-## Kết luận
+---
 
-Proxy Pattern là giải pháp linh hoạt cho nhiều vấn đề về kiểm soát truy cập: từ lazy loading (virtual proxy), bảo vệ quyền (protection proxy), caching, logging, đến remote access. Proxy cho phép thêm các cross-cutting concerns mà không làm ô nhiễm business logic của class chính.
+Proxy Pattern là giải pháp linh hoạt cho nhiều vấn đề về kiểm soát truy cập: từ lazy loading (virtual proxy), bảo vệ quyền (protection proxy), caching, logging, đến remote access. Proxy cho phép thêm các cross-cutting concerns mà không làm ô nhiễm business logic của class chính. Như tôi vẫn nói: **"Đừng để object nặng làm chậm ứng dụng của bạn — hãy dùng proxy, hãy lười biếng một cách thông minh."**
 
 **Nguyên tắc vàng**: Hãy dùng Proxy khi bạn cần thêm một lớp kiểm soát trước khi truy cập vào object thật — và việc kiểm soát đó không thuộc trách nhiệm của object thật. Hãy nhớ: Proxy và RealSubject phải cùng interface để client không bị ảnh hưởng. Và đừng lạm dụng — nếu chỉ cần lazy loading cho một object, một `if` đơn giản trong method getter cũng đủ, không cần proxy pattern phức tạp.
+
+---
+*Trân trọng!*

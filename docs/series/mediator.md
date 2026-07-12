@@ -11,27 +11,27 @@ sidebar_position: 18
 
 ## Bài toán chi tiết
 
-Xây dựng hệ thống điều khiển chuyến bay (flight control system) tại sân bay. Các thành phần chính gồm: **ControlTower** (đài kiểm soát), **Aircraft** (máy bay), **Runway** (đường băng), **Gate** (cửa đỗ), **WeatherService** (dịch vụ thời tiết), **GroundCrew** (đội mặt đất). Mỗi thành phần phải giao tiếp phức tạp: máy bay hỏi tower về đường băng trống, tower hỏi weather về gió, tower thông báo ground crew chuẩn bị tiếp nhiên liệu, gate thông báo sẵn sàng đón máy bay.
+Hãy tưởng tượng bạn xây hệ thống điều khiển chuyến bay tại sân bay. Có bao nhiêu thành phần? **ControlTower**, **Aircraft**, **Runway**, **Gate**, **WeatherService**, **GroundCrew** — và tất cả phải giao tiếp với nhau. Máy bay hỏi tower về đường băng trống, tower hỏi weather về gió, tower thông báo ground crew chuẩn bị tiếp nhiên liệu...
 
-Nếu không có Mediator, mỗi object phải giữ tham chiếu đến tất cả object khác. `Aircraft` phải biết `ControlTower`, `Runway`, `Gate`, `GroundCrew`. `ControlTower` phải biết `WeatherService`, `Runway`. Kết nối N×N tạo ra mạng lưới phụ thuộc chằng chịt — mỗi lần thay đổi một class (ví dụ: thêm `FuelTruck`), bạn phải sửa hàng loạt class khác.
+Nếu không có Mediator, mỗi object phải giữ tham chiếu đến tất cả object khác. `Aircraft` phải biết `ControlTower`, `Runway`, `Gate`, `GroundCrew`. Kết nối N×N tạo ra mạng lưới phụ thuộc chằng chịt — **như mớ bòng bong không thể gỡ.** Mỗi lần thay đổi một class, bạn phải sửa hàng loạt class khác.
 
-Vấn đề thứ hai là business logic giao tiếp bị phân tán. Logic "cho phép máy bay hạ cánh" bao gồm: kiểm tra thời tiết, kiểm tra đường băng trống, thông báo ground crew, cập nhật gate schedule, gửi thông báo đến các máy bay khác trong vùng. Khi logic này nằm rải rác trong nhiều class, việc debug, kiểm thử, và thay đổi là cực kỳ khó khăn.
+**Vấn đề thứ hai:** Business logic giao tiếp bị phân tán. Logic "cho phép máy bay hạ cánh" bao gồm kiểm tra thời tiết, kiểm tra đường băng, thông báo ground crew, cập nhật gate schedule... Khi logic nằm rải rác trong nhiều class, debug và kiểm thử là cực kỳ khó khăn.
 
-Vấn đề thứ ba là tight coupling. Khi `Aircraft` gọi trực tiếp `Runway.is_available()`, nếu `Runway` thay đổi API thành `Runway.check_status()`, mọi class gọi `is_available()` đều phải sửa. Coupling cao làm giảm khả năng tái sử dụng component.
+**Vấn đề thứ ba:** Tight coupling. Khi `Aircraft` gọi trực tiếp `Runway.is_available()`, nếu `Runway` đổi API thành `check_status()`, mọi class gọi `is_available()` đều phải sửa.
 
-Cuối cùng, kiểm soát đồng bộ. Nhiều máy bay cùng yêu cầu đường băng — cần cơ chế đồng bộ tập trung (centralized synchronization) để tránh race condition. Mediator là nơi duy nhất quản lý lock, queue, và priority.
+Cuối cùng, đồng bộ. Nhiều máy bay cùng yêu cầu đường băng — cần cơ chế tập trung để tránh race condition. Mediator là nơi duy nhất quản lý lock, queue, và priority.
 
 ## Giải pháp với Pattern
 
-Mediator đặt toàn bộ logic giao tiếp vào một object trung gian (mediator). Các colleague (đối tượng giao tiếp) không biết nhau — chúng chỉ biết mediator. Khi colleague cần giao tiếp, nó gửi thông báo đến mediator; mediator quyết định ai nhận, khi nào, và như thế nào.
+Mediator đặt toàn bộ logic giao tiếp vào một object trung gian. Các colleague không biết nhau — chúng chỉ biết mediator. Khi cần giao tiếp, colleague gửi thông báo đến mediator; mediator quyết định ai nhận, khi nào, và như thế nào. **Đây chính là "tổng đài viên" cho các object.**
 
-Cấu trúc:
+**Cấu trúc:**
 - **Mediator (ABC)**: interface cho giao tiếp (`notify()`, `register()`, `broadcast()`).
 - **ConcreteMediator** (FlightControlTower): implement logic giao tiếp, quản lý colleagues.
 - **Colleague** (Aircraft, Runway, Gate, GroundCrew): mỗi colleague chỉ giữ tham chiếu đến mediator.
-- **Event/Dispatch**: colleague gửi event đến mediator; mediator dispatch đến colleague phù hợp.
+- **Event/Dispatch**: colleague gửi event; mediator dispatch đến colleague phù hợp.
 
-Pattern giải quyết:
+**Pattern giải quyết:**
 - **N→1→N**: Thay vì N×N links → N links (mỗi colleague → mediator).
 - **Centralized logic**: Mọi business rule giao tiếp tập trung trong mediator.
 - **Loose coupling**: Colleague không biết colleague khác — chỉ biết mediator interface.
@@ -41,19 +41,19 @@ Pattern giải quyết:
 
 **OOP Principles:**
 - **Single Responsibility (SRP)**: Mediator quản lý giao tiếp; Colleague quản lý logic riêng.
-- **Open/Closed (OCP)**: Thêm colleague mới không sửa colleague cũ (chỉ sửa mediator). Tuy nhiên, mediator thường phải sửa khi thêm colleague — đây là trade-off kinh điển.
-- **Dependency Inversion (DIP)**: Colleague phụ thuộc vào abstraction Mediator, không phụ thuộc vào concrete colleague.
+- **Open/Closed (OCP)**: Thêm colleague mới không sửa colleague cũ — chỉ sửa mediator. Tuy nhiên, mediator thường phải sửa khi thêm colleague. Đây là trade-off kinh điển.
+- **Dependency Inversion (DIP)**: Colleague phụ thuộc vào abstraction Mediator.
 - **Law of Demeter (LoD)**: Colleague chỉ nói chuyện với mediator — không nói chuyện với colleague khác.
 
 **Trade-offs:**
-- **God Object risk**: Mediator có thể phình thành "super class" chứa mọi logic giao tiếp. Nếu mediator quá lớn, hãy chia thành multiple mediators (ví dụ: `FlightMediator`, `GroundMediator`) hoặc dùng Event Bus pattern.
-- **Single point of failure**: Mediator là bottleneck. Nếu mediator chết, toàn bộ giao tiếp sụp đổ. Cần HA (high availability) cho mediator.
-- **Performance overhead**: Mỗi giao tiếp phải qua mediator — thêm một hop. Với real-time system (flight control latency < 10ms), cần mediator siêu nhẹ.
+- **God Object risk**: Mediator có thể phình thành "super class". Nếu mediator quá lớn, hãy chia thành multiple mediators hoặc dùng Event Bus.
+- **Single point of failure**: Mediator là bottleneck. Nếu mediator chết, toàn bộ giao tiếp sụp đổ.
+- **Performance overhead**: Mỗi giao tiếp qua mediator — thêm một hop.
 
 **Khi không nên dùng:**
-- Giao tiếp đơn giản 1-1 (dùng direct reference hoặc Strategy).
-- Cần broadcast thuần túy đến nhiều receiver (dùng Observer pattern).
-- Hệ thống peer-to-peer (BitTorrent, blockchain) — không có trung tâm.
+- Giao tiếp đơn giản 1-1 — dùng direct reference hoặc Strategy.
+- Cần broadcast thuần túy — dùng Observer pattern.
+- Hệ thống peer-to-peer (BitTorrent, blockchain).
 
 ## Ví dụ code hoàn chỉnh
 
@@ -528,13 +528,16 @@ Giao tiếp: Colleague → Mediator → Colleague (không direct)
 ## So sánh với Pattern liên quan
 
 **1. Observer Pattern:**
-Observer phân phối event **một chiều** (subject → observers). Mediator cho phép giao tiếp **hai chiều** (colleague ↔ mediator ↔ colleague). Observer là broadcast (1→n). Mediator là point-to-point hoặc broadcast tùy logic. Observer không có centralized business logic.
+
+Observer phân phối event **một chiều** (subject → observers). Mediator cho phép giao tiếp **hai chiều** (colleague ↔ mediator ↔ colleague). Observer là broadcast (1→n). Mediator là point-to-point hoặc broadcast tùy logic. Observer không có centralized business logic. **Khác nhau cơ bản về luồng giao tiếp.**
 
 **2. Facade Pattern:**
-Facade đơn giản hóa interface cho một subsystem (static wrapper). Mediator là động và cho phép giao tiếp hai chiều giữa các colleague. Facade không thêm behavior — nó chỉ delegate. Mediator thêm behavior orchestration.
+
+Facade đơn giản hóa interface cho một subsystem. Mediator là động và cho phép giao tiếp hai chiều. Facade không thêm behavior — nó chỉ delegate. Mediator thêm behavior orchestration. **Facade là tĩnh, Mediator là động.**
 
 **3. Event Bus / Message Broker:**
-Event Bus là dạng Mediator hiện đại (hàng đợi message, pub/sub). Mediator pattern nguyên bản đồng bộ (synchronous); Event Bus thường async. Kafka, RabbitMQ là Mediator ở quy mô hệ thống (microservices). Cùng ý tưởng "trung gian giao tiếp", khác scale.
+
+Event Bus là dạng Mediator hiện đại — hàng đợi message, pub/sub. Mediator nguyên bản đồng bộ; Event Bus thường async. Kafka, RabbitMQ là Mediator ở quy mô hệ thống. Cùng ý tưởng "trung gian giao tiếp", khác scale.
 
 ## Ứng dụng thực tế
 
@@ -698,13 +701,18 @@ class TestMediatorColleagueIsolation:
 | Hỗ trợ đồng bộ tập trung | Mediator phình to theo số colleague |
 | Dễ dàng thêm colleague mới (OCP một phần) | Không phù hợp hệ thống peer-to-peer |
 
+---
+
 ## Kết luận
 
-Mediator pattern là giải pháp tối ưu cho các hệ thống có giao tiếp **phức tạp, nhiều chiều, cần đồng bộ và orchestration**. Áp dụng khi bạn thấy mối quan hệ giữa các object trở nên chằng chịt (spaghetti code), mỗi object phải biết quá nhiều object khác, và business logic giao tiếp bị phân tán khắp nơi.
+**Mediator pattern là giải pháp tối ưu cho các hệ thống có giao tiếp phức tạp, nhiều chiều, cần đồng bộ.** Hãy dùng nó khi bạn thấy mối quan hệ giữa các object trở nên chằng chịt như mạng nhện — mỗi object phải biết quá nhiều object khác.
 
-**Golden rules:**
-1. Đừng để Mediator phình thành God Object — nếu mediator > 500 dòng, hãy chia thành multiple mediators (ví dụ: `FlightMediator`, `GroundMediator`, `MaintenanceMediator`).
+Những điều cần nhớ:
+1. Đừng để Mediator phình thành God Object — nếu nó > 500 dòng, hãy chia nhỏ ra.
 2. Colleague chỉ nên biết mediator interface, không bao giờ biết concrete mediator.
-3. Dùng **Event object** (thay vì method call riêng lẻ) để giao tiếp — dễ mở rộng, dễ log.
-4. Cân nhắc **Event Bus / Message Queue** cho hệ thống phân tán (microservices).
-5. Luôn có **timeout** và **fallback** trong mediator — tránh deadlock khi colleague không phản hồi.
+3. Dùng **Event object** để giao tiếp — dễ mở rộng, dễ log.
+4. Cân nhắc **Event Bus / Message Queue** cho hệ thống phân tán.
+5. Luôn có **timeout** và **fallback** — tránh deadlock khi colleague không phản hồi.
+
+---
+*Trân trọng!*

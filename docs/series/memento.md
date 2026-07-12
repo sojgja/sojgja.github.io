@@ -11,50 +11,53 @@ sidebar_position: 19
 
 ## Bài toán chi tiết
 
-Xây dựng trình soạn thảo văn bản (text editor) có tính năng undo/redo unlimited. Mỗi thao tác của người dùng — gõ chữ, xóa, format, chèn ảnh — cần lưu một snapshot (ảnh chụp) trạng thái hiện tại để có thể quay lại. Vấn đề: làm thế nào để external code (History manager, Caretaker) lưu và khôi phục trạng thái của Editor mà không vi phạm encapsulation?
+Bạn đã bao giờ ấn Ctrl+Z và tự hỏi làm thế nào editor biết cách quay lại trạng thái trước? Tôi cũng từng thắc mắc — và câu trả lời là Memento pattern.
 
-Cách tiếp cận sai thứ nhất: public toàn bộ state của Editor. Nếu Editor public `content`, `cursor_position`, `selection_range`, `formatting`, thì History manager có thể đọc và ghi trực tiếp. Hậu quả: bất kỳ code nào cũng có thể sửa state Editor tùy tiện — mất kiểm soát, khó debug, dễ tạo bug. Vi phạm Information Hiding và Encapsulation.
+Hãy tưởng tượng bạn xây một text editor. Mỗi thao tác — gõ chữ, xóa, format, chèn ảnh — cần lưu một snapshot để có thể undo. **Vấn đề:** làm thế nào để external code lưu và khôi phục state của Editor mà không phá vỡ encapsulation?
 
-Cách sai thứ hai: Editor tự quản lý history. Editor vừa lo editing vừa lo history — vi phạm Single Responsibility Principle (SRP). Khi thêm tính năng mới (ví dụ: snapshot preview, so sánh diff), phải sửa Editor.
+**Cách sai thứ nhất:** Public toàn bộ state. Editor public `content`, `cursor_position`, `formatting`... Hậu quả: bất kỳ code nào cũng có thể sửa state tùy tiện — mất kiểm soát, khó debug.
 
-Vấn đề thứ ba là hiệu năng. Snapshot toàn bộ Editor state có thể rất tốn kém. Editor có thể chứa hàng trăm KB dữ liệu (ảnh, table, embedded objects). Lưu full snapshot mỗi lần gõ phím là không khả thi. Cần incremental snapshot (chỉ lưu diff) hoặc sparse snapshot.
+**Cách sai thứ hai:** Editor tự quản lý history. Vừa lo editing vừa lo history — vi phạm SRP. Thêm tính năng mới (snapshot preview, so sánh diff) phải sửa Editor.
 
-Vấn đề thứ tư là immutable snapshots. Một khi snapshot được tạo, không ai được phép sửa nó — kể cả Caretaker. Nếu Caretaker vô tình thay đổi snapshot, việc restore sẽ sai. Cần đảm bảo snapshot là immutable.
+**Vấn đề thứ ba:** Hiệu năng. Snapshot toàn bộ state rất tốn kém. Editor có thể chứa hàng trăm KB dữ liệu — ảnh, table, embedded objects. Lưu full snapshot mỗi lần gõ phím là không khả thi.
 
-Cuối cùng, selective deep copy. Editor có thể chứa object phức tạp (ví dụ: danh sách undo operations nội bộ, cache, connection pool). Khi snapshot, cần deep copy state cần thiết, nhưng không copy những state không cần restore (cache, connections). Cần thiết kế snapshot linh hoạt.
+**Vấn đề thứ tư:** Immutable snapshots. Một khi snapshot được tạo, không ai được sửa nó — kể cả Caretaker. Nếu Caretaker vô tình thay đổi snapshot, restore sẽ sai.
+
+Cuối cùng, selective deep copy. Editor chứa object phức tạp — cần deep copy state cần thiết, nhưng không copy cache, connections.
 
 ## Giải pháp với Pattern
 
-Memento pattern tách thành 3 vai trò:
-- **Originator** (Editor): object có state cần lưu. Nó tự tạo snapshot (Memento) và tự khôi phục từ Memento.
-- **Memento**: object immutable chứa snapshot state. Chỉ Originator mới có quyền truy cập state bên trong Memento (dùng private/protected). Bên ngoài (Caretaker) chỉ biết Memento như black box.
-- **Caretaker** (History): quản lý vòng đời Memento (lưu, xóa, pop). Không bao giờ đọc hoặc sửa nội dung Memento.
+Memento pattern tách thành 3 vai trò rõ ràng:
 
-Cơ chế encapsulation: trong Python, dùng convention `_state` (protected) hoặc `__state` (name mangling) + nested class. Memento không public getter cho state — chỉ Originator mới gọi `_get_state()`.
+- **Originator** (Editor): object có state cần lưu. Nó tự tạo snapshot và tự khôi phục.
+- **Memento**: object immutable chứa snapshot. Chỉ Originator mới truy cập được state bên trong. Bên ngoài — Caretaker — chỉ biết Memento như black box.
+- **Caretaker** (History): quản lý vòng đời Memento. **Không bao giờ đọc hoặc sửa nội dung.**
 
-Pattern giải quyết:
+Cơ chế encapsulation trong Python: dùng convention `_state` (protected) hoặc `__state` (name mangling). Memento không public getter cho state — chỉ Originator mới gọi được method internal.
+
+**Pattern giải quyết:**
 - **Encapsulation**: Không ai ngoài Originator đọc được state.
-- **SRP**: Editor (Originator) chỉ lo state; History (Caretaker) chỉ lo lưu trữ.
-- **Immutability**: Memento chỉ được tạo một lần, không có setter.
-- **Flexible snapshot**: Originator quyết định lưu gì vào Memento — có thể lưu subset.
+- **SRP**: Editor chỉ lo state; History chỉ lo lưu trữ.
+- **Immutability**: Memento chỉ được tạo một lần — không có setter.
+- **Flexible snapshot**: Originator quyết định lưu gì vào Memento.
 
 ## Phân tích thiết kế
 
 **OOP Principles:**
 - **Encapsulation**: Memento ẩn state khỏi tất cả object ngoại trừ Originator.
 - **Single Responsibility (SRP)**: Originator quản lý state; Caretaker quản lý lưu trữ.
-- **Command-Query Separation**: Originator tạo Memento (command) và restore từ Memento (command). State không được truy cập trực tiếp.
-- **Law of Demeter**: Caretaker chỉ gọi `save()` và `restore()` trên Originator — không chạm vào Memento bên trong.
+- **Command-Query Separation**: Originator tạo và restore Memento — state không được truy cập trực tiếp.
+- **Law of Demeter**: Caretaker chỉ gọi `save()` và `restore()` — không chạm vào Memento.
 
 **Trade-offs:**
-- **Memory cost**: Snapshot có thể lớn. Lưu full state mỗi lần có thể OOM. Cần compression, incremental snapshot, hoặc sparse snapshot.
-- **Performance**: Deep copy state mỗi lần snapshot chậm. Cân nhắc copy-on-write hoặc serialized snapshot.
-- **Encapsulation trong Python khó**: Python không có access modifier như Java/C++. Dùng naming convention `_memento_state` + documentation. Hoặc dùng `__` name mangling + nested class pattern.
+- **Memory cost**: Snapshot có thể lớn — có thể OOM nếu lưu full state mỗi lần.
+- **Performance**: Deep copy chậm với object phức tạp.
+- **Encapsulation trong Python khó**: Không có access modifier như Java/C++. Phải dùng naming convention.
 
 **Khi không nên dùng:**
-- State nhỏ, không cần undo (dùng Command pattern với undo logic).
-- Cần rollback external resource (DB transaction — dùng database snapshot/RDBMS).
-- State không thay đổi nhiều (dùng event sourcing — replay events thay vì snapshot).
+- State nhỏ, không cần undo — dùng Command pattern.
+- Cần rollback external resource — dùng database snapshot.
+- State không thay đổi nhiều — dùng event sourcing.
 
 ## Ví dụ code hoàn chỉnh
 
@@ -462,18 +465,22 @@ Luồng tương tác:
 ## So sánh với Pattern liên quan
 
 **1. Command Pattern:**
-Command lưu **hành động** (action + reverse action) để undo. Memento lưu **state snapshot**. Command undo bằng cách thực thi hành động ngược; Memento undo bằng cách restore snapshot. Kết hợp: Command dùng Memento bên trong để lưu state trước khi execute — phổ biến trong UI framework.
+
+Command lưu **hành động** (action + reverse). Memento lưu **state snapshot**. Command undo bằng cách thực thi hành động ngược; Memento undo bằng cách restore snapshot. **Kết hợp là bộ đôi mạnh nhất:** Command dùng Memento để lưu state trước khi execute — phổ biến trong mọi UI framework.
 
 **2. Prototype Pattern:**
-Prototype copy object (clone). Memento là một dạng snapshot specialized. Khác: Prototype thường là shallow copy; Memento yêu cầu deep copy để độc lập. Prototype không có Caretaker. Memento thiết kế cho undo/redo — có history management.
+
+Prototype copy object (clone). Memento là snapshot specialized. Khác: Prototype thường shallow copy; Memento yêu cầu deep copy. Prototype không có Caretaker. Memento thiết kế cho undo/redo — có history management.
 
 **3. State Pattern:**
-State thay đổi behavior của object dựa trên internal state. Memento lưu state để restore. State dùng trong runtime; Memento dùng để lưu lịch sử. Có thể kết hợp: hệ thống state machine dùng Memento để lưu checkpoint.
+
+State thay đổi behavior dựa trên internal state. Memento lưu state để restore. State dùng trong runtime; Memento dùng để lưu lịch sử. Có thể kết hợp: state machine dùng Memento để lưu checkpoint.
 
 ## Ứng dụng thực tế
 
 **1. Git Version Control:**
-Mỗi commit là một Memento của toàn bộ project. Git lưu tree DAG (Directed Acyclic Graph) của commits. `git checkout <hash>` = restore. `git revert` = undo.
+
+Mỗi commit là một Memento của toàn bộ project. `git checkout <hash>` = restore. `git revert` = undo. Bạn dùng Git mỗi ngày — đó là Memento pattern ở quy mô lớn nhất.
 
 ```bash
 # Git: memento của toàn bộ repository
@@ -676,14 +683,19 @@ class TestMementoPattern:
 | Dễ kiểm thử từng component riêng | Snapshot large object (ảnh, video) không khả thi |
 | Kết hợp tốt với Command Pattern | Không phù hợp real-time system |
 
+---
+
 ## Kết luận
 
-Memento pattern là giải pháp chính thống cho bài toán **undo/redo và snapshot/rollback** trong các hệ thống có state phức tạp. Pattern này đặc biệt hữu ích trong text editor, IDE, design tool, game checkpoint, database transaction, và version control.
+**Memento pattern là giải pháp chính thống cho undo/redo và snapshot/rollback.** Pattern này xuất hiện khắp nơi: text editor, IDE, design tool, game checkpoint, database transaction, và version control.
 
-**Golden rules:**
-1. **Originator tự quyết định snapshot chứa gì** — không để Caretaker quyết định state nào quan trọng.
-2. **Memento phải immutable** — không có setter, chỉ có getter cho Originator.
-3. **Caretaker không bao giờ đọc state Memento** — chỉ lưu và trả về. Nếu cần preview, dùng `get_snapshot_info()` metadata.
-4. **Giới hạn kích thước history** (thường 20–100) để tránh memory leak.
-5. Cân nhắc **Incremental Memento** (chỉ lưu diff) cho state lớn thay đổi thường xuyên.
-6. Kết hợp với **Command pattern**: Command gọi `editor.save()` trước khi execute và lưu Memento trong command object.
+Tôi muốn bạn nhớ 6 điều này:
+1. **Originator tự quyết định snapshot chứa gì** — không để Caretaker quyết định.
+2. **Memento phải immutable** — không có setter.
+3. **Caretaker không bao giờ đọc state Memento** — chỉ lưu và trả về.
+4. **Giới hạn kích thước history** (20–100) để tránh memory leak.
+5. Cân nhắc **Incremental Memento** — chỉ lưu diff cho state lớn.
+6. Kết hợp với **Command pattern** — Command gọi `editor.save()` trước khi execute.
+
+---
+*Trân trọng!*

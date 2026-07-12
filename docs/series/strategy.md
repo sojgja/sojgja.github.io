@@ -10,13 +10,15 @@ sidebar_position: 22
 > "Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it."
 > — **GoF**, *Design Patterns* (1994)
 
-**Strategy** là một behavioral pattern cho phép định nghĩa một họ các thuật toán, đóng gói từng thuật toán thành một class riêng, và làm cho chúng có thể hoán đổi cho nhau tại runtime. Pattern này tách phần "làm thế nào" (how) khỏi phần "làm gì" (what).
+Bạn có nhớ câu nói: *"Nếu bạn chỉ có một cái búa, mọi vấn đề đều trông giống cái đinh"*? Strategy pattern là cách để bạn có **cả một bộ công cụ** trong tay.
+
+**Strategy** cho phép định nghĩa một họ các thuật toán, đóng gói từng thuật toán thành một class riêng, và — quan trọng nhất — **hoán đổi chúng cho nhau tại runtime**. Pattern này tách phần "làm thế nào" (how) khỏi phần "làm gì" (what). Và đó mới là cái hay.
 
 ---
 
 ## Bài toán chi tiết
 
-Giả sử bạn đang xây dựng **hệ thống xử lý thanh toán** (Payment Processing System) cho một nền tảng thương mại điện tử lớn tại Việt Nam. Hệ thống cần hỗ trợ nhiều phương thức thanh toán:
+Tôi từng làm cho một startup thương mại điện tử — và tôi biết thanh toán là một mớ hỗn độn. Hãy tưởng tượng bạn đang xây dựng **hệ thống xử lý thanh toán** (Payment Processing System) cho một nền tảng thương mại điện tử lớn tại Việt Nam. Hệ thống cần hỗ trợ nhiều phương thức thanh toán:
 
 1. **Chuyển khoản ngân hàng** (Bank Transfer): Tính phí cố định 3,300 VND/giao dịch
 2. **Thẻ tín dụng/ghi nợ** (Credit Card): Phí 2.5% + 5,000 VND, cần xác thực 3D Secure
@@ -29,7 +31,7 @@ Mỗi phương thức thanh toán có:
 - Quy trình xử lý khác nhau (xác thực, kiểm tra số dư, v.v.)
 - Ràng buộc khác nhau (số tiền tối thiểu/tối đa, thời gian xử lý)
 
-Cách tiếp cận ngây thơ là viết tất cả trong một class:
+Và cách tiếp cận "ngây thơ" — tôi dùng từ này vì tôi cũng từng làm vậy — là viết tất cả trong một class:
 
 ```python
 class NaivePaymentService:
@@ -46,26 +48,26 @@ class NaivePaymentService:
         # ... cứ thế mỗi method thêm hàng chục dòng
 ```
 
-Vấn đề:
+Vấn đề — ôi trời, quá nhiều:
 
-1. **Class phình to**: `NaivePaymentService` có thể lên đến 1000+ dòng với 5-10 phương thức
-2. **Vi phạm Single Responsibility**: Một class vừa quản lý giao dịch, vừa xử lý logic thanh toán của mọi method
-3. **Vi phạm Open/Closed Principle**: Thêm phương thức mới (ví dụ: PayOS) = sửa class hiện tại
-4. **Không thể tái sử dụng**: Logic xử lý thẻ tín dụng không thể dùng ở module khác
-5. **Khó kiểm thử**: Phải test tất cả code path trong một class
-6. **Không linh hoạt**: Không thể thay đổi thuật toán runtime (ví dụ: chọn phương thức rẻ nhất tự động)
+1. **Class phình to**: `NaivePaymentService` có thể lên đến 1000+ dòng. Một class ôm đồm mọi thứ.
+2. **Vi phạm Single Responsibility**: Vừa quản lý giao dịch, vừa xử lý logic thanh toán — **một người làm việc của năm người**
+3. **Vi phạm Open/Closed Principle**: Thêm PayOS? Sửa class. Thêm tính năng mới? Sửa class. **Mỗi lần thêm là một lần run rem.**
+4. **Không thể tái sử dụng**: Logic xử lý thẻ tín dụng không thể dùng ở module khác. Viết lại từ đầu.
+5. **Khó kiểm thử**: Một class khổng lồ, muôn vàn code path. Test là cực hình.
+6. **Không linh hoạt**: Không thể thay đổi thuật toán runtime. Muốn chọn phương thức rẻ nhất tự động? Quên đi.
 
 ---
 
 ## Giải pháp với Pattern
 
-Strategy pattern tách mỗi thuật toán (phương thức thanh toán) thành một class riêng:
+Strategy pattern giải quyết vấn đề này cực kỳ đơn giản — **tách mỗi thuật toán thành một class riêng:**
 
-- **Context** (`PaymentService`): Nhận Strategy qua constructor/setter và ủy quyền xử lý cho nó
-- **Strategy interface** (`PaymentStrategy`): Định nghĩa contract chung cho tất cả strategy
-- **Concrete Strategies** (`BankTransferStrategy`, `CreditCardStrategy`, ...): Implement thuật toán cụ thể
+- **Context** (`PaymentService`): Nhận Strategy qua constructor/setter. **Context không cần biết nó đang dùng strategy nào.** Nó chỉ cần gọi interface.
+- **Strategy interface** (`PaymentStrategy`): Định nghĩa contract — tất cả strategy phải chơi theo cùng một luật
+- **Concrete Strategies** (`BankTransferStrategy`, `CreditCardStrategy`, ...): Mỗi thằng lo việc của nó. **Cô lập hoàn toàn.**
 
-Context không cần biết strategy nào đang được dùng — nó chỉ gọi `execute()` qua interface.
+Hãy tưởng tượng bạn vào một nhà hàng. Bạn gọi món (gọi method), đầu bếp (context) chọn công thức (strategy) để nấu. Bạn không cần biết món đó được nấu thế nào — bạn chỉ cần ăn. **Đó là Strategy.**
 
 ---
 
@@ -73,22 +75,28 @@ Context không cần biết strategy nào đang được dùng — nó chỉ g�
 
 ### Nguyên lý OOP được áp dụng
 
-- **Single Responsibility**: Mỗi class strategy chỉ chịu trách nhiệm cho một thuật toán
-- **Open/Closed Principle**: Thêm strategy mới = thêm class, không sửa code cũ
-- **Dependency Inversion**: Context phụ thuộc vào abstraction (`PaymentStrategy`), không phụ thuộc vào concrete class
-- **Favor Composition over Inheritance**: Thay vì subclass để override hành vi, composition cho phép thay đổi hành vi runtime
+Strategy là một trong những pattern **tôn trọng hầu hết các nguyên lý SOLID**:
+
+- **Single Responsibility**: Mỗi class strategy chỉ lo một thuật toán — **một việc, một class**
+- **Open/Closed Principle**: Thêm strategy mới? **Thêm class là xong.** Không động đến code cũ.
+- **Dependency Inversion**: Context phụ thuộc vào abstraction (`PaymentStrategy`), **không phải vào thằng cụ thể**
+- **Favor Composition over Inheritance**: Đây là tinh hoa — thay vì subclass để override, composition cho phép thay đổi hành vi runtime. **Uyển chuyển hơn nhiều.**
 
 ### Trade-offs
 
-1. **Class explosion**: Mỗi strategy là một class mới. Nếu có quá nhiều thuật toán nhỏ, số class sẽ phình to.
-2. **Client phải biết về strategies**: Client cần biết strategy nào tồn tại để chọn. Có thể giảm bằng factory method hoặc registry.
-3. **Overhead communication**: Nếu strategy cần nhiều dữ liệu từ context, phải truyền qua parameter, gây verbose.
+Nhưng — **miễn phí không bao giờ tồn tại:**
+
+1. **Class explosion**: Mỗi strategy là một class mới. Quá nhiều thuật toán nhỏ → quá nhiều class. Phải cân nhắc.
+2. **Client phải biết về strategies**: Client cần biết strategy nào tồn tại. Giải pháp: dùng factory method hoặc registry. Tôi hay dùng cả hai.
+3. **Overhead communication**: Nếu strategy cần nhiều dữ liệu từ context, phải truyền qua parameter — code trở nên dài dòng.
 
 ### Khi nào KHÔNG dùng
 
-- Khi thuật toán đơn giản, ít thay đổi — dùng function callback đơn giản hơn (đặc biệt trong Python với first-class functions)
-- Khi số lượng strategy ít (1-2) và không có khả năng mở rộng
-- Khi thuật toán cần truy cập nhiều private data của context — vi phạm encapsulation
+Tôi cũng muốn chia sẻ thật — **Strategy không phải lúc nào cũng là giải pháp tốt nhất:**
+
+- Khi thuật toán đơn giản, ít thay đổi — dùng function callback. Python có first-class functions, **đừng class hóa mọi thứ**
+- Khi chỉ có 1-2 strategy và không có khả năng mở rộng
+- Khi thuật toán cần truy cập nhiều private data của context — Strategy làm lộ internal state, vi phạm encapsulation
 
 ---
 

@@ -9,13 +9,15 @@ sidebar_position: 12
 
 > "Use sharing to support large numbers of fine-grained objects efficiently." — Erich Gamma, *Design Patterns: Elements of Reusable Object-Oriented Software*
 
+Bạn có bao giờ tự hỏi làm sao game thế giới mở với hàng trăm ngàn cây cối lại chạy mượt đến vậy? Câu trả lời nằm ở pattern này đây...
+
 ## Bài toán chi tiết
 
-Một công ty game đang phát triển tựa game nhập vai thế giới mở (open-world RPG) với bối cảnh một khu rừng rộng 100 km². Trong game có hàng trăm ngàn cây cối, bụi rậm, hoa lá, và các vật thể trang trí khác. Mỗi cây là một object với các thuộc tính: position (x, y, z), scale, rotation, texture (bề mặt vỏ cây), leafMesh (dữ liệu lá), colorPalette (bảng màu theo mùa), và nhiều thuộc tính khác. Với 500.000 cây trong rừng, mỗi object chiếm khoảng 200 bytes, tổng bộ nhớ lên tới 100 MB chỉ riêng cho cây cối — chưa kể các đối tượng khác.
+Hãy tưởng tượng bạn đang phát triển một tựa game nhập vai thế giới mở (open-world RPG) với bối cảnh một khu rừng rộng 100 km². Trong game có hàng trăm ngàn cây cối, bụi rậm, hoa lá. Mỗi cây là một object với các thuộc tính: position (x, y, z), scale, rotation, texture, leafMesh, colorPalette, và nhiều thuộc tính khác. Với 500.000 cây trong rừng, mỗi object chiếm khoảng 200 bytes, tổng bộ nhớ lên tới **100 MB chỉ riêng cho cây cối** — chưa kể các đối tượng khác.
 
-Vấn đề là phần lớn các cây có cùng texture và colorPalette — ví dụ: cây thông trong cùng một khu vực đều dùng texture vỏ thông và bảng màu lá xanh giống hệt nhau. Tuy nhiên, trong thiết kế ban đầu, mỗi object Tree đều lưu riêng texture và colorPalette, dẫn đến trùng lặp dữ liệu khổng lồ. Các thuộc tính như position, scale, rotation là duy nhất cho từng cây, nhưng texture và colorPalette thì được chia sẻ.
+Vấn đề là phần lớn các cây có cùng texture và colorPalette — ví dụ: cây thông trong cùng một khu vực đều dùng texture vỏ thông và bảng màu lá xanh giống hệt nhau. Tuy nhiên, trong thiết kế ban đầu, mỗi object Tree đều lưu riêng texture và colorPalette, dẫn đến **trùng lặp dữ liệu khổng lồ**. Các thuộc tính như position, scale, rotation là duy nhất cho từng cây, nhưng texture và colorPalette thì được chia sẻ.
 
-Nếu không tối ưu, game sẽ tiêu thụ quá nhiều RAM, gây giật lag trên các máy cấu hình thấp. Giải pháp đơn giản nhất là giảm số lượng cây — nhưng điều đó làm giảm chất lượng đồ họa và trải nghiệm chơi game. Cần một giải pháp cho phép giữ nguyên số lượng object nhưng giảm thiểu bộ nhớ bằng cách chia sẻ dữ liệu dùng chung.
+Nếu không tối ưu, game sẽ tiêu thụ quá nhiều RAM, gây giật lag trên các máy cấu hình thấp. Giải pháp đơn giản nhất là giảm số lượng cây — nhưng điều đó làm giảm chất lượng đồ họa và trải nghiệm chơi game. **Cần một giải pháp cho phép giữ nguyên số lượng object nhưng giảm thiểu bộ nhớ** bằng cách chia sẻ dữ liệu dùng chung.
 
 ## Giải pháp với Pattern
 
@@ -27,7 +29,7 @@ Cấu trúc Flyweight gồm:
 - **FlyweightFactory**: Quản lý pool các Flyweight — kiểm tra nếu Flyweight đã tồn tại thì trả về, nếu chưa thì tạo mới.
 - **Client**: Tính toán extrinsic state và truyền vào Flyweight method khi cần.
 
-Trong ví dụ cây cối, `TreeType` là Flyweight lưu texture và colorPalette (intrinsic). Mỗi cây cá thể (Tree) chỉ lưu position, scale, rotation và tham chiếu đến TreeType. Factory đảm bảo mỗi tổ hợp texture-colorPalette chỉ tồn tại một object duy nhất. Kết quả: 500.000 cây nhưng chỉ có 10-20 TreeType objects — giảm bộ nhớ từ 100 MB xuống còn vài MB.
+Trong ví dụ cây cối, `TreeType` là Flyweight lưu texture và colorPalette (intrinsic). Mỗi cây cá thể (Tree) chỉ lưu position, scale, rotation và tham chiếu đến TreeType. Factory đảm bảo mỗi tổ hợp texture-colorPalette chỉ tồn tại một object duy nhất. Kết quả: 500.000 cây nhưng chỉ có 10-20 TreeType objects — **giảm bộ nhớ từ 100 MB xuống còn vài MB.**
 
 ## Phân tích thiết kế
 
@@ -383,8 +385,11 @@ class TestEdgeCases:
 | Tái sử dụng tối đa — một object dùng chung cho hàng ngàn context | Khó debug — object chia sẻ gây side effect khó lường |
 | Giảm cache miss — ít object hơn, CPU cache hoạt động tốt hơn | Không phù hợp với object cần identity riêng |
 
-## Kết luận
+---
 
-Flyweight Pattern là công cụ tối ưu bộ nhớ mạnh mẽ cho các hệ thống có số lượng object cực lớn với intrinsic state dùng chung. Nó thường được sử dụng trong game, text editor, GUI framework, và bất kỳ ứng dụng nào cần quản lý hàng ngàn đến hàng triệu object tương tự nhau. Pattern này giúp giảm bộ nhớ từ 90-99% trong các trường hợp điển hình.
+Flyweight Pattern là công cụ tối ưu bộ nhớ mạnh mẽ cho các hệ thống có số lượng object cực lớn với intrinsic state dùng chung. Nó thường được sử dụng trong game, text editor, GUI framework, và bất kỳ ứng dụng nào cần quản lý hàng ngàn đến hàng triệu object tương tự nhau. Tôi từng thấy một hệ thống giảm được 95% bộ nhờ Flyweight — **một con số đáng kinh ngạc.**
 
 **Nguyên tắc vàng**: Hãy dùng Flyweight khi ứng dụng của bạn tạo ra một số lượng lớn object giống nhau và bộ nhớ là vấn đề. Hãy phân tích: thuộc tính nào thay đổi theo từng object (extrinsic — giữ lại trong context) và thuộc tính nào cố định theo loại (intrinsic — đưa vào Flyweight). Hãy nhớ rằng: Flyweight là immutable — một khi tạo ra, không được thay đổi intrinsic state của nó, vì thay đổi sẽ ảnh hưởng đến tất cả context đang dùng nó.
+
+---
+*Trân trọng!*
