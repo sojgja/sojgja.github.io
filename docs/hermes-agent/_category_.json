@@ -1,0 +1,10 @@
+{
+  "label": "🤖 Hermes Agent",
+  "position": 12,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "hermes-agent/index"
+  }
+}

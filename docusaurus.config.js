@@ -78,6 +78,7 @@ const config = {
         items: [
           { to: '/docs/2026/hello-2026', label: 'Help', position: 'left' },
           { to: '/docs/book/book-intro', label: 'Book', position: 'left' },
+          { to: '/docs/hermes-agent/index', label: 'Hermes Agent', position: 'left' },
           { to: '/docs/series/series-intro', label: 'Series', position: 'left' },
           { to: '/about', label: 'About', position: 'left' },
         ],
