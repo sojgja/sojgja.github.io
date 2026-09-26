@@ -1,0 +1,18 @@
+[submodule "www/hermes-agent"]
+	path = www/hermes-agent
+	url = https://github.com/NousResearch/hermes-agent.git
+[submodule "www/pi"]
+	path = www/pi
+	url = https://github.com/earendil-works/pi.git
+[submodule "www/openclaw"]
+	path = www/openclaw
+	url = https://github.com/openclaw/openclaw.git
+[submodule "www/odoo"]
+	path = www/odoo
+	url = https://github.com/odoo/odoo.git
+[submodule "www/django"]
+	path = www/django
+	url = https://github.com/django/django.git
+[submodule "www/fastapi"]
+	path = www/fastapi
+	url = https://github.com/fastapi/fastapi.git
