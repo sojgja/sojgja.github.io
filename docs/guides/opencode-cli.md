@@ -796,7 +796,7 @@ Chọn loại server, nhập thông tin:
 - Name: github
 - Command: npx
 - Args: -y @modelcontextprotocol/server-github
-- Token: <GitHub PAT>
+- Token: `<GitHub PAT>`
 
 ### 12.2. Tình huống: Kết nối với database qua MCP
 
