@@ -1,0 +1,11 @@
+{
+  "label": "🔬 Phân tích harness thực tế",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Phân tích thiết kế Harness tiên phong",
+    "description": "Pi, Claude Code, Codex và DeepSeek thực sự thiết kế harness của họ như thế nào."
+  }
+}

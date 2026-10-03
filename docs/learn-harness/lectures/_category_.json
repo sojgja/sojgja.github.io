@@ -1,0 +1,11 @@
+{
+  "label": "📖 Bài giảng",
+  "position": 1,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Bài giảng",
+    "description": "14 bài giảng về Harness Engineering — lý thuyết nền tảng giúp AI coding agent hoạt động đáng tin cậy."
+  }
+}

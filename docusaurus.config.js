@@ -79,6 +79,7 @@ const config = {
           { to: '/docs/2026/hello-2026', label: 'Help', position: 'left' },
           { to: '/docs/book/book-intro', label: 'Book', position: 'left' },
           { to: '/docs/hermes-agent/index', label: 'Hermes Agent', position: 'left' },
+          { to: '/docs/learn-harness/', label: 'Learn Harness', position: 'left' },
           { to: '/docs/series/series-intro', label: 'Series', position: 'left' },
           { to: '/about', label: 'About', position: 'left' },
         ],
@@ -99,6 +100,14 @@ const config = {
               { label: '❤️ Lời nói đầu', to: '/docs/book/book-intro' },
               { label: '🧹 Clean Code', to: '/docs/book/clean-code' },
               { label: '🧠 Pragmatic Programmer', to: '/docs/book/pragmatic-programmer' },
+            ],
+          },
+          {
+            title: '🎒 Learn Harness',
+            items: [
+              { label: '📖 Tổng quan khóa học', to: '/docs/learn-harness/' },
+              { label: '🎓 Bài giảng 01', to: '/docs/learn-harness/lectures/lecture-01-why-capable-agents-still-fail/' },
+              { label: '🔨 Dự án 01', to: '/docs/learn-harness/projects/project-01-baseline-vs-minimal-harness/' },
             ],
           },
           {

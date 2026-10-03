@@ -1,0 +1,11 @@
+{
+  "label": "📚 Tài nguyên",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Tài nguyên",
+    "description": "Templates, playbook và SOPs dùng ngay cho harness của bạn."
+  }
+}

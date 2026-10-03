@@ -1,0 +1,11 @@
+{
+  "label": "🛠️ Dự án thực hành",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Dự án thực hành",
+    "description": "8 dự án thực hành xây dựng harness từ số 0."
+  }
+}
